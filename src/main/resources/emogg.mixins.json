@@ -9,6 +9,7 @@
     "ChatHudMixin",
     "CommandSuggestorAccessor",
     "CommandSuggestorMixin",
+    "MinecraftClientMixin",
     "SelectionManagerMixin",
     "SuggestionWindowMixin",
     "TextFieldWidgetMixin"
