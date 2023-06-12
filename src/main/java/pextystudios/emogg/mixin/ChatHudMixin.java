@@ -37,7 +37,7 @@ public abstract class ChatHudMixin {
 
     matrixStack.translate(0.0D, -0.5D, 0.0D);
 
-    Pattern emojiPattern = Pattern.compile("(:([A-Za-z0-9]+):)");
+    Pattern emojiPattern = Pattern.compile("(:([_A-Za-z0-9]+):)");
 
     boolean emotesLeft = true;
     while (emotesLeft) {
