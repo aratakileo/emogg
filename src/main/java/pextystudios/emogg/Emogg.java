@@ -38,8 +38,6 @@ public class Emogg implements ClientModInitializer {
                 for (Identifier identifier: manager.findResources("emoji/", path -> path.endsWith(".png")))
                     regEmoji(new Emoji(identifier));
 
-                regEmoji(new Emoji("cutie"));
-
                 LOGGER.info("All emojis loaded!");
             }
         });
