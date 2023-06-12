@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "pextystudios.emogg.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "ChatHudMixin",
+    "CommandSuggestorAccessor",
+    "CommandSuggestorMixin",
+    "SelectionManagerMixin",
+    "SuggestionWindowMixin",
+    "TextFieldWidgetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
