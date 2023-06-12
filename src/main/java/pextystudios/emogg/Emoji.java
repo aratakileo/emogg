@@ -68,7 +68,7 @@ public class Emoji {
             float size,
             float alpha
     ) {
-        float scaleX = (float) this.width / this.height * 1.5f, scaleY = 1.5f;
+        float scaleX = (float) this.width / this.height * 0.9f, scaleY = 0.9f;
 
         scaleX = Math.round(size * scaleX) / size;
         scaleY = Math.round(size * scaleY) / size;

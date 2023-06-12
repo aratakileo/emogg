@@ -32,10 +32,11 @@ public abstract class ChatHudMixin {
   private int drawWithShadow(TextRenderer textRenderer, MatrixStack matrixStack, OrderedText text, float x, float y, int color) {
     TextReaderVisitor textReaderVisitor = new TextReaderVisitor();
     text.accept(textReaderVisitor);
-    float emoteSize = textRenderer.getWidth("  ");
+    float emoteSize = textRenderer.getWidth("   ");
     float emoteAlpha = (color >> 24 & 0xFF) / 255.0F;
+    final double VERTICAL_OFFSET = 2;
 
-    matrixStack.translate(0.0D, -0.5D, 0.0D);
+    matrixStack.translate(0.0D, -VERTICAL_OFFSET, 0.0D);
 
     Pattern emojiPattern = Pattern.compile("(:([_A-Za-z0-9]+):)");
 
@@ -61,14 +62,14 @@ public abstract class ChatHudMixin {
                     emoteAlpha
             );
 
-            textReaderVisitor.replaceBetween(startPos, endPos, "  ", Style.EMPTY);
+            textReaderVisitor.replaceBetween(startPos, endPos, "   ", Style.EMPTY);
             break;
           }
         } catch (NumberFormatException numberFormatException) {}
       }
     }
 
-    matrixStack.translate(0.0D, 0.5D, 0.0D);
+    matrixStack.translate(0.0D, VERTICAL_OFFSET, 0.0D);
     return textRenderer.draw(matrixStack, textReaderVisitor.getOrderedText(), x, y, color);
   }
 }
