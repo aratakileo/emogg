@@ -5,6 +5,28 @@ accessible field net/minecraft/client/font/TextRenderer fontStorageAccessor Ljav
 accessible method net/minecraft/client/font/TextRenderer getFontStorage (Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/font/FontStorage;
 accessible method net/minecraft/client/font/TextRenderer drawGlyph (Lnet/minecraft/client/font/GlyphRenderer;ZZFFFLnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/VertexConsumer;FFFFI)V
 accessible method net/minecraft/client/font/TextRenderer drawLayer (Ljava/lang/String;FFIZLnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;ZII)F
+accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
+accessible method net/minecraft/client/render/RenderLayer of (Ljava/lang/String;Lnet/minecraft/client/render/VertexFormat;Lnet/minecraft/client/render/VertexFormat$DrawMode;IZZLnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+accessible class net/minecraft/client/render/RenderPhase$Shader
+accessible class net/minecraft/client/render/RenderPhase$Texture
+accessible class net/minecraft/client/render/RenderPhase$Transparency
+accessible class net/minecraft/client/render/RenderPhase$Lightmap
+accessible field net/minecraft/util/math/Matrix4f a00 F
+accessible field net/minecraft/util/math/Matrix4f a01 F
+accessible field net/minecraft/util/math/Matrix4f a02 F
+accessible field net/minecraft/util/math/Matrix4f a03 F
+accessible field net/minecraft/util/math/Matrix4f a10 F
+accessible field net/minecraft/util/math/Matrix4f a11 F
+accessible field net/minecraft/util/math/Matrix4f a12 F
+accessible field net/minecraft/util/math/Matrix4f a13 F
+accessible field net/minecraft/util/math/Matrix4f a20 F
+accessible field net/minecraft/util/math/Matrix4f a21 F
+accessible field net/minecraft/util/math/Matrix4f a22 F
+accessible field net/minecraft/util/math/Matrix4f a23 F
+accessible field net/minecraft/util/math/Matrix4f a30 F
+accessible field net/minecraft/util/math/Matrix4f a31 F
+accessible field net/minecraft/util/math/Matrix4f a32 F
+accessible field net/minecraft/util/math/Matrix4f a33 F
 
 extendable method net/minecraft/client/font/TextRenderer drawLayer (Ljava/lang/String;FFIZLnet/minecraft/util/math/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;ZII)F
 

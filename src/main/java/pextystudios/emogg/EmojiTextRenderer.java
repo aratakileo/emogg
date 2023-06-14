@@ -8,21 +8,24 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.*;
 import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EmojiTextRenderer extends TextRenderer {
+
     public static LoadingCache<String, Pair<String, HashMap<Integer, Emoji>>> TEXT_DATA_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(60, TimeUnit.SECONDS)
             .build(new CacheLoader<>() {
@@ -41,13 +44,26 @@ public class EmojiTextRenderer extends TextRenderer {
     }
 
     @Override
-    public float drawLayer(String text, float x, float y, int color, boolean shadow, Matrix4f matrix, VertexConsumerProvider vertexConsumerProvider, boolean seeThrough, int underlineColor, int light) {
+    public float drawLayer(
+            String text,
+            float x,
+            float y,
+            int color,
+            boolean shadow,
+            Matrix4f matrix,
+            VertexConsumerProvider vertexConsumerProvider,
+            boolean isTransparent,
+            int underlineColor,
+            int light
+    ) {
         if (text.isEmpty()) return 0;
 
         try {
             Pair<String, HashMap<Integer, Emoji>> cache = TEXT_DATA_CACHE.get(text);
 
-            EmojiLiteralVisitor emojiLiteralVisitor = new EmojiLiteralVisitor(cache.getB(), vertexConsumerProvider, x, y, color, shadow, matrix, seeThrough, light);
+            EmojiLiteralVisitor emojiLiteralVisitor = new EmojiLiteralVisitor(
+                    cache.getB(), vertexConsumerProvider, x, y, color, shadow, matrix, isTransparent, light
+            );
 
             TextVisitFactory.visitFormatted(cache.getA(), Style.EMPTY, emojiLiteralVisitor);
 
@@ -57,6 +73,63 @@ public class EmojiTextRenderer extends TextRenderer {
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public int draw(OrderedText orderedText, float x, float y, int color, boolean shadow, Matrix4f matrix, VertexConsumerProvider vertexConsumers, boolean isTransparent, int backgroundColor, int light) {
+        String text;
+
+        if (orderedText == null || (text = asString(orderedText)).isEmpty())
+            return super.draw(
+                    (OrderedText)null, x, y, color, shadow, matrix, vertexConsumers, isTransparent, backgroundColor, light
+            );
+
+        color = (color & -67108864) == 0 ? color | -16777216 : color;
+        HashMap<Integer, Emoji> emojis = new LinkedHashMap<>();
+        try {
+            Pair<String, HashMap<Integer, Emoji>> cache = TEXT_DATA_CACHE.get(text);
+            emojis = cache.getB();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        List<OrderedText> processors = new ArrayList<>();
+        HashMap<Integer, Emoji> finalEmojis = emojis;
+        AtomicInteger cleanPos = new AtomicInteger();
+        AtomicBoolean ignore = new AtomicBoolean(false);
+
+        orderedText.accept((index, style, ch) -> {
+            if (!ignore.get()) {
+                if (finalEmojis.get(cleanPos.get()) == null) {
+                    processors.add(new OrderedTextProcessor(cleanPos.getAndIncrement(), style, ch));
+                } else {
+                    processors.add(new OrderedTextProcessor(cleanPos.get(), style, ' '));
+                    ignore.set(true);
+                    return true;
+                }
+            }
+            if (ignore.get() && ch == ':') {
+                ignore.set(false);
+                cleanPos.getAndIncrement();
+            }
+            return true;
+        });
+
+        EmojiLiteralVisitor emojiLiteralVisitor = new EmojiLiteralVisitor(
+                emojis,
+                vertexConsumers,
+                x,
+                y,
+                color,
+                shadow,
+                matrix,
+                isTransparent,
+                light
+        );
+
+        OrderedText.innerConcat(processors).accept(emojiLiteralVisitor);
+        emojiLiteralVisitor.finish(backgroundColor, x);
+
+        return (int)emojiLiteralVisitor.x;
     }
 
     @Override
@@ -71,43 +144,13 @@ public class EmojiTextRenderer extends TextRenderer {
     }
 
     @Override
-    public int getWidth(OrderedText text) {
-        StringBuilder stringBuilder = new StringBuilder();
-        text.accept((a, b, c) -> {
-            stringBuilder.append((char)c);
-            return true;
-        });
-        return getWidth(stringBuilder.toString());
+    public int getWidth(OrderedText orderedText) {
+        return getWidth(asString(orderedText));
     }
 
     @Override
     public int getWidth(StringVisitable text) {
         return this.getWidth(text.getString());
-    }
-
-    public static Pair<String, HashMap<Integer, Emoji>> getTextDataForRender(String text) {
-        HashMap<Integer, Emoji> emojiIndexes = new LinkedHashMap<>();
-
-        Matcher matcher = Pattern.compile("(:([_A-Za-z0-9]+):)").matcher(text);
-        int sourceEmojiIndexesOffset = 0;
-
-        while (matcher.find()) {
-            if (!Emogg.getInstance().emojis.containsKey(matcher.group(2)))
-                continue;
-
-            int lengthBeforeChanges = text.length();
-
-            text = text.replaceFirst(matcher.group(1), "   ");
-
-            emojiIndexes.put(
-                    matcher.start(1) - sourceEmojiIndexesOffset,
-                    Emogg.getInstance().emojis.get(matcher.group(2))
-            );
-
-            sourceEmojiIndexesOffset += lengthBeforeChanges - text.length();
-        }
-
-        return new Pair<>(text, emojiIndexes);
     }
 
     class EmojiLiteralVisitor implements CharacterVisitor {
@@ -118,9 +161,9 @@ public class EmojiTextRenderer extends TextRenderer {
         private final int color;
         private final boolean shadow;
         private final Matrix4f matrix;
-        private final boolean seeThrough;
+        private final boolean isTransparent;
         private final int light;
-        
+
         private List<GlyphRenderer.Rectangle> rectangles = List.of();
 
         public EmojiLiteralVisitor(
@@ -131,7 +174,7 @@ public class EmojiTextRenderer extends TextRenderer {
                 int color,
                 boolean shadow,
                 Matrix4f matrix,
-                boolean seeThrough,
+                boolean isTransparent,
                 int light
         ) {
             this.emojiIndexes = emojiIndexes;
@@ -141,10 +184,10 @@ public class EmojiTextRenderer extends TextRenderer {
             this.color = color;
             this.shadow = shadow;
             this.matrix = matrix;
-            this.seeThrough = seeThrough;
+            this.isTransparent = isTransparent;
             this.light = light;
         }
-        
+
         public void finish(int color, float x_off) {
             if (color != 0) {
                 float r = (float) (color >> 24 & 255) / 255.0F;
@@ -166,7 +209,7 @@ public class EmojiTextRenderer extends TextRenderer {
                 FontStorage fontStorage = EmojiTextRenderer.this.getFontStorage(Style.DEFAULT_FONT_ID);
                 GlyphRenderer rectangleRenderer = fontStorage.getRectangleRenderer();
 
-                VertexConsumer buffer = vertexConsumers.getBuffer(rectangleRenderer.getLayer(seeThrough ? TextLayerType.SEE_THROUGH : TextLayerType.NORMAL));
+                VertexConsumer buffer = vertexConsumers.getBuffer(rectangleRenderer.getLayer(isTransparent ? TextLayerType.SEE_THROUGH : TextLayerType.NORMAL));
 
                 for (GlyphRenderer.Rectangle rectangle: rectangles)
                     rectangleRenderer.drawRectangle(rectangle, matrix, buffer, light);
@@ -176,20 +219,9 @@ public class EmojiTextRenderer extends TextRenderer {
         @Override
         public boolean accept(int index, Style style, int codePoint) {
             if (emojiIndexes.containsKey(index)) {
-                ((MatrixStack)vertexConsumers).translate(0D, -2D, 0D);
+                emojiIndexes.get(index).draw(x, y, matrix, vertexConsumers, light);
+                x += 10;
 
-                int emojiWidth = EmojiTextRenderer.super.getWidth("   ");
-
-                emojiIndexes.get(index).draw(
-                        (MatrixStack) vertexConsumers,
-                        x,
-                        y,
-                        emojiWidth,
-                        (color >> 24 & 0xff) / 255f);
-
-                x += emojiWidth;
-
-                ((MatrixStack)vertexConsumers).translate(0D, 2D, 0D);
                 return true;
             }
 
@@ -216,7 +248,7 @@ public class EmojiTextRenderer extends TextRenderer {
             if (!(glyphRenderer instanceof EmptyGlyphRenderer)) {
                 float shadowOffset = shadow ? glyph.getShadowOffset() : 0f;
 
-                VertexConsumer buffer = vertexConsumers.getBuffer(glyphRenderer.getLayer(seeThrough ? TextLayerType.SEE_THROUGH : TextLayerType.NORMAL));
+                VertexConsumer buffer = vertexConsumers.getBuffer(glyphRenderer.getLayer(isTransparent ? TextLayerType.SEE_THROUGH : TextLayerType.NORMAL));
                 EmojiTextRenderer.this.drawGlyph(
                         glyphRenderer,
                         style.isBold(),
@@ -228,12 +260,12 @@ public class EmojiTextRenderer extends TextRenderer {
                         buffer,
                         r, g, b, a,
                         light
-                        );
+                );
             }
-            
+
             float advanceOffset = glyph.getAdvance(style.isBold());
             float shadowOffset = shadow ? 1f : 0f;
-            
+
             if (style.isStrikethrough())
                 rectangles.add(new GlyphRenderer.Rectangle(
                         x + shadowOffset - 1f,
@@ -243,7 +275,7 @@ public class EmojiTextRenderer extends TextRenderer {
                         0.01f,
                         r, g, b, a
                 ));
-            
+
             if (style.isUnderlined())
                 rectangles.add(new GlyphRenderer.Rectangle(
                         x + shadowOffset - 1f,
@@ -253,10 +285,61 @@ public class EmojiTextRenderer extends TextRenderer {
                         0.01f,
                         r, g, b, a
                 ));
-            
+
             x += advanceOffset;
 
             return true;
+        }
+    }
+
+    public static String asString(OrderedText orderedText) {
+        StringBuilder stringBuilder = new StringBuilder();
+        orderedText.accept((a, b, c) -> {
+            stringBuilder.append((char)c);
+            return true;
+        });
+        return stringBuilder.toString();
+    }
+
+    public static Pair<String, HashMap<Integer, Emoji>> getTextDataForRender(String text) {
+        HashMap<Integer, Emoji> emojiIndexes = new LinkedHashMap<>();
+
+        Matcher matcher = Pattern.compile("(:([_A-Za-z0-9]+):)").matcher(text);
+        int sourceEmojiIndexesOffset = 0;
+
+        while (matcher.find()) {
+            if (!Emogg.getInstance().emojis.containsKey(matcher.group(2)))
+                continue;
+
+            int lengthBeforeChanges = text.length();
+
+            text = text.replaceFirst(matcher.group(1), "\u2603");
+
+            emojiIndexes.put(
+                    matcher.start(1) - sourceEmojiIndexesOffset,
+                    Emogg.getInstance().emojis.get(matcher.group(2))
+            );
+
+            sourceEmojiIndexesOffset += lengthBeforeChanges - text.length();
+        }
+
+        return new Pair<>(text, emojiIndexes);
+    }
+
+    static class OrderedTextProcessor implements OrderedText {
+        public final int index;
+        public final Style style;
+        public final int codePoint;
+
+        public OrderedTextProcessor(int index, Style style, int codePoint) {
+            this.index = index;
+            this.style = style;
+            this.codePoint = codePoint;
+        }
+
+        @Override
+        public boolean accept(CharacterVisitor visitor) {
+            return visitor.accept(index, style, codePoint);
         }
     }
 }
