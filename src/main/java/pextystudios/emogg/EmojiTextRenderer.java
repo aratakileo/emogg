@@ -81,8 +81,7 @@ public class EmojiTextRenderer extends TextRenderer {
 
         if (orderedText == null || (text = asString(orderedText)).isEmpty())
             return super.draw(
-                    (OrderedText)null, x, y, color, shadow, matrix, vertexConsumers, isTransparent, backgroundColor, light
-            );
+                    (OrderedText)null, x, y, color, shadow, matrix, vertexConsumers, isTransparent, backgroundColor, light);
 
         color = (color & -67108864) == 0 ? color | -16777216 : color;
         HashMap<Integer, Emoji> emojis = new LinkedHashMap<>();
@@ -114,18 +113,36 @@ public class EmojiTextRenderer extends TextRenderer {
             return true;
         });
 
+        Matrix4f frontMatrix = new Matrix4f(matrix);
+
+        if (shadow) {
+            EmojiLiteralVisitor emojiLiteralVisitor = new EmojiLiteralVisitor(
+                    emojis,
+                    vertexConsumers,
+                    x,
+                    y,
+                    color,
+                    true,
+                    matrix,
+                    isTransparent,
+                    light
+            );
+            OrderedText.innerConcat(processors).accept(emojiLiteralVisitor);
+            emojiLiteralVisitor.finish(backgroundColor, x);
+            matrix.addToLastColumn(TextRenderer.FORWARD_SHIFT);
+        }
+
         EmojiLiteralVisitor emojiLiteralVisitor = new EmojiLiteralVisitor(
                 emojis,
                 vertexConsumers,
                 x,
                 y,
                 color,
-                shadow,
-                matrix,
+                false,
+                frontMatrix,
                 isTransparent,
                 light
         );
-
         OrderedText.innerConcat(processors).accept(emojiLiteralVisitor);
         emojiLiteralVisitor.finish(backgroundColor, x);
 
