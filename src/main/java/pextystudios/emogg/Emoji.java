@@ -71,7 +71,15 @@ public class Emoji {
             int light
     ) {
         float textureSize = 16, textureX = 0, textureY = 0, textureOffset = 16 / textureSize, size = 10,
-                offsetY = 1, offsetX = 0;
+                offsetY = 1, offsetX = 0, width = size, height = size;
+        if (this.width < this.height) {
+            width *= ((float) this.width / this.height);
+            x += (size - width) / 2;
+        }
+        else if (this.height < this.width) {
+            height *= ((float) this.height / this.width);
+            y += (size - height) / 2;
+        }
 
         VertexConsumer buffer = multiBufferSource.getBuffer(getRenderType());
 
@@ -80,17 +88,17 @@ public class Emoji {
                 .uv(textureX, textureY)
                 .uv2(light)
                 .endVertex();
-        buffer.vertex(matrix4f, x - offsetX, y + size - offsetY, 0.0F)
+        buffer.vertex(matrix4f, x - offsetX, y + height - offsetY, 0.0F)
                 .color(255, 255, 255, 255)
                 .uv(textureX, textureY + textureOffset)
                 .uv2(light)
                 .endVertex();
-        buffer.vertex(matrix4f, x - offsetX + size, y + size - offsetY, 0.0F)
+        buffer.vertex(matrix4f, x - offsetX + width, y + height - offsetY, 0.0F)
                 .color(255, 255, 255, 255)
                 .uv(textureX + textureOffset, textureY + textureOffset)
                 .uv2(light)
                 .endVertex();
-        buffer.vertex(matrix4f, x - offsetX + size, y - offsetY, 0.0F)
+        buffer.vertex(matrix4f, x - offsetX + width, y - offsetY, 0.0F)
                 .color(255, 255, 255, 255)
                 .uv(textureX + textureOffset, textureY / textureSize)
                 .uv2(light)
