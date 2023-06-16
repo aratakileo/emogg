@@ -6,12 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "CommandSuggestorAccessor",
-    "CommandSuggestorMixin",
-    "MinecraftClientMixin",
-    "SelectionManagerMixin",
-    "SuggestionWindowMixin",
-    "TextFieldWidgetMixin"
+    "CommandSuggestionsMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

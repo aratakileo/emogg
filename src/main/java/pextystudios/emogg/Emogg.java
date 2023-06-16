@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.*;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,17 +28,18 @@ public class Emogg implements ClientModInitializer {
     public void onInitializeClient() {
         INSTANCE = this;
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
-            public Identifier getFabricId() {
-                return new Identifier("customemotes", "emotes");
+            public ResourceLocation getFabricId() {
+                return new ResourceLocation("customemotes", "emotes");
             }
 
-            public void reload(ResourceManager manager) {
+            @Override
+            public void onResourceManagerReload(ResourceManager resourceManager) {
                 LOGGER.info("Emoji load has started...");
 
-                for (Identifier identifier: manager.findResources("emoji/", path -> path.endsWith(".png")))
-                    regEmoji(new Emoji(identifier));
+                for (ResourceLocation resourceLocation: resourceManager.listResources("emoji/", path -> path.endsWith(".png")))
+                    regEmoji(new Emoji(resourceLocation));
 
                 LOGGER.info("All emojis loaded!");
             }
