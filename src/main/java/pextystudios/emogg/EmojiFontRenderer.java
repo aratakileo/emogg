@@ -20,7 +20,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.jetbrains.annotations.NotNull;
-import oshi.util.tuples.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,17 +29,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EmojiFontRenderer extends Font {
 
-    public static LoadingCache<String, Pair<String, HashMap<Integer, Emoji>>> TEXT_DATA_CACHE = CacheBuilder.newBuilder()
+    public static LoadingCache<String, EmojiTextBuilder> EMOJI_TEXT_BUILDERS_CHACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(60, TimeUnit.SECONDS)
             .build(new CacheLoader<>() {
                 @Override
-                public @NotNull Pair<String, HashMap<Integer, Emoji>> load(@NotNull String key) {
-                    return getTextDataForRender(key);
+                public @NotNull EmojiTextBuilder load(@NotNull String key) {
+                    return new EmojiTextBuilder(key);
                 }
             });
 
@@ -68,13 +65,21 @@ public class EmojiFontRenderer extends Font {
         if (text.isEmpty()) return 0;
 
         try {
-            Pair<String, HashMap<Integer, Emoji>> cache = TEXT_DATA_CACHE.get(text);
+            EmojiTextBuilder emojiTextBuilder = EMOJI_TEXT_BUILDERS_CHACHE.get(text);
 
             EmojiCharSink emojiCharSink = new EmojiCharSink(
-                    cache.getB(), multiBufferSource, x, y, color, shadow, matrix, isTransparent, light
+                    emojiTextBuilder.getEmojiIndexes(),
+                    multiBufferSource,
+                    x,
+                    y,
+                    color,
+                    shadow,
+                    matrix,
+                    isTransparent,
+                    light
             );
 
-            StringDecomposer.iterateFormatted(cache.getA(), Style.EMPTY, emojiCharSink);
+            StringDecomposer.iterateFormatted(emojiTextBuilder.getBuiltText(), Style.EMPTY, emojiCharSink);
 
             emojiCharSink.finish(underlineColor, x);
 
@@ -92,15 +97,16 @@ public class EmojiFontRenderer extends Font {
             return super.drawInBatch((FormattedCharSequence)null, x, y, color, shadow, matrix, multiBufferSource, isTransparent, backgroundColor, light);
 
         color = (color & -67108864) == 0 ? color | -16777216 : color;
-        HashMap<Integer, Emoji> emojis = new LinkedHashMap<>();
+        HashMap<Integer, Emoji> emojiIndexes = new LinkedHashMap<>();
+
         try {
-            Pair<String, HashMap<Integer, Emoji>> cache = TEXT_DATA_CACHE.get(text);
-            emojis = cache.getB();
+            emojiIndexes = EMOJI_TEXT_BUILDERS_CHACHE.get(text).getEmojiIndexes();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
         List<FormattedCharSequence> processors = new ArrayList<>();
-        HashMap<Integer, Emoji> finalEmojis = emojis;
+        HashMap<Integer, Emoji> finalEmojis = emojiIndexes;
         AtomicInteger cleanPos = new AtomicInteger();
         AtomicBoolean ignore = new AtomicBoolean(false);
 
@@ -125,7 +131,7 @@ public class EmojiFontRenderer extends Font {
 
         if (shadow) {
             EmojiCharSink emojiCharSink = new EmojiCharSink(
-                    emojis,
+                    emojiIndexes,
                     multiBufferSource,
                     x,
                     y,
@@ -141,7 +147,7 @@ public class EmojiFontRenderer extends Font {
         }
 
         EmojiCharSink emojiCharSink = new EmojiCharSink(
-                emojis,
+                emojiIndexes,
                 multiBufferSource,
                 x,
                 y,
@@ -160,7 +166,7 @@ public class EmojiFontRenderer extends Font {
     @Override
     public int width(String text) {
         try {
-            text = TEXT_DATA_CACHE.get(text).getA();
+            text = EMOJI_TEXT_BUILDERS_CHACHE.get(text).getBuiltText();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -324,31 +330,6 @@ public class EmojiFontRenderer extends Font {
             return true;
         });
         return stringBuilder.toString();
-    }
-
-    public static Pair<String, HashMap<Integer, Emoji>> getTextDataForRender(String text) {
-        HashMap<Integer, Emoji> emojiIndexes = new LinkedHashMap<>();
-
-        Matcher matcher = Pattern.compile("(:([_A-Za-z0-9]+):)").matcher(text);
-        int sourceEmojiIndexesOffset = 0;
-
-        while (matcher.find()) {
-            if (!Emogg.getInstance().emojis.containsKey(matcher.group(2)))
-                continue;
-
-            int lengthBeforeChanges = text.length();
-
-            text = text.replaceFirst(matcher.group(1), "\u2603");
-
-            emojiIndexes.put(
-                    matcher.start(1) - sourceEmojiIndexesOffset,
-                    Emogg.getInstance().emojis.get(matcher.group(2))
-            );
-
-            sourceEmojiIndexesOffset += lengthBeforeChanges - text.length();
-        }
-
-        return new Pair<>(text, emojiIndexes);
     }
 
     record FormattedEmojiSequence(int index, Style style, int codePoint) implements FormattedCharSequence {
