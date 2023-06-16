@@ -61,9 +61,9 @@ public class Emogg implements ClientModInitializer {
     }
 
     public Collection<String> getEmojiSuggestions() {
-        return Lists.newArrayList(this.emojis.keys().asIterator())
+        return Lists.newArrayList(this.emojis.values())
                 .stream()
-                .map(name -> ":" + name + ":")
+                .map(Emoji::getCode)
                 .collect(Collectors.toList());
     }
 

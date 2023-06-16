@@ -44,7 +44,10 @@ public class Emoji {
     }
 
     public Emoji(String name, ResourceLocation resourceLocation) {
-        this.name = name.replaceAll("-+| +|\\.+", "_");
+        this.name = name.toLowerCase()
+                .replaceAll("-+| +|\\.+", "_")
+                .replaceAll("[^a-z0-9_]", "");
+
         this.resourceLocation = resourceLocation;
 
         try {
@@ -58,18 +61,6 @@ public class Emoji {
         } catch (Exception e) {
             Emogg.LOGGER.error("Failed to load: \"" + resourceLocation.getPath() + '"', e);
         }
-    }
-
-    public boolean match(String string, int charIndex){
-        String code = getCode();
-
-        for(int i = 0; i < code.length(); i++){
-            int stringIndex = charIndex - i;
-            int codeIndex = code.length() - 1 - i;
-            if(stringIndex < 0 || codeIndex < 0) return false;
-            if(string.charAt(stringIndex) != code.charAt(codeIndex)) return false;
-        }
-        return true;
     }
 
     public void render(
