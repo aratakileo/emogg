@@ -1,4 +1,6 @@
-package pextystudios.emogg;
+package pextystudios.emogg.emoji;
+
+import pextystudios.emogg.Emogg;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

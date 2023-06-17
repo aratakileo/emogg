@@ -1,4 +1,4 @@
-package pextystudios.emogg;
+package pextystudios.emogg.emoji;
 
 
 import com.google.common.cache.CacheBuilder;

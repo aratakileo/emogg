@@ -9,6 +9,8 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pextystudios.emogg.emoji.AnimatedEmoji;
+import pextystudios.emogg.emoji.Emoji;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,8 +40,15 @@ public class Emogg implements ClientModInitializer {
             public void onResourceManagerReload(ResourceManager resourceManager) {
                 LOGGER.info("Emoji load has started...");
 
-                for (ResourceLocation resourceLocation: resourceManager.listResources("emoji/", path -> path.endsWith(".png")))
-                    regEmoji(new Emoji(resourceLocation));
+                for (ResourceLocation resourceLocation: resourceManager.listResources(
+                        "emoji/",
+                        path -> path.endsWith(".png") || path.endsWith("gif")
+                )) {
+                    if (resourceLocation.getPath().endsWith(".gif"))
+                        regEmoji(new AnimatedEmoji(resourceLocation));
+                    else
+                        regEmoji(new Emoji(resourceLocation));
+                }
 
                 LOGGER.info("All emojis loaded!");
             }
@@ -47,8 +56,10 @@ public class Emogg implements ClientModInitializer {
     }
 
     public void regEmoji(Emoji emoji) {
-        if (emoji.getWidth() == -1)
+        if (!emoji.isValid()) {
+            LOGGER.error("Invalid: " + emoji);
             return;
+        }
 
         if (emojis.containsKey(emoji.getName())) {
             LOGGER.error("Failed to load: " + emoji + ", because it is already defined!");
