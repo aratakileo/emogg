@@ -94,7 +94,7 @@ public class EmojiFontRenderer extends Font {
         String text;
 
         if (formattedCharSequence == null || (text = asString(formattedCharSequence)).isEmpty())
-            return super.drawInBatch((FormattedCharSequence)null, x, y, color, shadow, matrix, multiBufferSource, isTransparent, backgroundColor, light);
+            return 0;
 
         color = (color & -67108864) == 0 ? color | -16777216 : color;
         HashMap<Integer, Emoji> emojiIndexes = new LinkedHashMap<>();
@@ -195,7 +195,7 @@ public class EmojiFontRenderer extends Font {
         private final boolean isTransparent;
         private final int light;
 
-        private List<BakedGlyph.Effect> effects = List.of();
+        private final List<BakedGlyph.Effect> effects = new ArrayList<>();
 
         public EmojiCharSink(
                 HashMap<Integer, Emoji> emojiIndexes,
