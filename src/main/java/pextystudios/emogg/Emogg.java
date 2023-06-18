@@ -9,8 +9,8 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pextystudios.emogg.emoji.AnimatedEmoji;
 import pextystudios.emogg.emoji.Emoji;
+import pextystudios.emogg.util.ResourceUtil;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +24,7 @@ public class Emogg implements ClientModInitializer {
 
     public static final String NAMESPACE = "emogg";
 
-    public final ConcurrentHashMap<String, Emoji> emojis = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -40,15 +40,11 @@ public class Emogg implements ClientModInitializer {
             public void onResourceManagerReload(ResourceManager resourceManager) {
                 LOGGER.info("Emoji load has started...");
 
-                for (ResourceLocation resourceLocation: resourceManager.listResources(
-                        "emoji/",
-                        path -> path.endsWith(".png") || path.endsWith("gif")
-                )) {
-                    if (resourceLocation.getPath().endsWith(".gif"))
-                        regEmoji(new AnimatedEmoji(resourceLocation));
-                    else
-                        regEmoji(new Emoji(resourceLocation));
-                }
+                ResourceUtil.processModResources(
+                        "emoji",
+                        string -> string.endsWith(".png") || string.endsWith(".gif"),
+                        resourceLocation -> regEmoji(Emoji.from(resourceLocation))
+                );
 
                 LOGGER.info("All emojis loaded!");
             }
@@ -61,18 +57,18 @@ public class Emogg implements ClientModInitializer {
             return;
         }
 
-        if (emojis.containsKey(emoji.getName())) {
+        if (allEmojis.containsKey(emoji.getName())) {
             LOGGER.error("Failed to load: " + emoji + ", because it is already defined!");
             return;
         }
 
         LOGGER.info("Loaded: " + emoji);
 
-        emojis.put(emoji.getName(), emoji);
+        allEmojis.put(emoji.getName(), emoji);
     }
 
     public Collection<String> getEmojiSuggestions() {
-        return Lists.newArrayList(this.emojis.values())
+        return Lists.newArrayList(this.allEmojis.values())
                 .stream()
                 .map(Emoji::getCode)
                 .collect(Collectors.toList());

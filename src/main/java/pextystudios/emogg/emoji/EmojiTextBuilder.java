@@ -25,7 +25,7 @@ public class EmojiTextBuilder {
         Matcher matcher = pattern.matcher(builtText);
 
         while (matcher.find()) {
-            if (!Emogg.getInstance().emojis.containsKey(matcher.group(2)))
+            if (!Emogg.getInstance().allEmojis.containsKey(matcher.group(2)))
                 continue;
 
             int lengthBeforeChanges = builtText.length();
@@ -34,7 +34,7 @@ public class EmojiTextBuilder {
 
             emojiIndexes.put(
                     matcher.start(1) - lengthDifference,
-                    Emogg.getInstance().emojis.get(matcher.group(2))
+                    Emogg.getInstance().allEmojis.get(matcher.group(2))
             );
 
             lengthDifference += lengthBeforeChanges - builtText.length();

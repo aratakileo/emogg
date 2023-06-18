@@ -1,16 +1,14 @@
 package pextystudios.emogg.emoji;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.StringUtil;
+import pextystudios.emogg.util.EmojiUtil;
+import pextystudios.emogg.util.StringUtil;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 
 public class Emoji {
     protected final String name;
@@ -22,12 +20,7 @@ public class Emoji {
     }
 
     public Emoji(ResourceLocation resourceLocation) {
-        this(
-                resourceLocation.getPath()
-                        .transform(name -> name.substring(name.lastIndexOf('/') + 1))
-                        .transform(name -> name.substring(0, name.lastIndexOf('.'))),
-                resourceLocation
-        );
+        this(getNameFromPath(resourceLocation.getPath()), resourceLocation);
     }
 
     public Emoji(String name, String fileName) {
@@ -35,13 +28,7 @@ public class Emoji {
     }
 
     public Emoji(String name, ResourceLocation resourceLocation) {
-        this.name = StringUtil.strip(
-                name.toLowerCase()
-                        .replaceAll("-+| +|\\.+", "_")
-                        .replaceAll("[^a-z0-9_]", ""),
-                '_'
-        );
-
+        this.name = normalizeName(name);
         this.resourceLocation = resourceLocation;
 
         load();
@@ -139,5 +126,26 @@ public class Emoji {
         } catch (Exception e) {
             Emogg.LOGGER.error("Failed to load: \"" + resourceLocation.getPath() + '"', e);
         }
+    }
+
+    public static Emoji from(ResourceLocation resourceLocation) {
+        if (resourceLocation.getPath().endsWith(".gif"))
+            return new AnimatedEmoji(resourceLocation);
+
+        return new Emoji(resourceLocation);
+    }
+
+    protected static String normalizeName(String sourceName) {
+        return StringUtil.strip(
+                sourceName.toLowerCase()
+                        .replaceAll("-+| +|\\.+", "_")
+                        .replaceAll("[^a-z0-9_]", ""),
+                '_'
+        );
+    }
+
+    protected static String getNameFromPath(String path) {
+        return path.transform(name -> name.substring(name.lastIndexOf('/') + 1))
+                .transform(name -> name.substring(0, name.lastIndexOf('.')));
     }
 }

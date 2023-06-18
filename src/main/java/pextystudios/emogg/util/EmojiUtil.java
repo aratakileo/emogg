@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji;
+package pextystudios.emogg.util;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.NativeImage;
@@ -80,14 +80,16 @@ public final class EmojiUtil {
                             Minecraft.getInstance()
                                     .getTextureManager()
                                     .register(
-                                            originalFileName.substring(
-                                                    originalFileName.lastIndexOf('.') + 1
-                                            ),
+                                            "emoji/" + originalFileName.substring(
+                                                    0, originalFileName.lastIndexOf('.')
+                                            ) + "_frame_" + i + ".png",
                                             new DynamicTexture(NativeImage.read(newImageStream))
                                     ),
                             frameDelayTime
                     )
             );
+
+//            Emogg.LOGGER.info(String.format("Frame: %s, of: %s", resourceLocation.getPath(), frames.get(frames.size() - 1).getA().getPath()));
         }
 
         totalDelayTime += frameDelayTime;

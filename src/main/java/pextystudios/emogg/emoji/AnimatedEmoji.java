@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Pair;
 import pextystudios.emogg.Emogg;
+import pextystudios.emogg.util.EmojiUtil;
 
 import java.util.List;
 

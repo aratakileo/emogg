@@ -1,4 +1,4 @@
-package pextystudios.emogg;
+package pextystudios.emogg.util;
 
 public final class StringUtil {
     public static String lstrip(String source, char stripChar) {
