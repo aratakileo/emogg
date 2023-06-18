@@ -10,7 +10,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pextystudios.emogg.emoji.Emoji;
-import pextystudios.emogg.util.ResourceUtil;
+import pextystudios.emogg.util.StringUtil;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +24,7 @@ public class Emogg implements ClientModInitializer {
 
     public static final String NAMESPACE = "emogg";
 
-    public ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
+    public final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -33,38 +33,49 @@ public class Emogg implements ClientModInitializer {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public ResourceLocation getFabricId() {
-                return new ResourceLocation("customemotes", "emotes");
+                return new ResourceLocation(NAMESPACE, Emoji.EMOJIS_PATH_PREFIX);
             }
 
             @Override
             public void onResourceManagerReload(ResourceManager resourceManager) {
-                LOGGER.info("Emoji load has started...");
+                LOGGER.info("Updating emoji lists...");
 
-                ResourceUtil.processModResources(
-                        "emoji",
-                        string -> string.endsWith(".png") || string.endsWith(".gif"),
-                        resourceLocation -> regEmoji(Emoji.from(resourceLocation))
-                );
+                allEmojis.clear();
 
-                LOGGER.info("All emojis loaded!");
+                for (var resourceLocation: resourceManager.listResources(Emoji.EMOJIS_PATH_PREFIX, Emoji.HAS_EMOJIS_EXTENSION))
+                    regEmoji(resourceLocation);
+
+                LOGGER.info("Updating the lists is complete!");
             }
         });
     }
 
-    public void regEmoji(Emoji emoji) {
+    private void regEmoji(ResourceLocation resourceLocation) {
+        var emojiName = Emoji.normalizeName(Emoji.getNameFromPath(resourceLocation));
+
+        if (allEmojis.containsKey(emojiName)) {
+            if (allEmojis.get(emojiName).getResourceLocation().equals(resourceLocation)) {
+                LOGGER.error(String.format("Failed to load %s, because it is already defined", StringUtil.repr(resourceLocation)));
+                return;
+            }
+
+            var emojiNameIndex = 0;
+            var newEmojiName = emojiName + emojiNameIndex;
+
+            while (allEmojis.containsKey(newEmojiName)) {
+                emojiNameIndex++;
+                newEmojiName = emojiName + emojiNameIndex;
+            }
+        }
+
+        var emoji = Emoji.from(emojiName, resourceLocation);
+
         if (!emoji.isValid()) {
-            LOGGER.error("Invalid: " + emoji);
+            LOGGER.error(String.format("Failed to load %s, because it has invalid format", StringUtil.repr(resourceLocation)));
             return;
         }
 
-        if (allEmojis.containsKey(emoji.getName())) {
-            LOGGER.error("Failed to load: " + emoji + ", because it is already defined!");
-            return;
-        }
-
-        LOGGER.info("Loaded: " + emoji);
-
-        allEmojis.put(emoji.getName(), emoji);
+        LOGGER.info(String.format("Loaded %s as %s", StringUtil.repr(resourceLocation), emoji.getCode()));
     }
 
     public Collection<String> getEmojiSuggestions() {

@@ -6,15 +6,18 @@ import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Pair;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.util.EmojiUtil;
+import pextystudios.emogg.util.StringUtil;
 
 import java.util.List;
 
 public class AnimatedEmoji extends Emoji {
+    public static final String ANIMATED_EMOJI_EXTENSION = ".gif";
+
     protected List<Pair<ResourceLocation, Integer>> framesData;
     protected int totalDelayTime, delayTimeBehind = 0, currentFrameIndex = 0;
 
     public AnimatedEmoji(String name) {
-        super(name, "emoji/" + name + ".gif");
+        super(name);
     }
 
     public AnimatedEmoji(ResourceLocation resourceLocation) {
@@ -68,12 +71,13 @@ public class AnimatedEmoji extends Emoji {
     protected void load() {
         try {
             var imageData = EmojiUtil.splitGif(resourceLocation);
+
             width = imageData.getA().getA();
             height = imageData.getA().getB();
             totalDelayTime = imageData.getB();
             framesData = imageData.getC();
         } catch (Exception e) {
-            Emogg.LOGGER.error("Failed to load: \"" + resourceLocation.getPath() + '"', e);
+            Emogg.LOGGER.error("Failed to load: " + StringUtil.repr(resourceLocation), e);
         }
     }
 }

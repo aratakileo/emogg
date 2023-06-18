@@ -9,14 +9,20 @@ import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.StringUtil;
 
 import javax.imageio.ImageIO;
+import java.util.function.Predicate;
 
 public class Emoji {
+    public static final String STATIC_EMOJI_EXTENSION = ".png";
+    public static final Predicate<String> HAS_EMOJIS_EXTENSION = path -> path.endsWith(STATIC_EMOJI_EXTENSION) || path.endsWith(AnimatedEmoji.ANIMATED_EMOJI_EXTENSION);
+
+    public static final String EMOJIS_PATH_PREFIX = "emoji";
+
     protected final String name;
     protected final ResourceLocation resourceLocation;
     protected int width = -1, height = -1;
 
     public Emoji(String name) {
-        this(name, "emoji/" + name + ".png");
+        this(name, EMOJIS_PATH_PREFIX + '/' + name + STATIC_EMOJI_EXTENSION);
     }
 
     public Emoji(ResourceLocation resourceLocation) {
@@ -109,11 +115,6 @@ public class Emoji {
         return width != -1 && height != -1;
     }
 
-    @Override
-    public String toString() {
-        return '{' + name + ": " + resourceLocation.getPath() + '}';
-    }
-
     protected void load() {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
@@ -124,18 +125,18 @@ public class Emoji {
 
             resource.close();
         } catch (Exception e) {
-            Emogg.LOGGER.error("Failed to load: \"" + resourceLocation.getPath() + '"', e);
+            Emogg.LOGGER.error("Failed to load: " + StringUtil.repr(resourceLocation), e);
         }
     }
 
-    public static Emoji from(ResourceLocation resourceLocation) {
-        if (resourceLocation.getPath().endsWith(".gif"))
-            return new AnimatedEmoji(resourceLocation);
+    public static Emoji from(String name, ResourceLocation resourceLocation) {
+        if (resourceLocation.getPath().endsWith(AnimatedEmoji.ANIMATED_EMOJI_EXTENSION))
+            return new AnimatedEmoji(name, resourceLocation);
 
-        return new Emoji(resourceLocation);
+        return new Emoji(name, resourceLocation);
     }
 
-    protected static String normalizeName(String sourceName) {
+    public static String normalizeName(String sourceName) {
         return StringUtil.strip(
                 sourceName.toLowerCase()
                         .replaceAll("-+| +|\\.+", "_")
@@ -144,7 +145,11 @@ public class Emoji {
         );
     }
 
-    protected static String getNameFromPath(String path) {
+    public static String getNameFromPath(ResourceLocation resourceLocation) {
+        return getNameFromPath(resourceLocation.toString());
+    }
+
+    public static String getNameFromPath(String path) {
         return path.transform(name -> name.substring(name.lastIndexOf('/') + 1))
                 .transform(name -> name.substring(0, name.lastIndexOf('.')));
     }
