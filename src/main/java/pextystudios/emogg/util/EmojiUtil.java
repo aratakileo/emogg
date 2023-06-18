@@ -15,24 +15,22 @@ import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Node;
 import oshi.util.tuples.Pair;
 import oshi.util.tuples.Triplet;
-import pextystudios.emogg.Emogg;
 
 import javax.imageio.ImageIO;
 import javax.imageio.metadata.IIOMetadataNode;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 
 public final class EmojiUtil {
-    public static Triplet<Pair<Integer, Integer>, Integer, List<Pair<ResourceLocation, Integer>>> splitGif(
+    public static Triplet<Pair<Integer, Integer>, Integer, ConcurrentHashMap<Integer, Pair<ResourceLocation, Integer>>> splitGif(
             ResourceLocation resourceLocation
     ) throws IOException {
         var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-        var frames = new ArrayList<Pair<ResourceLocation, Integer>>();
+        var frames = new ConcurrentHashMap<Integer, Pair<ResourceLocation, Integer>>();
 
         var reader = ImageIO.getImageReadersBySuffix("gif").next();
         reader.setInput(ImageIO.createImageInputStream(resource.getInputStream()), false);
@@ -74,8 +72,9 @@ public final class EmojiUtil {
                     Math.max(imageSize.getA(), newImage.getWidth()),
                     Math.max(imageSize.getB(), newImage.getHeight())
             );
-
-            frames.add(
+            
+            frames.put(
+                    totalDelayTime,
                     new Pair<>(
                             Minecraft.getInstance()
                                     .getTextureManager()
@@ -88,8 +87,6 @@ public final class EmojiUtil {
                             frameDelayTime
                     )
             );
-
-//            Emogg.LOGGER.info(String.format("Frame: %s, of: %s", resourceLocation.getPath(), frames.get(frames.size() - 1).getA().getPath()));
         }
 
         totalDelayTime += frameDelayTime;

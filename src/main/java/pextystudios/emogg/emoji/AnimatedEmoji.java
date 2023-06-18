@@ -8,12 +8,12 @@ import pextystudios.emogg.Emogg;
 import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.StringUtil;
 
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AnimatedEmoji extends Emoji {
     public static final String ANIMATED_EMOJI_EXTENSION = ".gif";
 
-    protected List<Pair<ResourceLocation, Integer>> framesData;
+    protected ConcurrentHashMap<Integer, Pair<ResourceLocation, Integer>> framesData;
     protected int totalDelayTime, delayTimeBehind = 0, currentFrameIndex = 0;
 
     public AnimatedEmoji(String name) {
@@ -36,20 +36,12 @@ public class AnimatedEmoji extends Emoji {
         if (framesData.size() == 1)
             return framesData.get(0).getA();
 
-        var currentFrameData = framesData.get(currentFrameIndex);
-        var currentTimeDelay = (int)(System.currentTimeMillis() / 10D % totalDelayTime);
+        var currentPart = (int)(System.currentTimeMillis() / 10D % totalDelayTime);
 
-        if (currentTimeDelay <= 1 && currentFrameIndex == framesData.size() - 1) {
-            delayTimeBehind = 0;
-            currentFrameIndex = 0;
-        }
+        while (!framesData.containsKey(currentPart))
+            currentPart--;
 
-        if (currentTimeDelay >= (currentFrameData.getB() + delayTimeBehind)) {
-            delayTimeBehind += currentFrameData.getB();
-            currentFrameIndex++;
-        }
-
-        return framesData.get(currentFrameIndex).getA();
+        return framesData.get(currentPart).getA();
     }
 
     @Override

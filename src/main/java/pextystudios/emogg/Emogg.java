@@ -75,6 +75,8 @@ public class Emogg implements ClientModInitializer {
             return;
         }
 
+        allEmojis.put(emojiName, emoji);
+
         LOGGER.info(String.format("Loaded %s as %s", StringUtil.repr(resourceLocation), emoji.getCode()));
     }
 
