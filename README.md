@@ -1,4 +1,4 @@
-# Enogg for better chatting experienсe! [1.17+]
+# Emogg for better chatting experienсe! [1.17+]
 Adds emoji support to the chat and to most of the Minecraft interface.
 Emoji are specified in the format: `:emoji_name:`
 
