@@ -1,4 +1,4 @@
-# Emogg for better chatting experienсe! [1.17+]
+# Emogg for better chatting experienсe! [1.17+] <img src="https://github.com/teacondemns/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 Adds emoji support to the chat and to most of the Minecraft interface.
 Emoji are specified in the format: `:emoji_name:`
 
