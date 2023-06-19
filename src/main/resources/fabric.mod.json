@@ -3,7 +3,7 @@
   "id": "emogg",
   "version": "${version}",
   "name": "emogg",
-  "description": "The mod draws and adds emojis in the text of the entire minecraft interface",
+  "description": "Adds emoji support to the chat and to most of the Minecraft interface",
   "authors": [
     "Arataki Leo"
   ],
