@@ -2,7 +2,7 @@
 Adds emoji support to the chat and to most of the Minecraft interface.
 Emoji are specified in the format: `:emoji_name:`
 
-![](/preview-1.png)
+![](preview/preview-1.png)
 
 Features:
 - add new emoji by texture pack (just insert your images to `assets/emogg/emoji/`)
