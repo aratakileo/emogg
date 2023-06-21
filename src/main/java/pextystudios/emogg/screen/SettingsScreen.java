@@ -14,9 +14,9 @@ public class SettingsScreen extends AbstractScreen {
     @Override
     protected void init() {
         addRenderableWidget(new Button(
-                (this.width - 150) / 2,
-                (this.height - 20) / 2,
-                150,
+                (width - 200) / 2,
+                (height - 20) / 2,
+                200,
                 20,
                 getBuiltinEmojiSwitcherText(),
                 button -> {
