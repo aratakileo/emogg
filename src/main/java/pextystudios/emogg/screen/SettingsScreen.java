@@ -28,7 +28,7 @@ public class SettingsScreen extends AbstractScreen {
 
     private Component getBuiltinEmojiSwitcherText() {
         return new TextComponent(
-                "Built-in emojis: " + (ConfigContainer.data.isBuiltinEmojiEnabled ? "Enabled" : "Disabled")
+                "Built-in emojis in prompts: " + (ConfigContainer.data.isBuiltinEmojiEnabled ? "Enabled" : "Disabled")
         );
     }
 
