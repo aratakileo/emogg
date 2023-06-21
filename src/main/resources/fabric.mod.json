@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "pextystudios.emogg.Emogg"
+    ],
+    "modmenu": [
+      "pextystudios.emogg.ModMenuApiImpl"
     ]
   },
   "mixins": [

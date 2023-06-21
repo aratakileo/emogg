@@ -14,5 +14,7 @@ public class Emogg implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         new EmojiHandler();
+
+        ConfigContainer.load();
     }
 }

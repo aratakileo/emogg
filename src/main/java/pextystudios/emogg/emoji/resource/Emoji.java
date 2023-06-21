@@ -124,7 +124,11 @@ public class Emoji {
         }
     }
 
-    public static Emoji from(String name, ResourceLocation resourceLocation) {
+    public static Emoji of(ResourceLocation resourceLocation) {
+        return of(normalizeName(getNameFromPath(resourceLocation)), resourceLocation);
+    }
+
+    public static Emoji of(String name, ResourceLocation resourceLocation) {
         if (resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION))
             return new AnimatedEmoji(name, resourceLocation);
 

@@ -7,7 +7,7 @@
   ],
   "client": [
     "CommandSuggestionsMixin",
-    "MinecraftClientMixin"
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1
