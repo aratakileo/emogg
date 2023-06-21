@@ -1,28 +1,23 @@
-package pextystudios.emogg.emoji;
+package pextystudios.emogg.emoji.resource;
 
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
+import pextystudios.emogg.emoji.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.StringUtil;
 
 import javax.imageio.ImageIO;
-import java.util.function.Predicate;
 
 public class Emoji {
-    public static final String STATIC_EMOJI_EXTENSION = ".png";
-    public static final Predicate<String> HAS_EMOJIS_EXTENSION = path -> path.endsWith(STATIC_EMOJI_EXTENSION) || path.endsWith(AnimatedEmoji.ANIMATED_EMOJI_EXTENSION);
-
-    public static final String EMOJIS_PATH_PREFIX = "emoji";
-
     protected final String name;
     protected final ResourceLocation resourceLocation;
     protected int width = -1, height = -1;
 
     public Emoji(String name) {
-        this(name, EMOJIS_PATH_PREFIX + '/' + name + STATIC_EMOJI_EXTENSION);
+        this(name, EmojiHandler.EMOJIS_PATH_PREFIX + '/' + name + EmojiHandler.STATIC_EMOJI_EXTENSION);
     }
 
     public Emoji(ResourceLocation resourceLocation) {
@@ -130,7 +125,7 @@ public class Emoji {
     }
 
     public static Emoji from(String name, ResourceLocation resourceLocation) {
-        if (resourceLocation.getPath().endsWith(AnimatedEmoji.ANIMATED_EMOJI_EXTENSION))
+        if (resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION))
             return new AnimatedEmoji(name, resourceLocation);
 
         return new Emoji(name, resourceLocation);

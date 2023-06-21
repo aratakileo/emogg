@@ -1,6 +1,6 @@
 package pextystudios.emogg.emoji;
 
-import pextystudios.emogg.Emogg;
+import pextystudios.emogg.emoji.resource.Emoji;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -25,7 +25,7 @@ public class EmojiTextBuilder {
         Matcher matcher = pattern.matcher(builtText);
 
         while (matcher.find()) {
-            if (!Emogg.getInstance().allEmojis.containsKey(matcher.group(2)))
+            if (!EmojiHandler.getInstance().hasEmoji(matcher.group(2)))
                 continue;
 
             int lengthBeforeChanges = builtText.length();
@@ -34,7 +34,7 @@ public class EmojiTextBuilder {
 
             emojiIndexes.put(
                     matcher.start(1) - lengthDifference,
-                    Emogg.getInstance().allEmojis.get(matcher.group(2))
+                    EmojiHandler.getInstance().getEmoji(matcher.group(2))
             );
 
             lengthDifference += lengthBeforeChanges - builtText.length();

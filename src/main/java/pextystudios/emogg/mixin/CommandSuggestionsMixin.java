@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pextystudios.emogg.Emogg;
+import pextystudios.emogg.emoji.EmojiHandler;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -52,7 +53,10 @@ public abstract class CommandSuggestionsMixin {
             int whitespace = getLastPattern(textUptoCursor, WHITESPACE_PATTERN);
             if(start < textUptoCursor.length() && start >= whitespace){
                 if(textUptoCursor.charAt(start) == ':') {
-                    this.pendingSuggestions = SharedSuggestionProvider.suggest(Emogg.getInstance().getEmojiSuggestions(), new SuggestionsBuilder(textUptoCursor, start));
+                    this.pendingSuggestions = SharedSuggestionProvider.suggest(
+                            EmojiHandler.getInstance().getEmojiSuggestions(),
+                            new SuggestionsBuilder(textUptoCursor, start)
+                    );
                     this.pendingSuggestions.thenRun(() -> {
                         if (!this.pendingSuggestions.isDone()) {
                             return;

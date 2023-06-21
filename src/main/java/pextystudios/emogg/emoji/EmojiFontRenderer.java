@@ -20,6 +20,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.jetbrains.annotations.NotNull;
+import pextystudios.emogg.emoji.resource.Emoji;
 
 import java.util.ArrayList;
 import java.util.HashMap;

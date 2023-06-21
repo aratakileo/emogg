@@ -1,5 +1,5 @@
-@set current_ver=1.0-BETA
-@set prev_ver=1.0.0
+@set current_ver=1.0-BETA.1
+@set prev_ver=1.0-BETA
 @set file_prefix=emogg-
 @set file_postfix=.jar
 

@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji;
+package pextystudios.emogg.emoji.resource;
 
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,10 +11,8 @@ import pextystudios.emogg.util.StringUtil;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AnimatedEmoji extends Emoji {
-    public static final String ANIMATED_EMOJI_EXTENSION = ".gif";
-
     protected ConcurrentHashMap<Integer, Pair<ResourceLocation, Integer>> framesData;
-    protected int totalDelayTime, delayTimeBehind = 0, currentFrameIndex = 0;
+    protected int totalDelayTime;
 
     public AnimatedEmoji(String name) {
         super(name);
