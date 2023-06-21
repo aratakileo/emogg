@@ -8,3 +8,5 @@ Emoji are specified in the format: `:emoji_name:`
 - add new emoji by texture pack (just insert your images to `assets/emogg/emoji/`)
 - when you enter emojis, hints appear in the form of the most appropriate emoji names
 - support for both static (`.png`) and animated (`.gif`) emojis
+
+[![](banner.png)](https://github.com/aratakileo/emogg/raw/main/emogg-addon.zip)
