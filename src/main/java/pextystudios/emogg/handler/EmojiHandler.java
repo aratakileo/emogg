@@ -29,6 +29,7 @@ public class EmojiHandler {
         return path.endsWith(STATIC_EMOJI_EXTENSION) || path.endsWith(ANIMATED_EMOJI_EXTENSION);
     };
     public static final String EMOJIS_PATH_PREFIX = "emoji";
+    public static final int EMOJI_DEFAULT_RENDER_SIZE = 10;
 
     private final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Emoji> builtinEmojis = new ConcurrentHashMap<>();
@@ -60,10 +61,24 @@ public class EmojiHandler {
     }
 
     public Optional<Emoji> getRandomEmoji() {
+        return getRandomEmoji(false);
+    }
+
+    public Optional<Emoji> getRandomEmoji(boolean includeBuiltinEmojisIfThereIsNoUserEmojis) {
         return allEmojis.values()
                 .stream()
-                .filter(IS_NOT_BUILTIN_EMOJI)
-                .skip((int) ((allEmojis.size() - builtinEmojis.size()) * Math.random()))
+                .filter(emoji -> (
+                        builtinEmojis.size() == allEmojis.size() && includeBuiltinEmojisIfThereIsNoUserEmojis
+                ) || IS_NOT_BUILTIN_EMOJI.test(emoji))
+                .skip(
+                        (int) (
+                                (
+                                        allEmojis.size() - (
+                                                ConfigHandler.data.isBuiltinEmojiEnabled ? 0 : builtinEmojis.size()
+                                        )
+                                ) * Math.random()
+                        )
+                )
                 .findFirst();
     }
 

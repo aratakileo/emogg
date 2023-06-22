@@ -30,7 +30,8 @@ public class AnimatedEmoji extends Emoji {
         super(name, resourceLocation);
     }
 
-    public ResourceLocation getCurrentFrameResourceLocation() {
+    @Override
+    public ResourceLocation getRenderResourceLocation() {
         if (framesData.size() == 1)
             return framesData.get(0).getA();
 
@@ -50,11 +51,6 @@ public class AnimatedEmoji extends Emoji {
     @Override
     public boolean isValid() {
         return super.isValid() && totalDelayTime > 0;
-    }
-
-    @Override
-    public void render(float x, float y, Matrix4f matrix4f, MultiBufferSource multiBufferSource, int light) {
-        render(getCurrentFrameResourceLocation(), x, y, matrix4f, multiBufferSource, light);
     }
 
     @Override

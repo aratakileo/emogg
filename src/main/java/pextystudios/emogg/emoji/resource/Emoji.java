@@ -1,7 +1,10 @@
 package pextystudios.emogg.emoji.resource;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
@@ -35,6 +38,26 @@ public class Emoji {
         load();
     }
 
+    public void render(int x, int y, int width, int height, PoseStack poseStack) {
+        var sourceWidth = width;
+        var sourceHeight = height;
+
+        if (this.width < this.height) {
+            width *= ((float) this.width / this.height);
+            x += (sourceWidth - width) / 2;
+        }
+        else if (this.height < this.width) {
+            height *= ((float) this.height / this.width);
+            y += (sourceHeight - height) / 2;
+        }
+
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.setShaderTexture(0, getRenderResourceLocation());
+        RenderSystem.enableBlend();
+        GuiComponent.blit(poseStack, x, y, 0f, 0f, width, height, width, height);
+        RenderSystem.disableBlend();
+    }
+
     public void render(
             float x,
             float y,
@@ -42,29 +65,18 @@ public class Emoji {
             MultiBufferSource multiBufferSource,
             int light
     ) {
-        render(resourceLocation, x, y, matrix4f, multiBufferSource, light);
-    }
-
-    protected void render(
-            ResourceLocation resourceLocation,
-            float x,
-            float y,
-            Matrix4f matrix4f,
-            MultiBufferSource multiBufferSource,
-            int light
-    ) {
-        float textureSize = 16, textureX = 0, textureY = 0, textureOffset = 16 / textureSize, size = 10,
-                offsetY = 1, offsetX = 0, width = size, height = size;
+        float textureSize = 16, textureX = 0, textureY = 0, textureOffset = 16 / textureSize, offsetY = 1, offsetX = 0,
+                width = EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE, height = EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE;
         if (this.width < this.height) {
             width *= ((float) this.width / this.height);
-            x += (size - width) / 2;
+            x += (EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE - width) / 2;
         }
         else if (this.height < this.width) {
             height *= ((float) this.height / this.width);
-            y += (size - height) / 2;
+            y += (EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE - height) / 2;
         }
 
-        var buffer = multiBufferSource.getBuffer(EmojiUtil.getRenderType(resourceLocation));
+        var buffer = multiBufferSource.getBuffer(EmojiUtil.getRenderType(getRenderResourceLocation()));
 
         buffer.vertex(matrix4f, x - offsetX, y - offsetY, 0.0f)
                 .color(255, 255, 255, 255)
@@ -93,6 +105,8 @@ public class Emoji {
     public String getCode() {return ':' + name + ':';}
 
     public ResourceLocation getResourceLocation() {return resourceLocation;}
+
+    public ResourceLocation getRenderResourceLocation() {return  resourceLocation;}
 
     public int getWidth() {
         return width;

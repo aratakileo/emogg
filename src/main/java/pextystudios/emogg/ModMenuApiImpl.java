@@ -2,7 +2,7 @@ package pextystudios.emogg;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import pextystudios.emogg.screen.SettingsScreen;
+import pextystudios.emogg.gui.screen.SettingsScreen;
 
 public class ModMenuApiImpl implements ModMenuApi {
     @Override

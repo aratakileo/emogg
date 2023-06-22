@@ -1,4 +1,4 @@
-package pextystudios.emogg.screen;
+package pextystudios.emogg.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

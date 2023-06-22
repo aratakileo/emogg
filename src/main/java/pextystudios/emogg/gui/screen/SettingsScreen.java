@@ -1,4 +1,4 @@
-package pextystudios.emogg.screen;
+package pextystudios.emogg.gui.screen;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
