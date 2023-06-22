@@ -7,14 +7,14 @@ import net.minecraft.network.chat.TextComponent;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.handler.EmojiHandler;
 
-public class EmojiButton extends Button {
+public class OpenEmojiMenuButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
-    public EmojiButton(int x, int y, OnPress onPress) {
+    public OpenEmojiMenuButton(int x, int y, OnPress onPress) {
         this(x, y, EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE, EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE, onPress);
     }
 
-    public EmojiButton(int x, int y, int width, int height, OnPress onPress) {
+    public OpenEmojiMenuButton(int x, int y, int width, int height, OnPress onPress) {
         super(
                 x,
                 y,
@@ -23,7 +23,7 @@ public class EmojiButton extends Button {
                 TextComponent.EMPTY,
                 onPress,
                 (button, poseStack, mouseX, mouseY) -> {
-                    var emojiButton = (EmojiButton)button;
+                    var emojiButton = (OpenEmojiMenuButton)button;
 
                     if (emojiButton.displayableEmoji == null) return;
 

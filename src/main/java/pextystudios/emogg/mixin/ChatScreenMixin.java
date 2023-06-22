@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.gui.component.EmojiButton;
+import pextystudios.emogg.gui.component.OpenEmojiMenuButton;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
-    private EmojiButton emojiButton;
+    private OpenEmojiMenuButton openEmojiMenuButton;
 
     @Shadow public EditBox input;
 
@@ -23,7 +23,7 @@ public class ChatScreenMixin {
         final var self = (ChatScreen)(Object)this;
         final var positionOffset = input.getHeight() + 1;
 
-        emojiButton = new EmojiButton(
+        openEmojiMenuButton = new OpenEmojiMenuButton(
                 self.width - positionOffset,
                 self.height - positionOffset,
                 input.getHeight() - 2,
@@ -33,27 +33,27 @@ public class ChatScreenMixin {
                 }
         );
 
-        self.addRenderableWidget(emojiButton);
+        self.addRenderableWidget(openEmojiMenuButton);
     }
 
     @Inject(method = "render", at = @At("HEAD"))
     public void render(PoseStack poseStack, int mouseX, int mouseY, float dt, CallbackInfo ci) {
-        if (!emojiButton.collidePoint(mouseX, mouseY)) {
-            emojiButton.setFocused(false);
+        if (!openEmojiMenuButton.collidePoint(mouseX, mouseY)) {
+            openEmojiMenuButton.setFocused(false);
             return;
         }
 
         final var self = (ChatScreen)(Object)this;
 
-        self.setFocused(emojiButton);
+        self.setFocused(openEmojiMenuButton);
         self.input.setFocus(false);
-        emojiButton.setFocused(true);
+        openEmojiMenuButton.setFocused(true);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int i, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiButton.isHovered()) return;
+        if (!openEmojiMenuButton.isHovered()) return;
 
-        cir.setReturnValue(emojiButton.mouseClicked(mouseX, mouseY, 0));
+        cir.setReturnValue(openEmojiMenuButton.mouseClicked(mouseX, mouseY, 0));
     }
 }
