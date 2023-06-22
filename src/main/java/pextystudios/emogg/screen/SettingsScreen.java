@@ -4,7 +4,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import pextystudios.emogg.ConfigContainer;
+import pextystudios.emogg.handler.ConfigHandler;
 
 public class SettingsScreen extends AbstractScreen {
     public SettingsScreen(Screen parent) {
@@ -20,7 +20,7 @@ public class SettingsScreen extends AbstractScreen {
                 20,
                 getBuiltinEmojiSwitcherText(),
                 button -> {
-                    ConfigContainer.data.isBuiltinEmojiEnabled = !ConfigContainer.data.isBuiltinEmojiEnabled;
+                    ConfigHandler.data.isBuiltinEmojiEnabled = !ConfigHandler.data.isBuiltinEmojiEnabled;
                     button.setMessage(getBuiltinEmojiSwitcherText());
                 }
         ));
@@ -28,13 +28,13 @@ public class SettingsScreen extends AbstractScreen {
 
     private Component getBuiltinEmojiSwitcherText() {
         return new TextComponent(
-                "Built-in emojis in prompts: " + (ConfigContainer.data.isBuiltinEmojiEnabled ? "Enabled" : "Disabled")
+                "Built-in emojis in prompts: " + (ConfigHandler.data.isBuiltinEmojiEnabled ? "Enabled" : "Disabled")
         );
     }
 
     @Override
     public void onClose() {
-        ConfigContainer.save();
+        ConfigHandler.save();
         super.onClose();
     }
 }

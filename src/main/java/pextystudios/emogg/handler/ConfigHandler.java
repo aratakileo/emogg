@@ -1,12 +1,13 @@
-package pextystudios.emogg;
+package pextystudios.emogg.handler;
 
 import com.google.gson.Gson;
+import pextystudios.emogg.Emogg;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-public class ConfigContainer {
+public class ConfigHandler {
     private final static File file = new File("config/emogg.json");
     private final static Gson gson = new Gson();
     

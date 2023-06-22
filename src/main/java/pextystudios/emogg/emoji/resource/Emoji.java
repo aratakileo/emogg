@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.emoji.EmojiHandler;
+import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.StringUtil;
 

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.emoji.EmojiHandler;
+import pextystudios.emogg.handler.EmojiHandler;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;

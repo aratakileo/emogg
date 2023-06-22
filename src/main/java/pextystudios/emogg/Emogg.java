@@ -3,7 +3,8 @@ package pextystudios.emogg;
 import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pextystudios.emogg.emoji.EmojiHandler;
+import pextystudios.emogg.handler.EmojiHandler;
+import pextystudios.emogg.handler.ConfigHandler;
 
 
 public class Emogg implements ClientModInitializer {
@@ -15,6 +16,6 @@ public class Emogg implements ClientModInitializer {
     public void onInitializeClient() {
         new EmojiHandler();
 
-        ConfigContainer.load();
+        ConfigHandler.load();
     }
 }
