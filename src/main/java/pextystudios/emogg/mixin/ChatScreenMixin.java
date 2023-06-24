@@ -10,50 +10,47 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.gui.component.OpenEmojiMenuButton;
+import pextystudios.emogg.gui.component.EmojiPickerButton;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
-    private OpenEmojiMenuButton openEmojiMenuButton;
+    private EmojiPickerButton emojiPickerButton;
 
     @Shadow public EditBox input;
 
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
-        final var positionOffset = input.getHeight() + 1;
+        final var positionOffset = input.getHeight() + 2;
 
-        openEmojiMenuButton = new OpenEmojiMenuButton(
+        emojiPickerButton = new EmojiPickerButton(
                 self.width - positionOffset,
                 self.height - positionOffset,
-                input.getHeight() - 2,
-                input.getHeight() - 2,
-                emojiButton -> {
-                    Emogg.LOGGER.info("Pressed emoji button!");
-                }
+                input.getHeight() - 4
         );
+        emojiPickerButton.setOnClickListener(emojiPickerButton -> Emogg.LOGGER.info("Pressed emoji button!"));
 
-        self.addRenderableWidget(openEmojiMenuButton);
+        self.addRenderableWidget(emojiPickerButton);
     }
 
     @Inject(method = "render", at = @At("HEAD"))
     public void render(PoseStack poseStack, int mouseX, int mouseY, float dt, CallbackInfo ci) {
-        if (!openEmojiMenuButton.collidePoint(mouseX, mouseY)) {
-            openEmojiMenuButton.setFocused(false);
+        if (!emojiPickerButton.collidePoint(mouseX, mouseY)) {
+            emojiPickerButton.setFocused(false);
             return;
         }
 
         final var self = (ChatScreen)(Object)this;
 
-        self.setFocused(openEmojiMenuButton);
+        self.setFocused(emojiPickerButton);
         self.input.setFocus(false);
-        openEmojiMenuButton.setFocused(true);
+        emojiPickerButton.setFocused(true);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int i, CallbackInfoReturnable<Boolean> cir) {
-        if (!openEmojiMenuButton.isHovered()) return;
+        if (!emojiPickerButton.isHovered()) return;
 
-        cir.setReturnValue(openEmojiMenuButton.mouseClicked(mouseX, mouseY, 0));
+        cir.setReturnValue(emojiPickerButton.mouseClicked(mouseX, mouseY, 0));
     }
 }
