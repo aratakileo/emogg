@@ -14,7 +14,8 @@ public class ConfigHandler {
     public static Config data = new Config();
 
     public static class Config {
-        public boolean isBuiltinEmojiEnabled = true;
+        public boolean useBuiltinEmojiEnabled = true;
+        public boolean isExperimentalExperienceEnabled = false;
     }
 
     public static void load() {
@@ -25,6 +26,7 @@ public class ConfigHandler {
                 fileReader.close();
             } catch (Exception e) {
                 Emogg.LOGGER.error("Failed to load emogg config: ", e);
+                save();
             }
     }
 

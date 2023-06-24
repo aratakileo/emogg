@@ -28,4 +28,12 @@ public class AbstractScreen extends Screen {
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 15, 16777215);
         super.render(poseStack, i, j, f);
     }
+
+    public int centerX() {
+        return width / 2;
+    }
+
+    public int centerY() {
+        return height / 2;
+    }
 }

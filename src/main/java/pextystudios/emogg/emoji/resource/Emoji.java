@@ -38,17 +38,17 @@ public class Emoji {
         load();
     }
 
-    public void render(int x, int y, int width, int height, PoseStack poseStack) {
-        var sourceWidth = width;
-        var sourceHeight = height;
+    public void render(int x, int y, int size, PoseStack poseStack) {
+        var width = size;
+        var height = size;
 
         if (this.width < this.height) {
             width *= ((float) this.width / this.height);
-            x += (sourceWidth - width) / 2;
+            x += (size - width) / 2;
         }
         else if (this.height < this.width) {
             height *= ((float) this.height / this.width);
-            y += (sourceHeight - height) / 2;
+            y += (size - height) / 2;
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);

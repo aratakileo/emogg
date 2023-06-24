@@ -4,14 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.handler.EmojiHandler;
 
-public class EmojiPickerButton extends AbstractWidget {
+public class EmojiSelectorButton extends AbstractWidget {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
-    public EmojiPickerButton(int x, int y) {
+    public EmojiSelectorButton(int x, int y) {
         this(x, y, EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE);
     }
 
-    public EmojiPickerButton(int x, int y, int size) {
+    public EmojiSelectorButton(int x, int y, int size) {
         super(
                 x,
                 y,
@@ -33,6 +33,7 @@ public class EmojiPickerButton extends AbstractWidget {
             changeDisplayableEmoji();
 
         renderButton(poseStack, mouseX, mouseY, dt);
+        renderToolTip(poseStack, mouseX, mouseY);
     }
 
     @Override
@@ -52,10 +53,7 @@ public class EmojiPickerButton extends AbstractWidget {
             renderSize += 2;
         }
 
-        displayableEmoji.render(renderX, renderY, renderSize, renderSize, poseStack);
-
-        if (isHovered())
-            renderToolTip(poseStack, mouseX, mouseY);
+        displayableEmoji.render(renderX, renderY, renderSize, poseStack);
     }
 
     protected void changeDisplayableEmoji() {

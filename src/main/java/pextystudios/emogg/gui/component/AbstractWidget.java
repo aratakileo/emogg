@@ -8,16 +8,15 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
+import pextystudios.emogg.util.RenderUtil;
+
+import java.util.function.Consumer;
 
 public abstract class AbstractWidget extends AbstractButton {
-    public interface OnClickListener {
-        void onClick(AbstractWidget widget);
-    }
-
-    protected OnClickListener onClickListener = null;
+    protected Consumer<AbstractWidget> onClicked = null;
     protected Component hint = null;
 
-    public boolean playSoundWhenClick = true;
+    public boolean playClickSound = true;
 
     public AbstractWidget(int x, int y, int width, int height) {
         super(x, y, width, height, TextComponent.EMPTY);
@@ -29,7 +28,7 @@ public abstract class AbstractWidget extends AbstractButton {
 
     @Override
     public void onPress() {
-        if (onClickListener != null) onClickListener.onClick(this);
+        if (onClicked != null) onClicked.accept(this);
     }
 
     @Override
@@ -38,7 +37,7 @@ public abstract class AbstractWidget extends AbstractButton {
             if (key != 257 && key != 32 && key != 335)
                 return false;
 
-            if (playSoundWhenClick) playDownSound(Minecraft.getInstance().getSoundManager());
+            if (playClickSound) playDownSound(Minecraft.getInstance().getSoundManager());
             onPress();
 
             return true;
@@ -67,11 +66,19 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
-        super.renderButton(poseStack, mouseX, mouseY, dt);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float dt) {
+        if (!visible) return;
 
-        if (isHovered())
-            renderToolTip(poseStack, mouseX, mouseY);
+        isHovered = collidePoint(mouseX, mouseY);
+
+        renderButton(poseStack, mouseX, mouseY, dt);
+        renderToolTip(poseStack, mouseX, mouseY);
+    }
+
+    @Override
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
+        RenderUtil.drawRect(x, y, width, height, 0xaa222222, 1, 0xaa000000);
+        renderMessage(poseStack, 0xffffff);
     }
 
     public void renderMessage(PoseStack poseStack, int color) {
@@ -89,6 +96,8 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     public boolean collidePoint(int x, int y) {
+        if (!visible) return false;
+
         return x >= this.x && y >= this.y && x < this.x + width && y < this.y + height;
     }
 
@@ -96,8 +105,8 @@ public abstract class AbstractWidget extends AbstractButton {
         return !isHovered && isFocused();
     }
 
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void setOnClicked(Consumer<AbstractWidget> onClicked) {
+        this.onClicked = onClicked;
     }
 
     public void setHint(String hint) {

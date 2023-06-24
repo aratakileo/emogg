@@ -10,47 +10,65 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.gui.component.EmojiPickerButton;
+import pextystudios.emogg.gui.component.EmojiSelector;
+import pextystudios.emogg.gui.component.EmojiSelectorButton;
+import pextystudios.emogg.handler.ConfigHandler;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
-    private EmojiPickerButton emojiPickerButton;
+    private EmojiSelectorButton emojiSelectorButton;
+    private EmojiSelector emojiSelector;
 
     @Shadow public EditBox input;
 
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
-        final var positionOffset = input.getHeight() + 2;
 
-        emojiPickerButton = new EmojiPickerButton(
+        emojiSelector = new EmojiSelector();
+        emojiSelector.setOnClicked(emojiPicker -> Emogg.LOGGER.info("Emoji picker clicked!"));
+        emojiSelector.x = self.width - emojiSelector.getWidth() - 4;
+        emojiSelector.y = self.height - emojiSelector.getHeight() - input.getHeight() - 4;
+        emojiSelector.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
+        self.addRenderableWidget(emojiSelector);
+
+        final var positionOffset = input.getHeight();
+        emojiSelectorButton = new EmojiSelectorButton(
                 self.width - positionOffset,
                 self.height - positionOffset,
                 input.getHeight() - 4
         );
-        emojiPickerButton.setOnClickListener(emojiPickerButton -> Emogg.LOGGER.info("Pressed emoji button!"));
-
-        self.addRenderableWidget(emojiPickerButton);
+        emojiSelectorButton.setOnClicked(emojiPickerButton -> emojiSelector.visible = !emojiSelector.visible);
+        emojiSelectorButton.visible = ConfigHandler.data.isExperimentalExperienceEnabled;
+        self.addRenderableWidget(emojiSelectorButton);
     }
 
     @Inject(method = "render", at = @At("HEAD"))
     public void render(PoseStack poseStack, int mouseX, int mouseY, float dt, CallbackInfo ci) {
-        if (!emojiPickerButton.collidePoint(mouseX, mouseY)) {
-            emojiPickerButton.setFocused(false);
+        final var self = (ChatScreen)(Object)this;
+
+        emojiSelector.setFocused(false);
+        emojiSelectorButton.setFocused(false);
+
+        if (emojiSelector.collidePoint(mouseX, mouseY)) {
+            self.setFocused(emojiSelector);
+            self.input.setFocus(false);
+            emojiSelector.setFocused(true);
+
             return;
         }
 
-        final var self = (ChatScreen)(Object)this;
-
-        self.setFocused(emojiPickerButton);
-        self.input.setFocus(false);
-        emojiPickerButton.setFocused(true);
+        if (emojiSelectorButton.collidePoint(mouseX, mouseY)) {
+            self.setFocused(emojiSelectorButton);
+            self.input.setFocus(false);
+            emojiSelectorButton.setFocused(true);
+        }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int i, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiPickerButton.isHovered()) return;
+        if (!emojiSelectorButton.isHovered()) return;
 
-        cir.setReturnValue(emojiPickerButton.mouseClicked(mouseX, mouseY, 0));
+        cir.setReturnValue(emojiSelectorButton.mouseClicked(mouseX, mouseY, 0));
     }
 }
