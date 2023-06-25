@@ -12,7 +12,7 @@ import pextystudios.emogg.util.RenderUtil;
 
 import java.util.function.Consumer;
 
-public class EmojiSelector extends AbstractWidget {
+public class EmojiSelectionMenu extends AbstractWidget {
     private final static ResourceLocation settingsIcon = new ResourceLocation(
             Emogg.NAMESPACE,
             "gui/icon/emoji-selector-settings.png"
@@ -26,7 +26,7 @@ public class EmojiSelector extends AbstractWidget {
     private Consumer<Emoji> onEmojiSelected = null;
     private Emoji hoveredEmoji = null;
 
-    protected EmojiSelector(int width, int height) {
+    protected EmojiSelectionMenu(int width, int height) {
         super(0, 0, width, height);
         this.visible = false;
         this.emojiSize = height - Minecraft.getInstance().screen.height / 3;
@@ -34,7 +34,7 @@ public class EmojiSelector extends AbstractWidget {
         this.headerPadding = (float) (emojiSize - font.lineHeight) / 2;
     }
 
-    public EmojiSelector() {
+    public EmojiSelectionMenu() {
         this(
                 Minecraft.getInstance().screen.height / 3,
                 Minecraft.getInstance().screen.height / 3 + (Minecraft.getInstance().screen.height / 3 - 10) / 9

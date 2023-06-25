@@ -9,14 +9,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import pextystudios.emogg.gui.component.EmojiSelector;
+import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiSelectorButton;
 import pextystudios.emogg.handler.ConfigHandler;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
     private EmojiSelectorButton emojiSelectorButton;
-    private EmojiSelector emojiSelector;
+    private EmojiSelectionMenu emojiSelectionMenu;
 
     @Shadow public EditBox input;
 
@@ -24,11 +24,11 @@ public class ChatScreenMixin {
     public void init(CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
 
-        emojiSelector = new EmojiSelector();
-        emojiSelector.x = self.width - emojiSelector.getWidth() - 4;
-        emojiSelector.y = self.height - emojiSelector.getHeight() - input.getHeight() - 4;
-        emojiSelector.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
-        self.addRenderableWidget(emojiSelector);
+        emojiSelectionMenu = new EmojiSelectionMenu();
+        emojiSelectionMenu.x = self.width - emojiSelectionMenu.getWidth() - 4;
+        emojiSelectionMenu.y = self.height - emojiSelectionMenu.getHeight() - input.getHeight() - 4;
+        emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
+        self.addRenderableWidget(emojiSelectionMenu);
 
         final var positionOffset = input.getHeight();
         emojiSelectorButton = new EmojiSelectorButton(
@@ -36,7 +36,7 @@ public class ChatScreenMixin {
                 self.height - positionOffset,
                 input.getHeight() - 4
         );
-        emojiSelectorButton.setOnClicked(emojiPickerButton -> emojiSelector.visible = !emojiSelector.visible);
+        emojiSelectorButton.setOnClicked(emojiPickerButton -> emojiSelectionMenu.visible = !emojiSelectionMenu.visible);
         emojiSelectorButton.visible = ConfigHandler.data.isExperimentalExperienceEnabled;
         self.addRenderableWidget(emojiSelectorButton);
     }
@@ -45,13 +45,13 @@ public class ChatScreenMixin {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float dt, CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
 
-        emojiSelector.setFocused(false);
+        emojiSelectionMenu.setFocused(false);
         emojiSelectorButton.setFocused(false);
 
-        if (emojiSelector.collidePoint(mouseX, mouseY)) {
-            self.setFocused(emojiSelector);
+        if (emojiSelectionMenu.collidePoint(mouseX, mouseY)) {
+            self.setFocused(emojiSelectionMenu);
             self.input.setFocus(false);
-            emojiSelector.setFocused(true);
+            emojiSelectionMenu.setFocused(true);
 
             return;
         }
