@@ -97,7 +97,11 @@ public class Emoji {
 
     public String getName() {return name;}
 
-    public String getCode() {return ':' + name + ':';}
+    public String getCode() {
+        return ":" + name + ':';
+    }
+
+    public String getEscapedCode() {return '\\' + getCode();}
 
     public ResourceLocation getResourceLocation() {return resourceLocation;}
 

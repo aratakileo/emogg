@@ -240,7 +240,9 @@ public class EmojiFontRenderer extends Font {
                 FontSet fontSet = EmojiFontRenderer.this.getFontSet(Style.DEFAULT_FONT);
                 BakedGlyph bakedGlyph = fontSet.whiteGlyph();
 
-                VertexConsumer buffer = multiBufferSource.getBuffer(bakedGlyph.renderType(isTransparent ? DisplayMode.SEE_THROUGH : DisplayMode.NORMAL));
+                VertexConsumer buffer = multiBufferSource.getBuffer(
+                        bakedGlyph.renderType(isTransparent ? DisplayMode.SEE_THROUGH : DisplayMode.NORMAL)
+                );
 
                 for (BakedGlyph.Effect rectangle: effects)
                     bakedGlyph.renderEffect(rectangle, matrix, buffer, light);
@@ -250,7 +252,12 @@ public class EmojiFontRenderer extends Font {
         @Override
         public boolean accept(int index, Style style, int codePoint) {
             if (emojiIndexes.containsKey(index)) {
-                emojiIndexes.get(index).render(x, y, matrix, multiBufferSource, light);
+                Emoji emoji;
+
+                if ((emoji = emojiIndexes.get(index)) == null)
+                    return true;
+
+                emoji.render(x, y, matrix, multiBufferSource, light);
                 x += 10;
 
                 return true;
@@ -334,8 +341,8 @@ public class EmojiFontRenderer extends Font {
 
     record FormattedEmojiSequence(int index, Style style, int codePoint) implements FormattedCharSequence {
         @Override
-            public boolean accept(FormattedCharSink formattedCharSink) {
-                return formattedCharSink.accept(index, style, codePoint);
-            }
+        public boolean accept(FormattedCharSink formattedCharSink) {
+            return formattedCharSink.accept(index, style, codePoint);
         }
+    }
 }

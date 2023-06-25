@@ -89,7 +89,7 @@ public class EmojiSelector extends AbstractWidget {
 
             if (mouseColumn == column && mouseLine == line) {
                 hoveredEmoji = emoji;
-                setHint(emoji.getCode());
+                setHint(emoji.getEscapedCode());
                 RenderUtil.drawRect(emojiX, emojiY, emojiSize, emojiSize, 0x77ffffff);
             }
 

@@ -43,7 +43,7 @@ public class EmojiSelectorButton extends Button {
             return;
         }
 
-        setHint(displayableEmoji.getCode());
+        setHint(displayableEmoji.getEscapedCode());
 
         int renderX = x, renderY = y, renderSize = width;
 
