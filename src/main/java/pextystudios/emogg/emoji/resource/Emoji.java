@@ -5,6 +5,7 @@ import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.lang3.StringUtils;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
@@ -162,11 +163,11 @@ public class Emoji {
     }
 
     public static String normalizeNameOrCategory(String sourceValue) {
-        return StringUtil.strip(
+        return StringUtils.strip(
                 sourceValue.toLowerCase()
                         .replaceAll("-+| +|\\.+", "_")
                         .replaceAll("[^a-z0-9_]", ""),
-                '_'
+                "_"
         );
     }
 
