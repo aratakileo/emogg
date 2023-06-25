@@ -3,9 +3,11 @@ package pextystudios.emogg.handler;
 import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.commons.lang3.StringUtils;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
@@ -73,6 +75,15 @@ public class EmojiHandler {
         return emojiCategories.get(category).stream().map(allEmojis::get).toList();
     }
 
+    public String getDisplayableCategoryName(String category) {
+        final var categoryLangKey = "emogg.category." + category;
+        final var displayableName = new TranslatableComponent(categoryLangKey).getString();
+
+        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category);
+
+        return displayableName;
+    }
+
     public Optional<Emoji> getRandomEmoji() {
         return getRandomEmoji(false);
     }
@@ -95,35 +106,12 @@ public class EmojiHandler {
                 .findFirst();
     }
 
-    private String getUniqueName(ResourceLocation resourceLocation, String emojiName, ConcurrentHashMap<String, Emoji> emojis) {
-        if (emojis.containsKey(emojiName)) {
-            if (emojis.get(emojiName).getResourceLocation().equals(resourceLocation))
-                return null;
-
-            var emojiNameIndex = 0;
-            var newEmojiName = emojiName + emojiNameIndex;
-
-            while (emojis.containsKey(newEmojiName)) {
-                emojiNameIndex++;
-                newEmojiName = emojiName + emojiNameIndex;
-            }
-
-            return newEmojiName;
-        }
-
-        return emojiName;
-    }
-
-    private void regEmojiInItsCategory(Emoji emoji) {
-        if (!emojiCategories.containsKey(emoji.getCategory()))
-            emojiCategories.put(emoji.getCategory(), new ArrayList<>());
-
-        final var emojiNamesInCategory = emojiCategories.get(emoji.getCategory());
-
-        if (emojiNamesInCategory.contains(emoji.getName()))
-            return;
-
-        emojiNamesInCategory.add(emoji.getName());
+    public Collection<String> getEmojiSuggestions() {
+        return Lists.newArrayList(this.allEmojis.values())
+                .stream()
+                .filter(IS_NOT_BUILTIN_EMOJI)
+                .map(Emoji::getCode)
+                .collect(Collectors.toList());
     }
 
     public void regEmoji(ResourceLocation resourceLocation) {
@@ -167,12 +155,35 @@ public class EmojiHandler {
         ));
     }
 
-    public Collection<String> getEmojiSuggestions() {
-        return Lists.newArrayList(this.allEmojis.values())
-                .stream()
-                .filter(IS_NOT_BUILTIN_EMOJI)
-                .map(Emoji::getCode)
-                .collect(Collectors.toList());
+    private String getUniqueName(ResourceLocation resourceLocation, String emojiName, ConcurrentHashMap<String, Emoji> emojis) {
+        if (emojis.containsKey(emojiName)) {
+            if (emojis.get(emojiName).getResourceLocation().equals(resourceLocation))
+                return null;
+
+            var emojiNameIndex = 0;
+            var newEmojiName = emojiName + emojiNameIndex;
+
+            while (emojis.containsKey(newEmojiName)) {
+                emojiNameIndex++;
+                newEmojiName = emojiName + emojiNameIndex;
+            }
+
+            return newEmojiName;
+        }
+
+        return emojiName;
+    }
+
+    private void regEmojiInItsCategory(Emoji emoji) {
+        if (!emojiCategories.containsKey(emoji.getCategory()))
+            emojiCategories.put(emoji.getCategory(), new ArrayList<>());
+
+        final var emojiNamesInCategory = emojiCategories.get(emoji.getCategory());
+
+        if (emojiNamesInCategory.contains(emoji.getName()))
+            return;
+
+        emojiNamesInCategory.add(emoji.getName());
     }
 
     private void load(ResourceManager resourceManager) {
