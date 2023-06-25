@@ -11,6 +11,14 @@ public final class StringUtil {
         return source.replaceAll(stripChar + "+$", "");
     }
 
+    public static String replaceStartEndIndex(String source, int start, int end, Character newChar) {
+        return source.substring(0, start) + newChar + source.substring(end);
+    }
+
+    public static String replaceStartEndIndex(String source, int start, int end, String newSubstring) {
+        return source.substring(0, start) + newSubstring + source.substring(end);
+    }
+
     public static String strip(String source, char stripChar) {
         return source.replaceAll("^" + stripChar + "+", "")
                 .replaceAll(stripChar + "+$", "");
