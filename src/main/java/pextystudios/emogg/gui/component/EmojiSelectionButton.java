@@ -4,14 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.handler.EmojiHandler;
 
-public class EmojiSelectorButton extends Button {
+public class EmojiSelectionButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
-    public EmojiSelectorButton(int x, int y) {
+    public EmojiSelectionButton(int x, int y) {
         this(x, y, EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE);
     }
 
-    public EmojiSelectorButton(int x, int y, int size) {
+    public EmojiSelectionButton(int x, int y, int size) {
         super(
                 x,
                 y,
