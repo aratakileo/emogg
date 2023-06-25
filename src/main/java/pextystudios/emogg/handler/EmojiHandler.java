@@ -10,8 +10,7 @@ import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -29,10 +28,12 @@ public class EmojiHandler {
         return path.endsWith(STATIC_EMOJI_EXTENSION) || path.endsWith(ANIMATED_EMOJI_EXTENSION);
     };
     public static final String EMOJIS_PATH_PREFIX = "emoji";
+    public static final String DEFAULT_EMOJI_CATEGORY = "other";
     public static final int EMOJI_DEFAULT_RENDER_SIZE = 10;
 
     private final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Emoji> builtinEmojis = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, List<String>> emojiCategories = new ConcurrentHashMap<>();
 
     public EmojiHandler() {
         INSTANCE = this;
@@ -60,8 +61,16 @@ public class EmojiHandler {
         return allEmojis.get(name);
     }
 
-    public Collection<Emoji> getEmojis() {
+    public List<Emoji> getEmojis() {
         return allEmojis.values().stream().filter(IS_NOT_BUILTIN_EMOJI).toList();
+    }
+
+    public Enumeration<String> getCategories() {return emojiCategories.keys();}
+
+    public List<Emoji> getEmojisFromCategory(String category) {
+        if (!emojiCategories.containsKey(category)) return null;
+
+        return emojiCategories.get(category).stream().map(allEmojis::get).toList();
     }
 
     public Optional<Emoji> getRandomEmoji() {
@@ -86,31 +95,57 @@ public class EmojiHandler {
                 .findFirst();
     }
 
-    public void regEmoji(ResourceLocation resourceLocation) {
-        var emojiName = Emoji.normalizeName(Emoji.getNameFromPath(resourceLocation));
-        regEmoji(resourceLocation, emojiName);
-    }
-
-    public void regEmoji(ResourceLocation resourceLocation, String emojiName) {
-        if (allEmojis.containsKey(emojiName)) {
-            if (allEmojis.get(emojiName).getResourceLocation().equals(resourceLocation)) {
-                Emogg.LOGGER.error(String.format(
-                        "Failed to load %s, because it is already defined",
-                        StringUtil.repr(resourceLocation)
-                ));
-                return;
-            }
+    private String getUniqueName(ResourceLocation resourceLocation, String emojiName, ConcurrentHashMap<String, Emoji> emojis) {
+        if (emojis.containsKey(emojiName)) {
+            if (emojis.get(emojiName).getResourceLocation().equals(resourceLocation))
+                return null;
 
             var emojiNameIndex = 0;
             var newEmojiName = emojiName + emojiNameIndex;
 
-            while (allEmojis.containsKey(newEmojiName)) {
+            while (emojis.containsKey(newEmojiName)) {
                 emojiNameIndex++;
                 newEmojiName = emojiName + emojiNameIndex;
             }
+
+            return newEmojiName;
         }
 
-        var emoji = Emoji.from(emojiName, resourceLocation);
+        return emojiName;
+    }
+
+    private void regEmojiInItsCategory(Emoji emoji) {
+        if (!emojiCategories.containsKey(emoji.getCategory()))
+            emojiCategories.put(emoji.getCategory(), new ArrayList<>());
+
+        final var emojiNamesInCategory = emojiCategories.get(emoji.getCategory());
+
+        if (emojiNamesInCategory.contains(emoji.getName()))
+            return;
+
+        emojiNamesInCategory.add(emoji.getName());
+    }
+
+    public void regEmoji(ResourceLocation resourceLocation) {
+        var emojiName = Emoji.normalizeNameOrCategory(Emoji.getNameFromPath(resourceLocation));
+        emojiName = getUniqueName(resourceLocation, emojiName, allEmojis);
+
+        if (emojiName == null) {
+            Emogg.LOGGER.error(String.format(
+                    "Failed to load %s, because it is already defined",
+                    StringUtil.repr(resourceLocation)
+            ));
+            return;
+        }
+
+        final var newEmojiName = getUniqueName(resourceLocation, emojiName, builtinEmojis);
+
+        if (newEmojiName == null) {
+            regEmojiInItsCategory(builtinEmojis.get(emojiName));
+            return;
+        }
+
+        var emoji = Emoji.from(newEmojiName, resourceLocation);
 
         if (!emoji.isValid()) {
             Emogg.LOGGER.error(String.format(
@@ -120,9 +155,16 @@ public class EmojiHandler {
             return;
         }
 
-        allEmojis.put(emojiName, emoji);
+        allEmojis.put(newEmojiName, emoji);
 
-        Emogg.LOGGER.info(String.format("Loaded %s as %s", StringUtil.repr(resourceLocation), emoji.getCode()));
+        regEmojiInItsCategory(emoji);
+
+        Emogg.LOGGER.info(String.format(
+                "Loaded %s as %s in %s",
+                StringUtil.repr(resourceLocation),
+                emoji.getCode(),
+                emoji.getCategory()
+        ));
     }
 
     public Collection<String> getEmojiSuggestions() {
@@ -166,17 +208,13 @@ public class EmojiHandler {
             // End of auto generated code
         }
 
+        emojiCategories.clear();
         allEmojis.clear();
+
+        for (var resourceLocation: resourceManager.listResources(EMOJIS_PATH_PREFIX, HAS_EMOJIS_EXTENSION))
+            regEmoji(resourceLocation);
+
         allEmojis.putAll(builtinEmojis);
-
-        for (var resourceLocation: resourceManager.listResources(EMOJIS_PATH_PREFIX, HAS_EMOJIS_EXTENSION)) {
-            var emojiName = Emoji.normalizeName(Emoji.getNameFromPath(resourceLocation));
-
-            if (builtinEmojis.containsKey(emojiName))
-                continue;
-
-            regEmoji(resourceLocation, emojiName);
-        }
 
         Emogg.LOGGER.info("Updating the lists is complete!");
     }

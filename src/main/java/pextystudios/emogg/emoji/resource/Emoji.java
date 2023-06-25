@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 public class Emoji {
     protected final String name;
     protected final ResourceLocation resourceLocation;
+    protected final String category;
     protected int width = -1, height = -1;
 
     public Emoji(String name) {
@@ -31,8 +32,18 @@ public class Emoji {
     }
 
     public Emoji(String name, ResourceLocation resourceLocation) {
-        this.name = normalizeName(name);
+        this.name = normalizeNameOrCategory(name);
         this.resourceLocation = resourceLocation;
+
+        var category = resourceLocation.getPath().substring(EmojiHandler.EMOJIS_PATH_PREFIX.length() + 1);
+        if (category.contains("/")) {
+            var splitPath = category.split("/");
+
+            category = splitPath[splitPath.length - 2];
+        } else
+            category = EmojiHandler.DEFAULT_EMOJI_CATEGORY;
+
+        this.category = normalizeNameOrCategory(category);
 
         load();
     }
@@ -97,6 +108,8 @@ public class Emoji {
 
     public String getName() {return name;}
 
+    public String getCategory() {return category;}
+
     public String getCode() {
         return ":" + name + ':';
     }
@@ -138,7 +151,7 @@ public class Emoji {
     }
 
     public static Emoji from(ResourceLocation resourceLocation) {
-        return from(normalizeName(getNameFromPath(resourceLocation)), resourceLocation);
+        return from(normalizeNameOrCategory(getNameFromPath(resourceLocation)), resourceLocation);
     }
 
     public static Emoji from(String name, ResourceLocation resourceLocation) {
@@ -148,9 +161,9 @@ public class Emoji {
         return new Emoji(name, resourceLocation);
     }
 
-    public static String normalizeName(String sourceName) {
+    public static String normalizeNameOrCategory(String sourceValue) {
         return StringUtil.strip(
-                sourceName.toLowerCase()
+                sourceValue.toLowerCase()
                         .replaceAll("-+| +|\\.+", "_")
                         .replaceAll("[^a-z0-9_]", ""),
                 '_'
