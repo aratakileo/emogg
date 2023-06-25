@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import pextystudios.emogg.Emogg;
 import pextystudios.emogg.gui.component.EmojiSelector;
 import pextystudios.emogg.gui.component.EmojiSelectorButton;
 import pextystudios.emogg.handler.ConfigHandler;
@@ -26,7 +25,6 @@ public class ChatScreenMixin {
         final var self = (ChatScreen)(Object)this;
 
         emojiSelector = new EmojiSelector();
-        emojiSelector.setOnClicked(emojiPicker -> Emogg.LOGGER.info("Emoji picker clicked!"));
         emojiSelector.x = self.width - emojiSelector.getWidth() - 4;
         emojiSelector.y = self.height - emojiSelector.getHeight() - input.getHeight() - 4;
         emojiSelector.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));

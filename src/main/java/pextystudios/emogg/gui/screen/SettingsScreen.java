@@ -7,6 +7,10 @@ import pextystudios.emogg.gui.component.Button;
 import pextystudios.emogg.handler.ConfigHandler;
 
 public class SettingsScreen extends AbstractScreen {
+    public SettingsScreen() {
+        super(new TextComponent("Emogg settings"));
+    }
+
     public SettingsScreen(Screen parent) {
         super(new TextComponent("Emogg settings"), parent);
     }
@@ -34,7 +38,7 @@ public class SettingsScreen extends AbstractScreen {
         addRenderableWidget(new Button(0, 0, "Save & Quit") {{
             setOnClicked(button -> onClose());
             x = centerX() - width / 2;
-            y = SettingsScreen.this.height - height - 2;
+            y = SettingsScreen.this.height - height - 20;
         }});
     }
 

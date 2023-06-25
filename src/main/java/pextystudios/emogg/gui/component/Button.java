@@ -7,6 +7,10 @@ import net.minecraft.network.chat.TextComponent;
 import pextystudios.emogg.util.RenderUtil;
 
 public class Button extends AbstractWidget {
+    public Button(int x, int y, int width, int height) {
+        super(x, y, width, height);
+    }
+
     public Button(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
     }
@@ -23,6 +27,12 @@ public class Button extends AbstractWidget {
                 Minecraft.getInstance().font.lineHeight + 10,
                 message
         );
+    }
+
+    @Override
+    public void onPress() {
+        playClickSound();
+        super.onPress();
     }
 
     @Override

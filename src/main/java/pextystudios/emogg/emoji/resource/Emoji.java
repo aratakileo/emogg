@@ -1,15 +1,14 @@
 package pextystudios.emogg.emoji.resource;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
+import pextystudios.emogg.util.RenderUtil;
 import pextystudios.emogg.util.StringUtil;
 
 import javax.imageio.ImageIO;
@@ -51,11 +50,7 @@ public class Emoji {
             y += (size - height) / 2;
         }
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.setShaderTexture(0, getRenderResourceLocation());
-        RenderSystem.enableBlend();
-        GuiComponent.blit(poseStack, x, y, 0f, 0f, width, height, width, height);
-        RenderSystem.disableBlend();
+        RenderUtil.renderTexture(poseStack, getRenderResourceLocation(), x, y, width, height);
     }
 
     public void render(
@@ -138,11 +133,11 @@ public class Emoji {
         }
     }
 
-    public static Emoji of(ResourceLocation resourceLocation) {
-        return of(normalizeName(getNameFromPath(resourceLocation)), resourceLocation);
+    public static Emoji from(ResourceLocation resourceLocation) {
+        return from(normalizeName(getNameFromPath(resourceLocation)), resourceLocation);
     }
 
-    public static Emoji of(String name, ResourceLocation resourceLocation) {
+    public static Emoji from(String name, ResourceLocation resourceLocation) {
         if (resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION))
             return new AnimatedEmoji(name, resourceLocation);
 

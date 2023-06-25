@@ -5,8 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class AbstractScreen extends Screen {
-    protected final Screen parent;
+public abstract class AbstractScreen extends Screen {
+    protected Screen parent;
 
     protected AbstractScreen(Component component, Screen parent) {
         super(component);

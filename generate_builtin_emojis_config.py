@@ -8,7 +8,7 @@ builtin_emoji_paths = []
 amount = 0
 for emoji_path in listdir(emoji_dir_path):
     if emoji_path.endswith('.gif') or emoji_path.endswith('png'):
-        builtin_emoji_paths.append(f'emoji = Emoji.of(new ResourceLocation('
+        builtin_emoji_paths.append(f'emoji = Emoji.from(new ResourceLocation('
                                    f'Emogg.NAMESPACE,'
                                    f'"{"emoji/" + emoji_path}"'
                                    f'));\n'

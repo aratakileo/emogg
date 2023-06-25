@@ -8,6 +8,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
+import pextystudios.emogg.gui.screen.AbstractScreen;
 import pextystudios.emogg.util.RenderUtil;
 
 import java.util.function.Consumer;
@@ -15,8 +16,6 @@ import java.util.function.Consumer;
 public abstract class AbstractWidget extends AbstractButton {
     protected Consumer<AbstractWidget> onClicked = null;
     protected Component hint = null;
-
-    public boolean playClickSound = true;
 
     public AbstractWidget(int x, int y, int width, int height) {
         super(x, y, width, height, TextComponent.EMPTY);
@@ -37,12 +36,10 @@ public abstract class AbstractWidget extends AbstractButton {
             if (key != 257 && key != 32 && key != 335)
                 return false;
 
-            if (playClickSound) playDownSound(Minecraft.getInstance().getSoundManager());
             onPress();
 
             return true;
         }
-
         return false;
     }
 
@@ -79,6 +76,23 @@ public abstract class AbstractWidget extends AbstractButton {
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
         RenderUtil.drawRect(x, y, width, height, 0xaa222222, 1, 0xaa000000);
         renderMessage(poseStack, 0xffffff);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int i) {
+        if (!active || !visible)
+            return false;
+
+        if (isValidClickButton(i) && clicked(mouseX, mouseY)) {
+            onClick(mouseX, mouseY);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void playClickSound() {
+        playDownSound(Minecraft.getInstance().getSoundManager());
     }
 
     public void renderMessage(PoseStack poseStack, int color) {

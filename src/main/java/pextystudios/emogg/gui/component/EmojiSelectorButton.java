@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.handler.EmojiHandler;
 
-public class EmojiSelectorButton extends AbstractWidget {
+public class EmojiSelectorButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
     public EmojiSelectorButton(int x, int y) {
