@@ -21,6 +21,7 @@ import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.jetbrains.annotations.NotNull;
 import pextystudios.emogg.emoji.resource.Emoji;
+import pextystudios.emogg.handler.EmojiHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -258,7 +259,7 @@ public class EmojiFontRenderer extends Font {
                     return true;
 
                 emoji.render(x, y, matrix, multiBufferSource, light);
-                x += 10;
+                x += EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE;
 
                 return true;
             }
