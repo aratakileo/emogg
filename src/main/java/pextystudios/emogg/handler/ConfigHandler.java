@@ -11,9 +11,9 @@ public class ConfigHandler {
     private final static File file = new File("config/emogg.json");
     private final static Gson gson = new Gson();
     
-    public static Config data = new Config();
+    public static ConfigData data = new ConfigData();
 
-    public static class Config {
+    public static class ConfigData {
         public boolean useBuiltinEmojiEnabled = true;
         public boolean isExperimentalExperienceEnabled = true;
     }
@@ -22,7 +22,7 @@ public class ConfigHandler {
         if (file.exists())
             try {
                 var fileReader = new FileReader(file);
-                data = gson.fromJson(fileReader, Config.class);
+                data = gson.fromJson(fileReader, ConfigData.class);
                 fileReader.close();
             } catch (Exception e) {
                 Emogg.LOGGER.error("Failed to load emogg config: ", e);
