@@ -15,7 +15,7 @@ public class ConfigHandler {
 
     public static class Config {
         public boolean useBuiltinEmojiEnabled = true;
-        public boolean isExperimentalExperienceEnabled = false;
+        public boolean isExperimentalExperienceEnabled = true;
     }
 
     public static void load() {
