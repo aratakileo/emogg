@@ -215,8 +215,7 @@ public class EmojiHandler {
             builtinEmojis.put(emoji.getName(), emoji);
             emoji = Emoji.from(new ResourceLocation(Emogg.NAMESPACE,"emoji/people/waving_hand.gif"));
             builtinEmojis.put(emoji.getName(), emoji);
-
-
+            
             // End of auto generated code
         }
 
