@@ -17,6 +17,7 @@ Adds emoji support to the chat and to most of the Minecraft interface. Emoji are
 - support for both static (`.png`) and animated (`.gif`) emojis
 
 [![](example/banner.png)](https://github.com/aratakileo/emogg/raw/main/example/emogg-example-resourcepack.zip)
+[![](resourcepack/twemogg-banner.png)](https://github.com/aratakileo/emogg/raw/main/resourcepack/twemogg.zip)
 
 - when playing on the server with this mod, other players on the server who do not have this mod, or do not have emoji resource packs that you have, will see `:emoji_name:` instead of emoji
 - you can disable built-in emojis (they will not be displayed when you enter the emoji name and in the emoji selection menu)
