@@ -1,4 +1,12 @@
 {
+  "emogg.settings.title": "Настройки Emogg",
+  "emogg.settings.option.use_builtin_emoji.title": "Использовать встроенные эмодзи: %s",
+  "emogg.settings.option.use_builtin_emoji.description": "Если эта опция отключена, встроенные эмодзи не будут предлагаться в появляющихся подсказках при вводе названия эмодзи, и они также будут удалены из меню выбора эмодзи",
+  "emogg.settings.option.experimental_experience.title": "Экспериментальный опыт: %s",
+  "emogg.settings.option.experimental_experience.description": "Если эта опция включена, то на экране чата будет доступна экспериментальная версия меню выбора эмодзи. Не рекомендуется включать эту функцию, если в вашей коллекции есть более, чем 81 эмодзи!",
+  "emogg.settings.save_and_quit": "Сохранить и выйти",
+  "emogg.gui.state.enabled": "Включено",
+  "emogg.gui.state.disabled": "Выключено",
   "emogg.category.food": "Еда",
   "emogg.category.other": "Другое",
   "emogg.category.people": "Люди"

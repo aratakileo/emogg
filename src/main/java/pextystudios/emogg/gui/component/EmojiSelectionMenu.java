@@ -3,6 +3,7 @@ package pextystudios.emogg.gui.component;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.resource.Emoji;
@@ -57,7 +58,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         if (settingsButtonRect.contains(mouseX, mouseY)) {
             RenderUtil.drawRect(settingsButtonRect.move(-2, -2).expand(4, 4), 0x77ffffff);
-            setHint("Emogg settings");
+            setHint(new TranslatableComponent("emogg.settings.title"));
         }
 
         RenderUtil.renderTexture(

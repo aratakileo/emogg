@@ -1,4 +1,12 @@
 {
+  "emogg.settings.title": "Налаштування Emogg",
+  "emogg.settings.option.use_builtin_emoji.title": "Використовувати вбудовані емодзі: %s",
+  "emogg.settings.option.use_builtin_emoji.description": "Якщо цю опцію вимкнено, вбудовані емодзі не будуть пропонуватися в підказках при введенні назви емодзі, і вони також будуть видалені з меню вибору емодзі",
+  "emogg.settings.option.experimental_experience.title": "Експериментальний досвід: %s",
+  "emogg.settings.option.experimental_experience.description": "Якщо цю опцію увімкнено, то на екрані чату буде доступна експериментальна версія меню вибору емодзі. Не рекомендується вмикати цю функцію, якщо у вашій колекції є більш ніж 81 емодзі!",
+  "emogg.settings.save_and_quit": "Зберегти та вийти",
+  "emogg.gui.state.enabled": "Увімкнено",
+  "emogg.gui.state.disabled": "Вимкнено",
   "emogg.category.food": "Їжа",
   "emogg.category.other": "Інше",
   "emogg.category.people": "Люди"
