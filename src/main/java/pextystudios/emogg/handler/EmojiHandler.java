@@ -3,6 +3,7 @@ package pextystudios.emogg.handler;
 import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -77,7 +78,7 @@ public class EmojiHandler {
 
     public String getDisplayableCategoryName(String category) {
         final var categoryLangKey = "emogg.category." + category;
-        final var displayableName = new TranslatableComponent(categoryLangKey).getString();
+        final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
 
         if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category);
 
