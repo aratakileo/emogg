@@ -11,8 +11,6 @@ def main():
     data['prev_mod_version'] = get_build_properties_value('prev_mod_version')
     data['mod_version'] = get_build_properties_value('mod_version')
 
-    print(data)
-
     execute_root_cmd()
 
 
