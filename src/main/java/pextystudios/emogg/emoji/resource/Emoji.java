@@ -1,11 +1,11 @@
 package pextystudios.emogg.emoji.resource;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
+import org.joml.Matrix4f;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
@@ -49,7 +49,7 @@ public class Emoji {
         load();
     }
 
-    public void render(int x, int y, int size, PoseStack poseStack) {
+    public void render(int x, int y, int size, GuiGraphics guiGraphics) {
         var width = size;
         var height = size;
 
@@ -62,7 +62,7 @@ public class Emoji {
             y += (size - height) / 2;
         }
 
-        RenderUtil.renderTexture(poseStack, getRenderResourceLocation(), x, y, width, height);
+        RenderUtil.renderTexture(guiGraphics, getRenderResourceLocation(), x, y, width, height);
     }
 
     public void render(
@@ -140,14 +140,12 @@ public class Emoji {
     protected void load() {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-            var bufferedImage = ImageIO.read(resource.getInputStream());
+            var bufferedImage = ImageIO.read(resource.get().open());
 
             width = bufferedImage.getWidth();
             height = bufferedImage.getHeight();
-
-            resource.close();
         } catch (Exception e) {
-            Emogg.LOGGER.error("Failed to load: " + StringUtil.repr(resourceLocation), e);
+            Emogg.LOGGER.error("Failed to load " + StringUtil.repr(resourceLocation), e);
         }
     }
 

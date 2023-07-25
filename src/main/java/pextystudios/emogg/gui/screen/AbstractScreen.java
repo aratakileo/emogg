@@ -1,14 +1,14 @@
 package pextystudios.emogg.gui.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public abstract class AbstractScreen extends Screen {
-    protected Screen parent;
+    protected net.minecraft.client.gui.screens.Screen parent;
 
-    protected AbstractScreen(Component component, Screen parent) {
+    protected AbstractScreen(Component component, net.minecraft.client.gui.screens.Screen parent) {
         super(component);
         this.parent = parent;
     }
@@ -23,17 +23,18 @@ public abstract class AbstractScreen extends Screen {
         Minecraft.getInstance().setScreen(parent);
     }
 
-    public void render(PoseStack poseStack, int i, int j, float f) {
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 15, 16777215);
-        super.render(poseStack, i, j, f);
+    @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+        renderBackground(guiGraphics);
+        guiGraphics.drawCenteredString(font, title, width / 2, 15, 0xffffff);
+        super.render(guiGraphics, mouseX, mouseY, dt);
     }
 
-    public int centerX() {
+    public int horizontalCenter() {
         return width / 2;
     }
 
-    public int centerY() {
+    public int verticalCenter() {
         return height / 2;
     }
 }

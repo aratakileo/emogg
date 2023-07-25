@@ -1,9 +1,8 @@
 package pextystudios.emogg.gui.component;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import pextystudios.emogg.util.RenderUtil;
 
 public class Button extends AbstractWidget {
@@ -16,7 +15,7 @@ public class Button extends AbstractWidget {
     }
 
     public Button(int x, int y, String message) {
-        this(x, y, new TextComponent(message));
+        this(x, y, Component.literal(message));
     }
 
     public Button(int x, int y, Component message) {
@@ -36,14 +35,12 @@ public class Button extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
-        if (!visible) return;
-
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         RenderUtil.drawRect(x, y, width, height, 0xaa222222, 1, 0xaa000000);
 
-        if (isHovered())
+        if (isHovered)
             RenderUtil.drawRectStroke(x, y, width, height, 1, 0xffffffff);
 
-        renderMessage(poseStack, 0xffffffff);
+        renderString(guiGraphics);
     }
 }

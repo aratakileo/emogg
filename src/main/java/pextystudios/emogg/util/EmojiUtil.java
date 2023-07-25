@@ -33,7 +33,7 @@ public final class EmojiUtil {
         var frames = new ConcurrentHashMap<Integer, Pair<ResourceLocation, Integer>>();
 
         var reader = ImageIO.getImageReadersBySuffix("gif").next();
-        reader.setInput(ImageIO.createImageInputStream(resource.getInputStream()), false);
+        reader.setInput(ImageIO.createImageInputStream(resource.get().open()), false);
 
         var metadata = reader.getImageMetadata(0);
         var metaFormatName = metadata.getNativeMetadataFormatName();
@@ -90,9 +90,6 @@ public final class EmojiUtil {
         }
 
         totalDelayTime += frameDelayTime;
-
-        resource.close();
-
 
         return new Triplet<>(imageSize, totalDelayTime, frames);
     }

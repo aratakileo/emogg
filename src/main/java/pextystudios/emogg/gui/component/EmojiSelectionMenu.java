@@ -1,9 +1,9 @@
 package pextystudios.emogg.gui.component;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.resource.Emoji;
@@ -43,7 +43,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         disableHint();
 
         if (settingsButtonRect == null)
@@ -54,15 +54,15 @@ public class EmojiSelectionMenu extends AbstractWidget {
             );
 
         RenderUtil.drawRect(x, y, width, emojiSize, 0xaa000000);
-        font.draw(poseStack, "Emogg", x + headerPadding * 2, y + headerPadding, 0x6c757d);
+        renderString(guiGraphics, "Emogg", (int)(headerPadding * 2), (int)headerPadding, 0x6c757d);
 
         if (settingsButtonRect.contains(mouseX, mouseY)) {
             RenderUtil.drawRect(settingsButtonRect.move(-2, -2).expand(4, 4), 0x77ffffff);
-            setHint(new TranslatableComponent("emogg.settings.title"));
+            setHint(Component.translatable("emogg.settings.title"));
         }
 
         RenderUtil.renderTexture(
-                poseStack,
+                guiGraphics,
                 settingsIcon,
                 settingsButtonRect
         );
@@ -94,7 +94,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 RenderUtil.drawRect(emojiX, emojiY, emojiSize, emojiSize, 0x77ffffff);
             }
 
-            emoji.render(emojiX + 1, emojiY + 1, emojiSize - 2, poseStack);
+            emoji.render(emojiX + 1, emojiY + 1, emojiSize - 2, guiGraphics);
 
             column++;
 

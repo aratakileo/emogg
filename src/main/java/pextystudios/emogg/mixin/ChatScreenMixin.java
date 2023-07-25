@@ -1,6 +1,6 @@
 package pextystudios.emogg.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,30 +42,25 @@ public class ChatScreenMixin {
     }
 
     @Inject(method = "render", at = @At("HEAD"))
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float dt, CallbackInfo ci) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt, CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
 
-        emojiSelectionMenu.setFocused(false);
-        emojiSelectionButton.setFocused(false);
-
-        if (emojiSelectionMenu.collidePoint(mouseX, mouseY)) {
+        if (emojiSelectionMenu.isMouseOver(mouseX, mouseY)) {
             self.setFocused(emojiSelectionMenu);
-            self.input.setFocus(false);
-            emojiSelectionMenu.setFocused(true);
-
             return;
         }
 
-        if (emojiSelectionButton.collidePoint(mouseX, mouseY)) {
+        if (emojiSelectionButton.isMouseOver(mouseX, mouseY)) {
             self.setFocused(emojiSelectionButton);
-            self.input.setFocus(false);
-            emojiSelectionButton.setFocused(true);
+            return;
         }
+
+        self.setFocused(input);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int i, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionButton.isHovered()) return;
+        if (!emojiSelectionButton.isHovered) return;
 
         cir.setReturnValue(emojiSelectionButton.mouseClicked(mouseX, mouseY, 0));
     }

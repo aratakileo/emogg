@@ -1,7 +1,5 @@
 package pextystudios.emogg.emoji.resource;
 
-import com.mojang.math.Matrix4f;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Pair;
 import pextystudios.emogg.Emogg;

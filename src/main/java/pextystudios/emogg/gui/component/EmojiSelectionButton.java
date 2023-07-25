@@ -1,6 +1,6 @@
 package pextystudios.emogg.gui.component;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.handler.EmojiHandler;
 
@@ -23,21 +23,19 @@ public class EmojiSelectionButton extends Button {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float dt) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         if (!visible) return;
 
         var hasBeenHovered = isHovered;
-        isHovered = collidePoint(mouseX, mouseY);
+
+        super.render(guiGraphics, mouseX, mouseY, dt);
 
         if (!hasBeenHovered && isHovered)
             changeDisplayableEmoji();
-
-        renderButton(poseStack, mouseX, mouseY, dt);
-        renderToolTip(poseStack, mouseX, mouseY);
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         if (displayableEmoji == null) {
             disableHint();
             return;
@@ -47,13 +45,13 @@ public class EmojiSelectionButton extends Button {
 
         int renderX = x, renderY = y, renderSize = width;
 
-        if (isHovered()) {
+        if (isHovered) {
             renderX -= 1;
             renderY -= 1;
             renderSize += 2;
         }
 
-        displayableEmoji.render(renderX, renderY, renderSize, poseStack);
+        displayableEmoji.render(renderX, renderY, renderSize, guiGraphics);
     }
 
     protected void changeDisplayableEmoji() {

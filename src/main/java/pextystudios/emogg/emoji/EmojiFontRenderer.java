@@ -4,9 +4,7 @@ package pextystudios.emogg.emoji;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.mojang.blaze3d.font.GlyphInfo;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -15,11 +13,11 @@ import net.minecraft.client.gui.font.glyphs.EmptyGlyph;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.handler.EmojiHandler;
 
@@ -42,27 +40,16 @@ public class EmojiFontRenderer extends Font {
                 }
             });
 
-    public EmojiFontRenderer() {
-        super(Minecraft.getInstance().font.fonts);
+    public EmojiFontRenderer(boolean filterFishyGlyphs) {
+        super(Minecraft.getInstance().font.fonts, filterFishyGlyphs);
     }
 
-    public EmojiFontRenderer(Font textRenderer) {
-        super(textRenderer.fonts);
+    public EmojiFontRenderer(Font font) {
+        super(font.fonts, font.filterFishyGlyphs);
     }
 
     @Override
-    public float renderText(
-            String text,
-            float x,
-            float y,
-            int color,
-            boolean shadow,
-            Matrix4f matrix,
-            MultiBufferSource multiBufferSource,
-            boolean isTransparent,
-            int underlineColor,
-            int light
-    ) {
+    public float renderText(String text, float x, float y, int color, boolean shadow, Matrix4f matrix4f, MultiBufferSource multiBufferSource, DisplayMode displayMode, int underlineColor, int light) {
         if (text.isEmpty()) return 0;
 
         try {
@@ -75,8 +62,8 @@ public class EmojiFontRenderer extends Font {
                     y,
                     color,
                     shadow,
-                    matrix,
-                    isTransparent,
+                    matrix4f,
+                    displayMode,
                     light
             );
 
@@ -91,7 +78,7 @@ public class EmojiFontRenderer extends Font {
     }
 
     @Override
-    public int drawInBatch(FormattedCharSequence formattedCharSequence, float x, float y, int color, boolean shadow, Matrix4f matrix, MultiBufferSource multiBufferSource, boolean isTransparent, int backgroundColor, int light) {
+    public int drawInBatch(FormattedCharSequence formattedCharSequence, float x, float y, int color, boolean shadow, Matrix4f matrix4f, MultiBufferSource multiBufferSource, DisplayMode displayMode, int backgroundColor, int light) {
         String text;
 
         if (formattedCharSequence == null || (text = asString(formattedCharSequence)).isEmpty())
@@ -128,7 +115,7 @@ public class EmojiFontRenderer extends Font {
             return true;
         });
 
-        Matrix4f frontMatrix = new Matrix4f(matrix);
+        Matrix4f frontMatrix = new Matrix4f(matrix4f);
 
         if (shadow) {
             EmojiCharSink emojiCharSink = new EmojiCharSink(
@@ -138,13 +125,13 @@ public class EmojiFontRenderer extends Font {
                     y,
                     color,
                     true,
-                    matrix,
-                    isTransparent,
+                    matrix4f,
+                    displayMode,
                     light
             );
             FormattedCharSequence.fromList(processors).accept(emojiCharSink);
             emojiCharSink.finish(backgroundColor, x);
-            matrix.translate(Font.SHADOW_OFFSET);
+            matrix4f.translate(Font.SHADOW_OFFSET);
         }
 
         EmojiCharSink emojiCharSink = new EmojiCharSink(
@@ -155,7 +142,7 @@ public class EmojiFontRenderer extends Font {
                 color,
                 false,
                 frontMatrix,
-                isTransparent,
+                displayMode,
                 light
         );
         FormattedCharSequence.fromList(processors).accept(emojiCharSink);
@@ -193,7 +180,7 @@ public class EmojiFontRenderer extends Font {
         private final int color;
         private final boolean shadow;
         private final Matrix4f matrix;
-        private final boolean isTransparent;
+        private final DisplayMode displayMode;
         private final int light;
 
         private final List<BakedGlyph.Effect> effects = new ArrayList<>();
@@ -206,7 +193,7 @@ public class EmojiFontRenderer extends Font {
                 int color,
                 boolean shadow,
                 Matrix4f matrix,
-                boolean isTransparent,
+                DisplayMode displayMode,
                 int light
         ) {
             this.emojiIndexes = emojiIndexes;
@@ -216,7 +203,7 @@ public class EmojiFontRenderer extends Font {
             this.color = color;
             this.shadow = shadow;
             this.matrix = matrix;
-            this.isTransparent = isTransparent;
+            this.displayMode = displayMode;
             this.light = light;
         }
 
@@ -242,7 +229,7 @@ public class EmojiFontRenderer extends Font {
                 BakedGlyph bakedGlyph = fontSet.whiteGlyph();
 
                 VertexConsumer buffer = multiBufferSource.getBuffer(
-                        bakedGlyph.renderType(isTransparent ? DisplayMode.SEE_THROUGH : DisplayMode.NORMAL)
+                        bakedGlyph.renderType(displayMode)
                 );
 
                 for (BakedGlyph.Effect rectangle: effects)
@@ -264,11 +251,10 @@ public class EmojiFontRenderer extends Font {
                 return true;
             }
 
-            FontSet fontSet = EmojiFontRenderer.this.getFontSet(style.getFont());
-            GlyphInfo glyph = fontSet.getGlyphInfo(codePoint);
-            BakedGlyph bakedGlyph = style.isObfuscated() && codePoint != 32 ? fontSet.getRandomGlyph(glyph) : fontSet.getGlyph(codePoint);
-
-            TextColor textColor = style.getColor();
+            final var fontSet = EmojiFontRenderer.this.getFontSet(style.getFont());
+            final var glyph = fontSet.getGlyphInfo(codePoint, EmojiFontRenderer.this.filterFishyGlyphs);
+            final var bakedGlyph = style.isObfuscated() && codePoint != 32 ? fontSet.getRandomGlyph(glyph) : fontSet.getGlyph(codePoint);
+            final var textColor = style.getColor();
 
             float r, g, b, a = (float) (color >> 24 & 255) / 255.0F, dimFactor = shadow ? 0.25f : 1.0f;
 
@@ -285,9 +271,9 @@ public class EmojiFontRenderer extends Font {
             }
 
             if (!(bakedGlyph instanceof EmptyGlyph)) {
-                float shadowOffset = shadow ? glyph.getShadowOffset() : 0f;
+                final var shadowOffset = shadow ? glyph.getShadowOffset() : 0f;
 
-                VertexConsumer buffer = multiBufferSource.getBuffer(bakedGlyph.renderType(isTransparent ? DisplayMode.SEE_THROUGH : DisplayMode.NORMAL));
+                VertexConsumer buffer = multiBufferSource.getBuffer(bakedGlyph.renderType(displayMode));
                 EmojiFontRenderer.this.renderChar(
                         bakedGlyph,
                         style.isBold(),
@@ -302,8 +288,8 @@ public class EmojiFontRenderer extends Font {
                 );
             }
 
-            float advanceOffset = glyph.getAdvance(style.isBold());
-            float shadowOffset = shadow ? 1f : 0f;
+            final var advanceOffset = glyph.getAdvance(style.isBold());
+            final var shadowOffset = shadow ? 1f : 0f;
 
             if (style.isStrikethrough())
                 effects.add(new BakedGlyph.Effect(
