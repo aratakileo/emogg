@@ -13,6 +13,7 @@ import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiSelectionButton;
 import pextystudios.emogg.handler.ConfigHandler;
 
+
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
     private EmojiSelectionButton emojiSelectionButton;
