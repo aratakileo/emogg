@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
 public class EmojiTextBuilder {
+    public final static EmojiTextBuilder EMPTY = new EmojiTextBuilder(null);
+
     private final static Pattern pattern = Pattern.compile("(\\\\?)(:([_A-Za-z0-9]+):)");
     private final static int BACKSLASH_PATTERN_GROUP = 1, EMOJI_CODE_PATTERN_GROUP = 2, EMOJI_NAME_PATTERN_GROUP = 3;
 
@@ -20,10 +22,29 @@ public class EmojiTextBuilder {
         setSourceText(sourceText);
     }
 
-    public void setSourceText(String sourceText) {
+    public HashMap<Integer, Emoji> getEmojiIndexes() {
+        return emojiIndexes;
+    }
+
+    public String getBuiltText() {
+        return builtText;
+    }
+
+    public int getLengthDifference() {
+        return lengthDifference;
+    }
+
+    private void setSourceText(String sourceText) {
+
+        if (sourceText == null)
+            sourceText = "";
+
         emojiIndexes = new LinkedHashMap<>();
         builtText = sourceText;
         lengthDifference = 0;
+
+        if (sourceText.isEmpty())
+            return;
 
         var matcher = pattern.matcher(builtText);
 
@@ -69,17 +90,5 @@ public class EmojiTextBuilder {
 
             lengthDifference += lengthBeforeChanges - builtText.length();
         }
-    }
-
-    public HashMap<Integer, Emoji> getEmojiIndexes() {
-        return emojiIndexes;
-    }
-
-    public String getBuiltText() {
-        return builtText;
-    }
-
-    public int getLengthDifference() {
-        return lengthDifference;
     }
 }

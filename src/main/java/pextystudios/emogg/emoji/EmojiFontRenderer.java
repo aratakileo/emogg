@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EmojiFontRenderer extends Font {
-    public static LoadingCache<String, EmojiTextBuilder> EMOJI_TEXT_BUILDERS_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<String, EmojiTextBuilder> EMOJI_TEXT_BUILDERS_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(60, TimeUnit.SECONDS)
             .build(new CacheLoader<>() {
                 @Override
@@ -40,12 +40,12 @@ public class EmojiFontRenderer extends Font {
                 }
             });
 
-    public EmojiFontRenderer(boolean filterFishyGlyphs) {
-        super(Minecraft.getInstance().font.fonts, filterFishyGlyphs);
-    }
-
     public EmojiFontRenderer(Font font) {
         super(font.fonts, font.filterFishyGlyphs);
+    }
+
+    public EmojiTextBuilder getEmojiTextBuilder(String text) throws ExecutionException {
+        return text == null || text.isEmpty() ? EmojiTextBuilder.EMPTY : EMOJI_TEXT_BUILDERS_CACHE.get(text);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class EmojiFontRenderer extends Font {
         if (text.isEmpty()) return 0;
 
         try {
-            EmojiTextBuilder emojiTextBuilder = EMOJI_TEXT_BUILDERS_CACHE.get(text);
+            EmojiTextBuilder emojiTextBuilder = getEmojiTextBuilder(text);
 
             EmojiCharSink emojiCharSink = new EmojiCharSink(
                     emojiTextBuilder.getEmojiIndexes(),
@@ -88,7 +88,7 @@ public class EmojiFontRenderer extends Font {
         HashMap<Integer, Emoji> emojiIndexes = new LinkedHashMap<>();
 
         try {
-            emojiIndexes = EMOJI_TEXT_BUILDERS_CACHE.get(text).getEmojiIndexes();
+            emojiIndexes = getEmojiTextBuilder(text).getEmojiIndexes();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
@@ -154,7 +154,7 @@ public class EmojiFontRenderer extends Font {
     @Override
     public int width(String text) {
         try {
-            text = EMOJI_TEXT_BUILDERS_CACHE.get(text).getBuiltText();
+            text = getEmojiTextBuilder(text).getBuiltText();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
