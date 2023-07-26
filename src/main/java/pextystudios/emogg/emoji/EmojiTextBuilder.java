@@ -1,7 +1,6 @@
 package pextystudios.emogg.emoji;
 
 import pextystudios.emogg.emoji.resource.Emoji;
-import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.StringUtil;
 
 import java.util.HashMap;

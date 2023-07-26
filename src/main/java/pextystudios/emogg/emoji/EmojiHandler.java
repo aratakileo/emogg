@@ -1,4 +1,4 @@
-package pextystudios.emogg.handler;
+package pextystudios.emogg.emoji;
 
 import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -9,6 +9,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.lang3.StringUtils;
 import pextystudios.emogg.Emogg;
+import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
 
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class EmojiHandler {
     private static final Predicate<Emoji> IS_NOT_BUILTIN_EMOJI = emoji -> {
-        return ConfigHandler.data.useBuiltinEmojiEnabled || !getInstance().builtinEmojis.containsKey(emoji.getName());
+        return EmoggConfig.instance.isUsingBuiltinEmojis || !getInstance().builtinEmojis.containsKey(emoji.getName());
     };
 
     private static EmojiHandler INSTANCE;
@@ -99,7 +100,7 @@ public class EmojiHandler {
                         (int) (
                                 (
                                         allEmojis.size() - (
-                                                ConfigHandler.data.useBuiltinEmojiEnabled ? 0 : builtinEmojis.size()
+                                                EmoggConfig.instance.isUsingBuiltinEmojis ? 0 : builtinEmojis.size()
                                         )
                                 ) * Math.random()
                         )

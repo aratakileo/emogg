@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.gui.screen.SettingsScreen;
-import pextystudios.emogg.handler.EmojiHandler;
+import pextystudios.emogg.emoji.EmojiHandler;
 import pextystudios.emogg.util.RenderUtil;
 
 import java.util.function.Consumer;

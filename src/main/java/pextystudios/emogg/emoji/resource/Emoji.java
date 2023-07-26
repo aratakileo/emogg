@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.joml.Matrix4f;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.handler.EmojiHandler;
+import pextystudios.emogg.emoji.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.RenderUtil;
 import pextystudios.emogg.util.StringUtil;

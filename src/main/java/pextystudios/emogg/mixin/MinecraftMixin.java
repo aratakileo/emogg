@@ -13,8 +13,6 @@ import pextystudios.emogg.emoji.EmojiFontRenderer;
 public class MinecraftMixin {
     @Inject(method="<init>*", at=@At("RETURN"))
     private void init(GameConfig gameConfig, CallbackInfo ci) {
-        Emogg.LOGGER.info("SETUPPED");
-
         var minecraft = Minecraft.getInstance();
         minecraft.font = new EmojiFontRenderer(minecraft.font);
         minecraft.fontFilterFishy = new EmojiFontRenderer(minecraft.fontFilterFishy);

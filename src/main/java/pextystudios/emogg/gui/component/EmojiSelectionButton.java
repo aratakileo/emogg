@@ -2,7 +2,7 @@ package pextystudios.emogg.gui.component;
 
 import net.minecraft.client.gui.GuiGraphics;
 import pextystudios.emogg.emoji.resource.Emoji;
-import pextystudios.emogg.handler.EmojiHandler;
+import pextystudios.emogg.emoji.EmojiHandler;
 
 public class EmojiSelectionButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;

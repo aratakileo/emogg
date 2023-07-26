@@ -4,7 +4,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import pextystudios.emogg.gui.component.Button;
-import pextystudios.emogg.handler.ConfigHandler;
+import pextystudios.emogg.EmoggConfig;
 
 public class SettingsScreen extends AbstractScreen {
     public SettingsScreen() {
@@ -18,19 +18,27 @@ public class SettingsScreen extends AbstractScreen {
     @Override
     protected void init() {
         addRenderableWidget(new Button(0, 40, getUseBuiltinEmojisEnabledText()) {{
-                setHint(Component.translatable("emogg.settings.option.use_builtin_emoji.description"));
-                setOnClicked(button -> {
-                    ConfigHandler.data.useBuiltinEmojiEnabled = !ConfigHandler.data.useBuiltinEmojiEnabled;
-                    button.setMessage(getUseBuiltinEmojisEnabledText());
-                });
-                x = horizontalCenter() - width / 2;
+            setHint(Component.translatable("emogg.settings.option.is_using_builtin_emojis.description"));
+            setOnClicked(button -> {
+                EmoggConfig.instance.isUsingBuiltinEmojis = !EmoggConfig.instance.isUsingBuiltinEmojis;
+                button.setMessage(getUseBuiltinEmojisEnabledText());
+            });
+            x = horizontalCenter() - width / 2;
         }});
 
         addRenderableWidget(new Button(0, 62, getExperimentalExperienceEnabledText()) {{
-            setHint(Component.translatable("emogg.settings.option.experimental_experience.description"));
+            setHint(Component.translatable("emogg.settings.option.is_experimental_experience_enabled.description"));
             setOnClicked(button -> {
-                ConfigHandler.data.isExperimentalExperienceEnabled = !ConfigHandler.data.isExperimentalExperienceEnabled;
+                EmoggConfig.instance.isExperimentalExperienceEnabled = !EmoggConfig.instance.isExperimentalExperienceEnabled;
                 button.setMessage(getExperimentalExperienceEnabledText());
+            });
+            x = horizontalCenter() - width / 2;
+        }});
+
+        addRenderableWidget(new Button(0, 84, getDebugModeEnabledText()) {{
+            setOnClicked(button -> {
+                EmoggConfig.instance.isDebugModeEnabled = !EmoggConfig.instance.isDebugModeEnabled;
+                button.setMessage(getDebugModeEnabledText());
             });
             x = horizontalCenter() - width / 2;
         }});
@@ -44,15 +52,22 @@ public class SettingsScreen extends AbstractScreen {
 
     private Component getUseBuiltinEmojisEnabledText() {
         return Component.translatable(
-                "emogg.settings.option.use_builtin_emoji.title",
-                getState(ConfigHandler.data.useBuiltinEmojiEnabled)
+                "emogg.settings.option.is_using_builtin_emojis.title",
+                getState(EmoggConfig.instance.isUsingBuiltinEmojis)
         );
     }
 
     private Component getExperimentalExperienceEnabledText() {
         return Component.translatable(
-                "emogg.settings.option.experimental_experience.title",
-                getState(ConfigHandler.data.isExperimentalExperienceEnabled)
+                "emogg.settings.option.is_experimental_experience_enabled.title",
+                getState(EmoggConfig.instance.isExperimentalExperienceEnabled)
+        );
+    }
+
+    private Component getDebugModeEnabledText() {
+        return Component.translatable(
+                "emogg.settings.option.is_debug_mode_enabled.title",
+                getState(EmoggConfig.instance.isDebugModeEnabled)
         );
     }
 
@@ -62,7 +77,7 @@ public class SettingsScreen extends AbstractScreen {
 
     @Override
     public void onClose() {
-        ConfigHandler.save();
+        EmoggConfig.save();
         super.onClose();
     }
 }

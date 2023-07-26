@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiSelectionButton;
-import pextystudios.emogg.handler.ConfigHandler;
+import pextystudios.emogg.EmoggConfig;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
@@ -37,7 +37,7 @@ public class ChatScreenMixin {
                 input.getHeight() - 4
         );
         emojiSelectionButton.setOnClicked(emojiPickerButton -> emojiSelectionMenu.visible = !emojiSelectionMenu.visible);
-        emojiSelectionButton.visible = ConfigHandler.data.isExperimentalExperienceEnabled;
+        emojiSelectionButton.visible = EmoggConfig.instance.isExperimentalExperienceEnabled;
         self.addRenderableWidget(emojiSelectionButton);
     }
 

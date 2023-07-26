@@ -1,28 +1,28 @@
-package pextystudios.emogg.handler;
+package pextystudios.emogg;
 
 import com.google.gson.Gson;
-import pextystudios.emogg.Emogg;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-public class ConfigHandler {
+public class EmoggConfig {
+    // Non-JSON values
     private final static File file = new File("config/emogg.json");
     private final static Gson gson = new Gson();
-    
-    public static ConfigData data = new ConfigData();
 
-    public static class ConfigData {
-        public boolean useBuiltinEmojiEnabled = true;
-        public boolean isExperimentalExperienceEnabled = true;
-    }
+    public static EmoggConfig instance = new EmoggConfig();
+
+    // JSON values
+    public boolean isUsingBuiltinEmojis = true;
+    public boolean isExperimentalExperienceEnabled = true;
+    public boolean isDebugModeEnabled = false;
 
     public static void load() {
         if (file.exists())
             try {
                 var fileReader = new FileReader(file);
-                data = gson.fromJson(fileReader, ConfigData.class);
+                instance = gson.fromJson(fileReader, EmoggConfig.class);
                 fileReader.close();
             } catch (Exception e) {
                 Emogg.LOGGER.error("Failed to load emogg config: ", e);
@@ -38,7 +38,7 @@ public class ConfigHandler {
 
         try {
             var fileWriter = new FileWriter(file);
-            fileWriter.write(gson.toJson(data));
+            fileWriter.write(gson.toJson(instance));
             fileWriter.close();
         } catch (Exception e) {
             Emogg.LOGGER.error("Failed to save emogg config: ", e);

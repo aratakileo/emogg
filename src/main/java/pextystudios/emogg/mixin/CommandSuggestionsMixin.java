@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.handler.EmojiHandler;
+import pextystudios.emogg.EmoggConfig;
+import pextystudios.emogg.emoji.EmojiHandler;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -37,7 +38,8 @@ public abstract class CommandSuggestionsMixin {
 
     @Inject(method="updateCommandInfo",at=@At("TAIL"),cancellable = true)
     private void inject(CallbackInfo ci){
-        Emogg.LOGGER.info("Process: CommandSuggestionsMixin");
+        if (EmoggConfig.instance.isDebugModeEnabled)
+            Emogg.LOGGER.info("Process: CommandSuggestionsMixin");
 
         String text = this.input.getValue();
         StringReader stringReader = new StringReader(text);

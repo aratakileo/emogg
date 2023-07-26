@@ -5,7 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
@@ -19,7 +18,6 @@ import net.minecraft.util.StringDecomposer;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import pextystudios.emogg.emoji.resource.Emoji;
-import pextystudios.emogg.handler.EmojiHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;

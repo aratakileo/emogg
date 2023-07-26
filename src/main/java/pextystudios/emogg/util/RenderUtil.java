@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +29,10 @@ public final class RenderUtil {
     }
 
     public final static float DEFAULT_Z_LEVEL = 0;
+
+    public static double getGuiScale() {
+        return Minecraft.getInstance().getWindow().getGuiScale();
+    }
 
     public static void renderTexture(GuiGraphics guiGraphics, ResourceLocation resourceLocation, Rect2i rect2i) {
         renderTexture(guiGraphics, resourceLocation, rect2i.getX(), rect2i.getY(), rect2i.getWidth(), rect2i.getHeight());
