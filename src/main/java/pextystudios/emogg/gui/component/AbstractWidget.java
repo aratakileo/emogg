@@ -65,6 +65,16 @@ public abstract class AbstractWidget extends AbstractButton {
         defaultButtonNarrationText(narrationElementOutput);
     }
 
+    public void setLeftTop(int left, int top) {
+        x = left;
+        y = top;
+    }
+
+    public void setRightBottom(int right, int bottom) {
+        x = right - width;
+        y = bottom - height;
+    }
+
     public void renderString(GuiGraphics guiGraphics) {
         renderString(guiGraphics, 0xffffff);
     }

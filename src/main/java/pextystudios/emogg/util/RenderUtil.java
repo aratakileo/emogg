@@ -19,12 +19,41 @@ public final class RenderUtil {
             super(x, y, width, height);
         }
 
+        public Rect2i moveX(int x) {
+            final var returnable = copy();
+            returnable.xPos += x;
+
+            return returnable;
+        }
+
+        public Rect2i moveY(int y) {
+            final var returnable = copy();
+            returnable.yPos += y;
+
+            return returnable;
+        }
+
         public Rect2i move(int x, int y) {
-            return new Rect2i(xPos + x, yPos + y, width, height);
+            final var returnable = copy();
+            returnable.setPosition(xPos + x, yPos + y);
+
+            return returnable;
         }
 
         public Rect2i expand(int horizontal, int vertical) {
-            return new Rect2i(xPos, yPos, width + horizontal, height + vertical);
+            final var returnable = copy();
+            returnable.setSize(width + horizontal, height + vertical);
+
+            return returnable;
+        }
+
+        public void setSize(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        public Rect2i copy() {
+            return new Rect2i(xPos, yPos, width, height);
         }
     }
 

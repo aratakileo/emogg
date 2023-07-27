@@ -24,21 +24,21 @@ public class ChatScreenMixin {
     public void init(CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
 
-        emojiSelectionMenu = new EmojiSelectionMenu();
-        emojiSelectionMenu.x = self.width - emojiSelectionMenu.getWidth() - 4;
-        emojiSelectionMenu.y = self.height - emojiSelectionMenu.getHeight() - input.getHeight() - 4;
-        emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
-        self.addRenderableWidget(emojiSelectionMenu);
-
         final var positionOffset = input.getHeight();
         emojiSelectionButton = new EmojiSelectionButton(
                 self.width - positionOffset,
                 self.height - positionOffset,
                 input.getHeight() - 4
         );
-        emojiSelectionButton.setOnClicked(emojiPickerButton -> emojiSelectionMenu.visible = !emojiSelectionMenu.visible);
         emojiSelectionButton.visible = EmoggConfig.instance.isExperimentalExperienceEnabled;
         self.addRenderableWidget(emojiSelectionButton);
+
+        emojiSelectionMenu = new EmojiSelectionMenu(emojiSelectionButton.getHeight() + 4);
+        emojiSelectionMenu.setRightBottom(self.width - 2, self.height - input.getHeight());
+        emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
+        self.addRenderableWidget(emojiSelectionMenu);
+
+        emojiSelectionButton.setOnClicked(emojiPickerButton -> emojiSelectionMenu.visible = !emojiSelectionMenu.visible);
     }
 
     @Inject(method = "render", at = @At("HEAD"))
