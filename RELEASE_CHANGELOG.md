@@ -1,4 +1,6 @@
 - now the emoji selection menu is displayed correctly regardless of the scale of the interface
+- now emojis that do not fit in the emoji selection menu are not rendered
+- now the emoji selection menu can be scrolled if emojis do not fit in the emoji selection menu
 - now the tooltips move after the mouse cursor when you select an emoji in the emoji selection menu (previously, this did not work for versions 1.20 and 1.20.1)
 - fixed a crash that occurs under specific rarely circumstances when one of the mods passed a null value as text (the issue was stated as "a conflict with the FancyMenu mod") [#8](https://github.com/aratakileo/emogg/issues/8)
 - now the name of the emoji (`:emoji_name:`) is replaced by the emoji itself when it is entered in the text input field (previously, this did not work for versions 1.20 and 1.20.1)
