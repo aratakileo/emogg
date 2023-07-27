@@ -37,6 +37,8 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.visible = false;
         this.emojiSize = emojiSize;
         this.font = Minecraft.getInstance().font;
+
+        setHintPositioner(MOUSE_HINT_POSITIONER);
     }
 
     @Override
@@ -45,7 +47,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         if (settingsButtonRect == null)
             settingsButtonRect = new RenderUtil.Rect2i(
-                    x + width - font.lineHeight - 1,
+                    x + width - font.lineHeight - 3,
                     y + 1,
                     font.lineHeight
             );
@@ -57,14 +59,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
         renderString(guiGraphics, "Emogg", 2, 2, 0x6c757d);
 
         if (settingsButtonRect.contains(mouseX, mouseY)) {
-            RenderUtil.drawRect(settingsButtonRect.move(-1, -1).expand(2, 2), 0x77ffffff);
+            RenderUtil.drawRect(settingsButtonRect.expand(2, 2), 0x77ffffff);
             setHint(Component.translatable("emogg.settings.title"));
         }
 
         RenderUtil.renderTexture(
                 guiGraphics,
                 settingsIcon,
-                settingsButtonRect
+                settingsButtonRect.move(1, 1)
         );
 
         /*
