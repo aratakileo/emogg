@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pextystudios.emogg.Emogg;
-import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.emoji.EmojiHandler;
 
 import java.util.concurrent.CompletableFuture;
@@ -36,11 +34,8 @@ public abstract class CommandSuggestionsMixin {
 
     @Shadow @Final private boolean commandsOnly;
 
-    @Inject(method="updateCommandInfo",at=@At("TAIL"),cancellable = true)
+    @Inject(method = "updateCommandInfo", at = @At("TAIL"), cancellable = true)
     private void inject(CallbackInfo ci){
-        if (EmoggConfig.instance.isDebugModeEnabled)
-            Emogg.LOGGER.info("Process: CommandSuggestionsMixin");
-
         String text = this.input.getValue();
         StringReader stringReader = new StringReader(text);
         boolean hasSlash = stringReader.canRead() && stringReader.peek() == '/';

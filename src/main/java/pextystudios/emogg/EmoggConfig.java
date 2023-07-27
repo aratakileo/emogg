@@ -16,7 +16,6 @@ public class EmoggConfig {
     // JSON values
     public boolean isUsingBuiltinEmojis = true;
     public boolean isExperimentalExperienceEnabled = true;
-    public boolean isDebugModeEnabled = false;
 
     public static void load() {
         if (file.exists())

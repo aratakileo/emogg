@@ -35,14 +35,6 @@ public class SettingsScreen extends AbstractScreen {
             x = horizontalCenter() - width / 2;
         }});
 
-        addRenderableWidget(new Button(0, 84, getDebugModeEnabledText()) {{
-            setOnClicked(button -> {
-                EmoggConfig.instance.isDebugModeEnabled = !EmoggConfig.instance.isDebugModeEnabled;
-                button.setMessage(getDebugModeEnabledText());
-            });
-            x = horizontalCenter() - width / 2;
-        }});
-
         addRenderableWidget(new Button(0, 0, Component.translatable("emogg.settings.save_and_quit")) {{
             setOnClicked(button -> onClose());
             x = horizontalCenter() - width / 2;
@@ -61,13 +53,6 @@ public class SettingsScreen extends AbstractScreen {
         return Component.translatable(
                 "emogg.settings.option.is_experimental_experience_enabled.title",
                 getState(EmoggConfig.instance.isExperimentalExperienceEnabled)
-        );
-    }
-
-    private Component getDebugModeEnabledText() {
-        return Component.translatable(
-                "emogg.settings.option.is_debug_mode_enabled.title",
-                getState(EmoggConfig.instance.isDebugModeEnabled)
         );
     }
 

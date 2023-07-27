@@ -4,7 +4,6 @@
   "emogg.settings.option.is_using_builtin_emojis.description": "If this option disabled, built-in emojis will not be offered in the suggestions when you enter the name of the emoji, and they will also remove from the emoji selection menu",
   "emogg.settings.option.is_experimental_experience_enabled.title": "Experimental experience: %s",
   "emogg.settings.option.is_experimental_experience_enabled.description": "If this option enabled, then the experimental version of emoji selection menu will be shown in the chat screen. It is not recommended to include it if there are more than 81 emojis exists in your collection!",
-  "emogg.settings.option.is_debug_mode_enabled.title": "Debug mode: %s",
   "emogg.settings.save_and_quit": "Save & Quit",
   "emogg.gui.state.enabled": "Enabled",
   "emogg.gui.state.disabled": "Disabled",
