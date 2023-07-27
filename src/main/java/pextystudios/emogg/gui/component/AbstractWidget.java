@@ -55,11 +55,11 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int i) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!active || !visible)
             return false;
 
-        if (isValidClickButton(i) && clicked(mouseX, mouseY)) {
+        if (isValidClickButton(button) && clicked(mouseX, mouseY)) {
             onClick(mouseX, mouseY);
             return true;
         }

@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
+import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.gui.screen.SettingsScreen;
 import pextystudios.emogg.emoji.EmojiHandler;
@@ -14,6 +15,10 @@ import pextystudios.emogg.util.RenderUtil;
 import java.util.function.Consumer;
 
 public class EmojiSelectionMenu extends AbstractWidget {
+    public final static int MAX_NUMBER_OF_EMOJIS_IN_LINE = 9,
+            MAX_NUMBER_OF_EMOJIS_IN_COLUMN = 8,
+            MAX_NUMBER_OF_EMOJIS_IN_GRID = MAX_NUMBER_OF_EMOJIS_IN_LINE * MAX_NUMBER_OF_EMOJIS_IN_COLUMN;
+
     private final static ResourceLocation settingsIcon = new ResourceLocation(
             Emogg.NAMESPACE,
             "gui/icon/settings_icon.png"
@@ -25,18 +30,20 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private RenderUtil.Rect2i settingsButtonRect = null;
     private Consumer<Emoji> onEmojiSelected = null;
     private Emoji hoveredEmoji = null;
+    private int emojisLineOffset;
 
     public EmojiSelectionMenu(float emojiSize) {
         super(
                 0,
                 0,
-                (int) ((emojiSize + 1) * 9) + 3,
-                (int) (emojiSize * 9) + 4 + Minecraft.getInstance().font.lineHeight
+                (int) ((emojiSize + 1) * MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1,
+                (int) ((emojiSize + 1) * MAX_NUMBER_OF_EMOJIS_IN_COLUMN) + 4 + Minecraft.getInstance().font.lineHeight
         );
 
         this.visible = false;
         this.emojiSize = emojiSize;
         this.font = Minecraft.getInstance().font;
+        this.emojisLineOffset = EmoggConfig.instance.emojiSelectionMenuScrollStateValue;
 
         setHintPositioner(MOUSE_HINT_POSITIONER);
     }
@@ -90,7 +97,13 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         hoveredEmoji = null;
 
-        for (var emoji: EmojiHandler.getInstance().getEmojis()) {
+        for (
+                var emoji: EmojiHandler.getInstance()
+                .getEmojiStream()
+                .skip((long) emojisLineOffset * MAX_NUMBER_OF_EMOJIS_IN_LINE)
+                .limit(MAX_NUMBER_OF_EMOJIS_IN_GRID)
+                .toList()
+        ) {
             var emojiX = x + icolumn * (emojiSize + 1) + 1;
             var emojiY = y + emojiSize + iline * (emojiSize + 1) + 1;
 
@@ -104,11 +117,33 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
             icolumn++;
 
-            if (icolumn > 8) {
+            if (icolumn > MAX_NUMBER_OF_EMOJIS_IN_LINE - 1) {
                 icolumn = 0;
                 iline++;
             }
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
+        final var numberOfEmojis = EmojiHandler.getInstance().getNumberOfEmojis();
+
+        if (!isActive() || !isHovered || numberOfEmojis < MAX_NUMBER_OF_EMOJIS_IN_GRID)
+            return false;
+
+        final var previousEmojisLineOffset = emojisLineOffset;
+        emojisLineOffset = Math.min(
+                (int) Math.ceil((double)numberOfEmojis / (double) MAX_NUMBER_OF_EMOJIS_IN_LINE) - MAX_NUMBER_OF_EMOJIS_IN_COLUMN,
+                Math.max(0, emojisLineOffset - (int)scrollDelta)
+        );
+
+        if (previousEmojisLineOffset != emojisLineOffset) {
+            EmoggConfig.instance.emojiSelectionMenuScrollStateValue = emojisLineOffset;
+            EmoggConfig.save();
+        }
+
+        Emogg.LOGGER.info(String.format("MouseScroll{emojisLineOffset: %s, dt: %s}", emojisLineOffset, scrollDelta));
+        return true;
     }
 
     @Override

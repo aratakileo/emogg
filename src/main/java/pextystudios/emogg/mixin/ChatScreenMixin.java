@@ -59,9 +59,16 @@ public class ChatScreenMixin {
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    public void mouseClicked(double mouseX, double mouseY, int i, CallbackInfoReturnable<Boolean> cir) {
+    public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (!emojiSelectionButton.isHovered) return;
 
         cir.setReturnValue(emojiSelectionButton.mouseClicked(mouseX, mouseY, 0));
+    }
+
+    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
+    public void mouseScrolled(double mouseX, double mouseY, double scrollDelta, CallbackInfoReturnable<Boolean> cir) {
+        if (!emojiSelectionMenu.isHovered) return;
+
+        cir.setReturnValue(emojiSelectionMenu.mouseScrolled(mouseX, mouseY, scrollDelta));
     }
 }

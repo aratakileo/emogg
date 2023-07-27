@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EmojiHandler {
     private static final Predicate<Emoji> IS_NOT_BUILTIN_EMOJI = emoji -> {
@@ -65,8 +66,12 @@ public class EmojiHandler {
         return allEmojis.get(name);
     }
 
-    public List<Emoji> getEmojis() {
-        return allEmojis.values().stream().filter(IS_NOT_BUILTIN_EMOJI).toList();
+    public Stream<Emoji> getEmojiStream() {
+        return allEmojis.values().stream().filter(IS_NOT_BUILTIN_EMOJI);
+    }
+
+    public int getNumberOfEmojis() {
+        return allEmojis.size();
     }
 
     public Enumeration<String> getCategories() {return emojiCategories.keys();}

@@ -16,6 +16,7 @@ public class EmoggConfig {
     // JSON values
     public boolean isUsingBuiltinEmojis = true;
     public boolean isExperimentalExperienceEnabled = true;
+    public int emojiSelectionMenuScrollStateValue = 0;
 
     public static void load() {
         if (file.exists())
