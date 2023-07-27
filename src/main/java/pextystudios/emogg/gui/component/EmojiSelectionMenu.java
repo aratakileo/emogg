@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.gui.screen.SettingsScreen;
 import pextystudios.emogg.emoji.EmojiHandler;
@@ -30,7 +29,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private RenderUtil.Rect2i settingsButtonRect = null;
     private Consumer<Emoji> onEmojiSelected = null;
     private Emoji hoveredEmoji = null;
-    private int emojisLineOffset;
+    private int emojisLineOffset = 0;
 
     public EmojiSelectionMenu(float emojiSize) {
         super(
@@ -43,7 +42,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.visible = false;
         this.emojiSize = emojiSize;
         this.font = Minecraft.getInstance().font;
-        this.emojisLineOffset = EmoggConfig.instance.emojiSelectionMenuScrollStateValue;
 
         setHintPositioner(MOUSE_HINT_POSITIONER);
     }
@@ -136,11 +134,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 (int) Math.ceil((double)numberOfEmojis / (double) MAX_NUMBER_OF_EMOJIS_IN_LINE) - MAX_NUMBER_OF_EMOJIS_IN_COLUMN,
                 Math.max(0, emojisLineOffset - (int)scrollDelta)
         );
-
-        if (previousEmojisLineOffset != emojisLineOffset) {
-            EmoggConfig.instance.emojiSelectionMenuScrollStateValue = emojisLineOffset;
-            EmoggConfig.save();
-        }
 
         Emogg.LOGGER.info(String.format("MouseScroll{emojisLineOffset: %s, dt: %s}", emojisLineOffset, scrollDelta));
         return true;
