@@ -1,0 +1,4 @@
+- fix the dependency of EmojiSelectionMenu rendering on GUI scale
+- fixed a crash that occurs under specific rarely circumstances when one of the mods passed a null value as text. The issue was stated as "a conflict with the FancyMenu mod" [#8](https://github.com/aratakileo/emogg/issues/8)
+- removed unnecessary output to the developer console [#9](https://github.com/aratakileo/emogg/issues/9)
+- to optimize the development process, support for all versions of Minecraft has been prematurely suspended, except versions 1.20 and 1.20.1. Updates for other versions will no longer be released (┬┬﹏┬┬)
