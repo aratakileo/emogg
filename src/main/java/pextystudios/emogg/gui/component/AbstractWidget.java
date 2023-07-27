@@ -5,14 +5,21 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector2i;
+import org.joml.Vector2ic;
 import pextystudios.emogg.util.RenderUtil;
 
 import java.util.function.Consumer;
 
 public abstract class AbstractWidget extends AbstractButton {
+    public final static MouseHintPositioner MOUSE_HINT_POSITIONER = new MouseHintPositioner();
+
+    protected ClientTooltipPositioner hintPositioner = new MenuTooltipPositioner(this);
     protected Consumer<AbstractWidget> onClicked = null;
 
     public AbstractWidget(int x, int y, int width, int height) {
@@ -65,6 +72,11 @@ public abstract class AbstractWidget extends AbstractButton {
         defaultButtonNarrationText(narrationElementOutput);
     }
 
+    @Override
+    protected @NotNull ClientTooltipPositioner createTooltipPositioner() {
+        return this.isHovered && this.isFocused() && Minecraft.getInstance().getLastInputType().isKeyboard() ? super.createTooltipPositioner() : hintPositioner;
+    }
+
     public void setLeftTop(int left, int top) {
         x = left;
         y = top;
@@ -105,5 +117,16 @@ public abstract class AbstractWidget extends AbstractButton {
 
     public void disableHint() {
         setTooltip(null);
+    }
+
+    public void setHintPositioner(ClientTooltipPositioner hintPositioner) {
+        this.hintPositioner = hintPositioner;
+    }
+
+    private static class MouseHintPositioner implements ClientTooltipPositioner {
+        @Override
+        public Vector2ic positionTooltip(int guiWidth, int guiHeight, int mouseX, int mouseY, int m, int n) {
+            return new Vector2i(mouseX, mouseY);
+        }
     }
 }
