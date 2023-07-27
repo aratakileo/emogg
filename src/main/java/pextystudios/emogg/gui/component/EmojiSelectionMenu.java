@@ -129,7 +129,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
         if (!isActive() || !isHovered || numberOfEmojis < MAX_NUMBER_OF_EMOJIS_IN_GRID)
             return false;
 
-        final var previousEmojisLineOffset = emojisLineOffset;
         emojisLineOffset = Math.min(
                 (int) Math.ceil((double)numberOfEmojis / (double) MAX_NUMBER_OF_EMOJIS_IN_LINE) - MAX_NUMBER_OF_EMOJIS_IN_COLUMN,
                 Math.max(0, emojisLineOffset - (int)scrollDelta)
