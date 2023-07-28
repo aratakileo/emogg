@@ -2,8 +2,6 @@
   "emogg.settings.title": "Emogg-Einstellungen",
   "emogg.settings.option.is_using_builtin_emojis.title": "Verwenden integrierte Emojis: %s",
   "emogg.settings.option.is_using_builtin_emojis.description": "Wenn diese Option deaktiviert ist, werden integrierte Emojis nicht in den Vorschlägen angeboten, wenn Sie den Namen des Emojis eingeben, und sie werden auch aus dem Emoji-Auswahlmenü entfernt",
-  "emogg.settings.option.is_experimental_experience_enabled.title": "Experimentelle Erfahrung: %s",
-  "emogg.settings.option.is_experimental_experience_enabled.description": "Wenn diese Option aktiviert ist, wird die experimentelle Version des Emoji-Auswahlmenüs im Chat-Bildschirm angezeigt. Es wird nicht empfohlen, es einzuschließen, wenn mehr als 81 Emojis in Ihrer Sammlung vorhanden sind!",
   "emogg.settings.save_and_quit": "Speichern und beenden",
   "emogg.gui.state.enabled": "Aktiviert",
   "emogg.gui.state.disabled": "Deaktiviert",

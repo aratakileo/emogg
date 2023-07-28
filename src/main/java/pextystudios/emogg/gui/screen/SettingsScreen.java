@@ -26,15 +26,6 @@ public class SettingsScreen extends AbstractScreen {
             x = horizontalCenter() - width / 2;
         }});
 
-        addRenderableWidget(new Button(0, 62, getExperimentalExperienceEnabledText()) {{
-            setHint(Component.translatable("emogg.settings.option.is_experimental_experience_enabled.description"));
-            setOnClicked(button -> {
-                EmoggConfig.instance.isExperimentalExperienceEnabled = !EmoggConfig.instance.isExperimentalExperienceEnabled;
-                button.setMessage(getExperimentalExperienceEnabledText());
-            });
-            x = horizontalCenter() - width / 2;
-        }});
-
         addRenderableWidget(new Button(0, 0, Component.translatable("emogg.settings.save_and_quit")) {{
             setOnClicked(button -> onClose());
             x = horizontalCenter() - width / 2;
@@ -46,13 +37,6 @@ public class SettingsScreen extends AbstractScreen {
         return Component.translatable(
                 "emogg.settings.option.is_using_builtin_emojis.title",
                 getState(EmoggConfig.instance.isUsingBuiltinEmojis)
-        );
-    }
-
-    private Component getExperimentalExperienceEnabledText() {
-        return Component.translatable(
-                "emogg.settings.option.is_experimental_experience_enabled.title",
-                getState(EmoggConfig.instance.isExperimentalExperienceEnabled)
         );
     }
 
