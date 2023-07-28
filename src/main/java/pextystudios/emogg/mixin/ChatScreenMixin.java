@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiSelectionButton;
-import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.util.KeyboardUtil;
 
 @Mixin(ChatScreen.class)
