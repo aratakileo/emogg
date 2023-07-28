@@ -31,7 +31,6 @@ public class ChatScreenMixin {
                 self.height - positionOffset,
                 input.getHeight() - 4
         );
-        emojiSelectionButton.visible = EmoggConfig.instance.isExperimentalExperienceEnabled;
         self.addRenderableWidget(emojiSelectionButton);
 
         emojiSelectionMenu = new EmojiSelectionMenu(emojiSelectionButton.getHeight() + 4);
