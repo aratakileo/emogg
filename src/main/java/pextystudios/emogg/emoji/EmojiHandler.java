@@ -20,21 +20,21 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EmojiHandler {
-    private static final Predicate<Emoji> IS_NOT_BUILTIN_EMOJI = emoji -> {
+    private final static Predicate<Emoji> IS_NOT_BUILTIN_EMOJI = emoji -> {
         return EmoggConfig.instance.isUsingBuiltinEmojis || !getInstance().builtinEmojis.containsKey(emoji.getName());
     };
 
     private static EmojiHandler INSTANCE;
 
-    public static final String STATIC_EMOJI_EXTENSION = ".png";
-    public static final String ANIMATED_EMOJI_EXTENSION = ".gif";
-    public static final Predicate<String> HAS_EMOJIS_EXTENSION = path -> {
+    public final static String STATIC_EMOJI_EXTENSION = ".png";
+    public final static String ANIMATED_EMOJI_EXTENSION = ".gif";
+    public final static Predicate<String> HAS_EMOJIS_EXTENSION = path -> {
         return path.endsWith(STATIC_EMOJI_EXTENSION) || path.endsWith(ANIMATED_EMOJI_EXTENSION);
     };
-    public static final Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(resourceLocation.getPath());
-    public static final String EMOJIS_PATH_PREFIX = "emoji";
-    public static final String DEFAULT_EMOJI_CATEGORY = "other";
-    public static final int EMOJI_DEFAULT_RENDER_SIZE = 10;
+    public final static Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(resourceLocation.getPath());
+    public final static String EMOJIS_PATH_PREFIX = "emoji";
+    public final static String DEFAULT_CATEGORY_NAME = "other";
+    public final static int EMOJI_DEFAULT_RENDER_SIZE = 10;
 
     private final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Emoji> builtinEmojis = new ConcurrentHashMap<>();
@@ -74,21 +74,12 @@ public class EmojiHandler {
         return allEmojis.size();
     }
 
-    public Enumeration<String> getCategories() {return emojiCategories.keys();}
+    public ConcurrentHashMap.KeySetView<String, List<String>> getCategories() {return emojiCategories.keySet();}
 
-    public List<Emoji> getEmojisFromCategory(String category) {
+    public List<Emoji> getEmojisByCategory(String category) {
         if (!emojiCategories.containsKey(category)) return null;
 
         return emojiCategories.get(category).stream().map(allEmojis::get).toList();
-    }
-
-    public String getDisplayableCategoryName(String category) {
-        final var categoryLangKey = "emogg.category." + category;
-        final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
-
-        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category);
-
-        return displayableName;
     }
 
     public Optional<Emoji> getRandomEmoji() {
@@ -236,10 +227,23 @@ public class EmojiHandler {
 
         allEmojis.putAll(builtinEmojis);
 
-        Emogg.LOGGER.info("Updating the lists is complete!");
+        Emogg.LOGGER.info(String.format(
+                "Updating the lists is complete. %s built-in and %s custom emojis have been defined!",
+                allEmojis.size() - builtinEmojis.size(),
+                builtinEmojis.size()
+        ));
     }
 
     public static EmojiHandler getInstance() {
         return INSTANCE;
+    }
+
+    public static String getDisplayableCategoryName(String category) {
+        final var categoryLangKey = "emogg.category." + category;
+        final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
+
+        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category);
+
+        return displayableName;
     }
 }
