@@ -7,5 +7,6 @@
   "emogg.gui.state.disabled": "Disabled",
   "emogg.category.food": "Food",
   "emogg.category.other": "Other",
-  "emogg.category.people": "People"
+  "emogg.category.people": "People",
+  "emogg.resourcepack.builtin": "emogg built-in emojis"
 }
