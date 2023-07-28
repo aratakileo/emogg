@@ -194,7 +194,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (!isScrolling()) return false;
 
-        applyScrollByThumbY((int) Math.max(mouseY - y - scrollingThumbMouseOffset, headerHeight + 1));
+        applyScrollByThumbY((int)(mouseY - y - scrollingThumbMouseOffset));
 
         return true;
     }
@@ -240,7 +240,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private void applyScrollByThumbY(int y) {
         final var scrollbarFieldHeight =  scrollbarRect.height - 2 - scrollbarThumbRect.height;
 
-        scrollbarThumbRect.setY(Math.min(y, scrollbarFieldHeight + headerHeight + 1));
+        scrollbarThumbRect.setY(Math.min(Math.max(y, headerHeight + 1), scrollbarFieldHeight + headerHeight + 1));
         scrollLinesAmount = (int) ((
                 emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN
         ) * (
