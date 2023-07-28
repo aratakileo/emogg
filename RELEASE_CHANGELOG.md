@@ -1,3 +1,4 @@
 - implemented a more intuitive interaction with the emoji selection menu
+- implemented support for splitting emojis into categories. All emojis located in the root folder `assets/emogg/emoji` will be assigned to the `other` category by default. Except the root folder, the name of the folder will be used as the name of the category to which the emojis will be assigned. It is also possible to translate category names into different languages, for this you need to use the following translation key `emogg.category.your_category_name`
 - added a scrollbar to the emoji selection menu
 - the emoji selection menu is no longer part of the experimental user experience.
