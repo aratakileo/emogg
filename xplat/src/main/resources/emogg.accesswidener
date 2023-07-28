@@ -1,0 +1,10 @@
+accessWidener v1 named
+
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
+accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+accessible class net/minecraft/client/renderer/RenderStateShard$ShaderStateShard
+accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
+accessible class net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard
+accessible class net/minecraft/client/renderer/RenderStateShard$LightmapStateShard
+
+extendable method net/minecraft/client/gui/Font renderText (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)F

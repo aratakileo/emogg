@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[46,)"
+license="GPL-3.0-only"
+
+[[mods]]
+modId="emogg"
+version="${file.jarVersion}"
+displayName="Emogg"
+logoFile="icon.png"
+description='''
+Adds emoji support to the chat and to most of the Minecraft interface
+'''
+authors="Arataki Leo"
+displayURL="https://github.com/aratakileo/emogg"
+
+[[dependencies.emogg]]
+modId="forge"
+mandatory=true
+versionRange="[46,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.emogg]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20,)"
+ordering="NONE"
+side="BOTH"

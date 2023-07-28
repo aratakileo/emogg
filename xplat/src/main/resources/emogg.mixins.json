@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "pextystudios.emogg.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "ChatScreenMixin",
+    "CommandSuggestionsMixin",
+    "InBedChatScreenMixin",
+    "MinecraftMixin",
+    "accessor.MinecraftAccessor",
+    "accessor.FontAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "emogg.refmap.json"
+}
