@@ -8,9 +8,9 @@
     "Arataki Leo"
   ],
   "contact": {
-    "sources": "https://github.com/teaco/emogg",
+    "sources": "https://github.com/aratakileo/emogg",
     "homepage": "https://modrinth.com/mod/emogg",
-    "issues": "https://github.com/teaco/emogg/issues"
+    "issues": "https://github.com/aratakileo/emogg/issues"
   },
   "license": "GPL-3.0",
   "icon": "assets/emogg/icon.png",
