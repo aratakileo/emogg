@@ -12,11 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiSelectionButton;
 import pextystudios.emogg.EmoggConfig;
+import pextystudios.emogg.util.KeyboardUtil;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
-    private EmojiSelectionButton emojiSelectionButton;
-    private EmojiSelectionMenu emojiSelectionMenu;
+    protected EmojiSelectionButton emojiSelectionButton;
+    protected EmojiSelectionMenu emojiSelectionMenu;
 
     @Shadow public EditBox input;
 
@@ -56,6 +57,15 @@ public class ChatScreenMixin {
         }
 
         self.setFocused(input);
+    }
+
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (!emojiSelectionMenu.visible || keyCode != KeyboardUtil.K_ESC) return;
+
+        emojiSelectionMenu.visible = false;
+
+        cir.setReturnValue(true);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
