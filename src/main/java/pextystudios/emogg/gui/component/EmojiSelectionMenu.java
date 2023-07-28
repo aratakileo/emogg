@@ -196,15 +196,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         applyScrollByThumbY((int) Math.max(mouseY - y - scrollingThumbMouseOffset, headerHeight + 1));
 
-//        final var scrollbarFieldHeight =  scrollbarRect.height - 2 - scrollbarThumbRect.height;
-//
-//        scrollbarThumbRect.setY(Math.min((int) Math.max(mouseY - y - scrollingThumbMouseOffset, headerHeight + 1), scrollbarFieldHeight + headerHeight + 1));
-//        scrollLinesAmount = (int) ((
-//                emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN
-//        ) * (
-//                (double)(scrollbarThumbRect.yPos - headerHeight - 1) / (double)scrollbarFieldHeight)
-//        );
-
         return true;
     }
 
@@ -229,15 +220,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
         if (!scrollbarRect.move(x, y).contains((int)mouseX, (int)mouseY)) return;
 
         applyScrollByThumbY((int) (mouseY - y));
-
-//        final var scrollbarFieldHeight =  scrollbarRect.height - 2 - scrollbarThumbRect.height;
-//
-//        scrollbarThumbRect.setY(Math.min((int) (mouseY - y), scrollbarFieldHeight + headerHeight + 1));
-//        scrollLinesAmount = (int) ((
-//                emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN
-//        ) * (
-//                (double)(scrollbarThumbRect.yPos - headerHeight - 1) / (double)(scrollbarFieldHeight))
-//        );
     }
 
     @Override
