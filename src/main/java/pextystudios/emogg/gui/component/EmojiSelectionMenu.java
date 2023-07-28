@@ -27,12 +27,13 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private final float emojiSize;
     private final Font font;
     private final int headerHeight, emojiLinesAmount;
-    private final RenderUtil.Rect2i settingsButtonRect;
+    private final RenderUtil.Rect2i settingsButtonRect, scrollbarRect, scrollbarThumbRect;
     private final boolean isSinglePage;
 
     private Consumer<Emoji> onEmojiSelected = null;
     private Emoji hoveredEmoji = null;
     private int scrollLinesAmount = 0;
+    private int scrollingThumbMouseOffset = -1;
 
     protected EmojiSelectionMenu(float emojiSize, int headerHeight) {
         super(
@@ -59,6 +60,18 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 1,
                 font.lineHeight
         );
+        this.scrollbarRect = new RenderUtil.Rect2i(
+                width - SCROLLBAR_WIDTH,
+                headerHeight,
+                SCROLLBAR_WIDTH,
+                height - headerHeight
+        );
+        this.scrollbarThumbRect = new RenderUtil.Rect2i(
+                scrollbarRect.xPos + 1,
+                scrollbarRect.yPos + 1,
+                SCROLLBAR_WIDTH - 2,
+                Math.max(8, scrollbarRect.height - 2 - (emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN) / 2)
+        );
 
         setHintPositioner(MOUSE_HINT_POSITIONER);
     }
@@ -71,7 +84,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         disableHint();
 
-        final var settingsButtonRenderRect = settingsButtonRect.move(x, y);
+        final var renderableSettingsButtonRect = settingsButtonRect.move(x, y);
 
         /*
         * Start of header processing & rendering
@@ -79,15 +92,15 @@ public class EmojiSelectionMenu extends AbstractWidget {
         RenderUtil.drawRect(x, y, width, (int) emojiSize, 0xaa000000);
         renderString(guiGraphics, "Emogg", 2, 2, 0x6c757d);
 
-        if (settingsButtonRenderRect.contains(mouseX, mouseY)) {
-            RenderUtil.drawRect(settingsButtonRenderRect.expand(2, 2), 0x77ffffff);
+        if (!isScrolling() && renderableSettingsButtonRect.contains(mouseX, mouseY)) {
+            RenderUtil.drawRect(renderableSettingsButtonRect.expand(2, 2), 0x77ffffff);
             setHint(Component.translatable("emogg.settings.title"));
         }
 
         RenderUtil.renderTexture(
                 guiGraphics,
                 settingsIcon,
-                settingsButtonRenderRect.move(1, 1)
+                renderableSettingsButtonRect.move(1, 1)
         );
 
         /*
@@ -121,7 +134,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
             var emojiX = x + icolumn * (emojiSize + 1) + 1;
             var emojiY = y + emojiSize + iline * (emojiSize + 1) + 1;
 
-            if (mouseColumn == icolumn && mouseLine == iline) {
+            if (!isScrolling() && mouseColumn == icolumn && mouseLine == iline) {
                 hoveredEmoji = emoji;
                 setHint(emoji.getEscapedCode());
                 RenderUtil.drawRect((int) emojiX, (int) emojiY, (int) emojiSize, (int) emojiSize, 0x77ffffff);
@@ -142,36 +155,18 @@ public class EmojiSelectionMenu extends AbstractWidget {
         */
         if (isSinglePage) return;
 
-        final var scrollbarX = getRight() - SCROLLBAR_WIDTH;
-        final var scrollbarY = y + headerHeight;
-        final var scrollbarHeight = height - headerHeight;
-        final var scrollbarThumbHeight = Math.max(
-                8,
-                scrollbarHeight - 2 - (emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN) / 2
-        );
-
         RenderUtil.drawRect(
-                scrollbarX,
-                scrollbarY,
-                SCROLLBAR_WIDTH,
-                scrollbarHeight,
+                scrollbarRect.move(x, y),
                 0xaa222222,
                 1,
                 0xaa000000
         );
 
+        final var renderableScrollbarThumbRect = scrollbarThumbRect.move(x, y);
+
         RenderUtil.drawRect(
-                scrollbarX,
-                (int) (scrollbarY + 1 + (
-                        scrollbarHeight - 2 - scrollbarThumbHeight
-                ) * (
-                        (double)scrollLinesAmount / (double)(emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN)
-                )),
-                SCROLLBAR_WIDTH,
-                scrollbarThumbHeight,
-                0xaa222222,
-                1,
-                0xffffffff
+                renderableScrollbarThumbRect,
+                (renderableScrollbarThumbRect.contains(mouseX, mouseY)) ? 0xaacbcbcb : 0xaa6c757d
         );
     }
 
@@ -180,10 +175,35 @@ public class EmojiSelectionMenu extends AbstractWidget {
         if (!isActive() || !isHovered || isSinglePage)
             return false;
 
+        scrollingThumbMouseOffset = -1;
         scrollLinesAmount = Math.min(
                 emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN,
                 Math.max(0, scrollLinesAmount - (int)scrollDelta)
         );
+
+        scrollbarThumbRect.setY(
+                (int) (scrollbarRect.yPos + 1 + (scrollbarRect.height - 2 - scrollbarThumbRect.height) * (
+                        (double)scrollLinesAmount / (double)(emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN)
+                ))
+        );
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (!isScrolling()) return false;
+
+        applyScrollByThumbY((int) Math.max(mouseY - y - scrollingThumbMouseOffset, headerHeight + 1));
+
+//        final var scrollbarFieldHeight =  scrollbarRect.height - 2 - scrollbarThumbRect.height;
+//
+//        scrollbarThumbRect.setY(Math.min((int) Math.max(mouseY - y - scrollingThumbMouseOffset, headerHeight + 1), scrollbarFieldHeight + headerHeight + 1));
+//        scrollLinesAmount = (int) ((
+//                emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN
+//        ) * (
+//                (double)(scrollbarThumbRect.yPos - headerHeight - 1) / (double)scrollbarFieldHeight)
+//        );
 
         return true;
     }
@@ -196,6 +216,28 @@ public class EmojiSelectionMenu extends AbstractWidget {
         }
 
         super.onClick(mouseX, mouseY);
+
+        if (isSinglePage) return;
+
+        final var renderableScrollbarThumbRect = scrollbarThumbRect.move(x, y);
+
+        if (renderableScrollbarThumbRect.contains((int)mouseX, (int)mouseY)) {
+            scrollingThumbMouseOffset = (int) (mouseY - renderableScrollbarThumbRect.yPos);
+            return;
+        }
+
+        if (!scrollbarRect.move(x, y).contains((int)mouseX, (int)mouseY)) return;
+
+        applyScrollByThumbY((int) (mouseY - y));
+
+//        final var scrollbarFieldHeight =  scrollbarRect.height - 2 - scrollbarThumbRect.height;
+//
+//        scrollbarThumbRect.setY(Math.min((int) (mouseY - y), scrollbarFieldHeight + headerHeight + 1));
+//        scrollLinesAmount = (int) ((
+//                emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN
+//        ) * (
+//                (double)(scrollbarThumbRect.yPos - headerHeight - 1) / (double)(scrollbarFieldHeight))
+//        );
     }
 
     @Override
@@ -206,6 +248,26 @@ public class EmojiSelectionMenu extends AbstractWidget {
             playClickSound();
             onEmojiSelected.accept(hoveredEmoji);
         }
+    }
+
+    @Override
+    public void onRelease(double mouseX, double mouseY) {
+        scrollingThumbMouseOffset = -1;
+    }
+
+    private void applyScrollByThumbY(int y) {
+        final var scrollbarFieldHeight =  scrollbarRect.height - 2 - scrollbarThumbRect.height;
+
+        scrollbarThumbRect.setY(Math.min(y, scrollbarFieldHeight + headerHeight + 1));
+        scrollLinesAmount = (int) ((
+                emojiLinesAmount - MAX_NUMBER_OF_EMOJIS_IN_COLUMN
+        ) * (
+                (double)(scrollbarThumbRect.yPos - headerHeight - 1) / (double)(scrollbarFieldHeight))
+        );
+    }
+
+    private boolean isScrolling() {
+        return scrollingThumbMouseOffset >= 0;
     }
 
     public void setOnEmojiSelected(Consumer<Emoji> onEmojiSelected) {

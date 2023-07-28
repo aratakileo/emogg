@@ -74,6 +74,10 @@ public final class RenderUtil {
         RenderSystem.disableBlend();
     }
 
+    public static void drawRect(Rect2i rect2i, int color, int strokeThickness, int strokeColor) {
+        drawRect(rect2i.getX(), rect2i.getY(), rect2i.getWidth(), rect2i.getHeight(), color, strokeThickness, strokeColor);
+    }
+
     public static void drawRect(int x, int y, int width, int height, int color, int strokeThickness, int strokeColor) {
         drawRect(x, y, width, height, color, strokeThickness, strokeColor, DEFAULT_Z_LEVEL);
     }
