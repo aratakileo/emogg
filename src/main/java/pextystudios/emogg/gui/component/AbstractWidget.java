@@ -133,8 +133,15 @@ public abstract class AbstractWidget extends AbstractButton {
 
     private static class MouseHintPositioner implements ClientTooltipPositioner {
         @Override
-        public Vector2ic positionTooltip(int guiWidth, int guiHeight, int mouseX, int mouseY, int m, int n) {
-            return new Vector2i(mouseX, mouseY);
+        public Vector2ic positionTooltip(
+                int guiWidth,
+                int guiHeight,
+                int mouseX,
+                int mouseY,
+                int tooltipWidth,
+                int tooltipHeight
+        ) {
+            return new Vector2i(mouseX - tooltipWidth - 7, mouseY - tooltipHeight - 7);
         }
     }
 }
