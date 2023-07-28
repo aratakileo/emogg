@@ -14,7 +14,7 @@ public class EmoggConfig {
     public static EmoggConfig instance = new EmoggConfig();
 
     // JSON values
-    public boolean isUsingBuiltinEmojis = true;
+    // nothing here...
 
     public static void load() {
         if (file.exists())
