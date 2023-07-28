@@ -1,0 +1,1 @@
+- implemented a more intuitive interaction with the emoji selection menu
