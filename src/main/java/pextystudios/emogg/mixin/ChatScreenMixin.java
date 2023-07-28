@@ -70,7 +70,11 @@ public class ChatScreenMixin {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionButton.isHovered) return;
+        if (!emojiSelectionButton.isHovered) {
+            if (!emojiSelectionMenu.isHovered) emojiSelectionMenu.visible = false;
+
+            return;
+        }
 
         cir.setReturnValue(emojiSelectionButton.mouseClicked(mouseX, mouseY, 0));
     }

@@ -87,6 +87,14 @@ public abstract class AbstractWidget extends AbstractButton {
         y = bottom - height;
     }
 
+    public int getRight() {
+        return x + width;
+    }
+
+    public int getBottom() {
+        return y + height;
+    }
+
     public void renderString(GuiGraphics guiGraphics) {
         renderString(guiGraphics, 0xffffff);
     }
