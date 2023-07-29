@@ -17,27 +17,11 @@ public class SettingsScreen extends AbstractScreen {
 
     @Override
     protected void init() {
-        addRenderableWidget(new Button(0, 40, getUseBuiltinEmojisEnabledText()) {{
-            setHint(Component.translatable("emogg.settings.option.is_using_builtin_emojis.description"));
-            setOnClicked(button -> {
-                EmoggConfig.instance.isUsingBuiltinEmojis = !EmoggConfig.instance.isUsingBuiltinEmojis;
-                button.setMessage(getUseBuiltinEmojisEnabledText());
-            });
-            x = horizontalCenter() - width / 2;
-        }});
-
         addRenderableWidget(new Button(0, 0, Component.translatable("emogg.settings.save_and_quit")) {{
             setOnClicked(button -> onClose());
             x = horizontalCenter() - width / 2;
             y = SettingsScreen.this.height - height - 20;
         }});
-    }
-
-    private Component getUseBuiltinEmojisEnabledText() {
-        return Component.translatable(
-                "emogg.settings.option.is_using_builtin_emojis.title",
-                getState(EmoggConfig.instance.isUsingBuiltinEmojis)
-        );
     }
 
     private String getState(boolean state) {

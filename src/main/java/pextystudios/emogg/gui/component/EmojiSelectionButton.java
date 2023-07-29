@@ -58,14 +58,14 @@ public class EmojiSelectionButton extends Button {
         prevDisplayableEmoji = displayableEmoji;
 
         EmojiHandler.getInstance()
-                .getRandomEmoji(true)
+                .getRandomEmoji()
                 .ifPresent(emoji -> displayableEmoji = emoji);
 
         if (displayableEmoji == null || prevDisplayableEmoji == null) return;
 
         while (displayableEmoji.getName().equals(prevDisplayableEmoji.getName()))
             EmojiHandler.getInstance()
-                    .getRandomEmoji(true)
+                    .getRandomEmoji()
                     .ifPresent(emoji -> displayableEmoji = emoji);
     }
 }

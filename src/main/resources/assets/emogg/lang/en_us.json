@@ -1,11 +1,10 @@
 {
   "emogg.settings.title": "Emogg settings",
-  "emogg.settings.option.is_using_builtin_emojis.title": "Use built-in emoji: %s",
-  "emogg.settings.option.is_using_builtin_emojis.description": "If this option disabled, built-in emojis will not be offered in the suggestions when you enter the name of the emoji, and they will also remove from the emoji selection menu",
   "emogg.settings.save_and_quit": "Save & Quit",
   "emogg.gui.state.enabled": "Enabled",
   "emogg.gui.state.disabled": "Disabled",
   "emogg.category.food": "Food",
   "emogg.category.other": "Other",
-  "emogg.category.people": "People"
+  "emogg.category.people": "People",
+  "emogg.resourcepack.builtin.name": "Built-in emojis"
 }
