@@ -129,7 +129,7 @@ public class EmojiHandler {
         regEmojiInItsCategory(emoji);
 
         Emogg.LOGGER.info(String.format(
-                "Loaded %s as %s in %s",
+                "Loaded %s as %s to %s",
                 StringUtil.repr(resourceLocation),
                 emoji.getCode(),
                 emoji.getCategory()
