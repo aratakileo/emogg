@@ -160,13 +160,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
             } else {
                 if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
 
-                renderString(
-                        guiGraphics,
-                        EmojiHandler.getDisplayableCategoryName(currentSegment.getA()),
-                        2,
-                        lineLocalY + categoryNameOffsetY,
-                        0x6c757d
-                );
+                if (iline >= 0)
+                    renderString(
+                            guiGraphics,
+                            EmojiHandler.getDisplayableCategoryName(currentSegment.getA()),
+                            2,
+                            lineLocalY + categoryNameOffsetY,
+                            0x6c757d
+                    );
 
                 iline++;
 
