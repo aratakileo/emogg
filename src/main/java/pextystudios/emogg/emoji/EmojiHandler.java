@@ -54,6 +54,10 @@ public class EmojiHandler {
         );
     }
 
+    public boolean isEmpty() {
+        return allEmojis.isEmpty();
+    }
+
     public boolean hasEmoji(String name) {
         return allEmojis.containsKey(name);
     }

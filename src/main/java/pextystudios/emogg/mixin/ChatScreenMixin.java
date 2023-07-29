@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import pextystudios.emogg.emoji.EmojiHandler;
 import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiSelectionButton;
 import pextystudios.emogg.util.KeyboardUtil;
@@ -38,6 +39,11 @@ public class ChatScreenMixin {
         self.addRenderableWidget(emojiSelectionMenu);
 
         emojiSelectionButton.setOnClicked(emojiPickerButton -> emojiSelectionMenu.visible = !emojiSelectionMenu.visible);
+
+        if (EmojiHandler.getInstance().isEmpty()) {
+            emojiSelectionButton.active = false;
+            emojiSelectionButton.visible = false;
+        }
     }
 
     @Inject(method = "render", at = @At("HEAD"))
