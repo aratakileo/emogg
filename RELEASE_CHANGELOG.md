@@ -1,5 +1,6 @@
 - implemented a more intuitive interaction with the emoji selection menu
 - implemented support for splitting emojis into categories. All emojis located in the root folder `assets/emogg/emoji` will be assigned to the `other` category by default. Except the root folder, the name of the folder will be used as the name of the category to which the emojis will be assigned. It is also possible to translate category names into different languages, for this you need to use the following translation key `emogg.category.your_category_name`
 - added a scrollbar to the emoji selection menu
-- now the built-in emojis are disabled via the resource packs selection menu ([#11](https://github.com/aratakileo/emogg/pull/11) by [@Abbie5](https://github.com/Abbie5))
+- now the built-in emojis can be disabled via the resource packs selection menu instead of the settings screen ([#11](https://github.com/aratakileo/emogg/pull/11) by [@Abbie5](https://github.com/Abbie5))
+- now Twemogg is part of the emoji packs built into the mod
 - the emoji selection menu is no longer part of the experimental user experience.
