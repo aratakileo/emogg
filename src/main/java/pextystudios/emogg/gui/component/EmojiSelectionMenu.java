@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 public class EmojiSelectionMenu extends AbstractWidget {
     public final static int MAX_NUMBER_OF_EMOJIS_IN_LINE = 9,
             MAX_NUMBER_OF_LINES_ON_PAGE = 8,
-            MAX_NUMBER_OF_EMOJIS_IN_GRID = MAX_NUMBER_OF_EMOJIS_IN_LINE * MAX_NUMBER_OF_LINES_ON_PAGE,
             SCROLLBAR_WIDTH = 5;
 
     private final static ResourceLocation SETTINGS_ICON = new ResourceLocation(
@@ -47,7 +46,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 (int) ((emojiSize + 1) * MAX_NUMBER_OF_LINES_ON_PAGE) + 1 + headerHeight
         );
 
-        this.isSinglePage = EmojiHandler.getInstance().getNumberOfEmojis() < MAX_NUMBER_OF_EMOJIS_IN_GRID;
+        this.isSinglePage = EmojiHandler.getInstance().getNumberOfEmojis() < MAX_NUMBER_OF_EMOJIS_IN_LINE * MAX_NUMBER_OF_LINES_ON_PAGE;
 
         if (isSinglePage)
             width -= SCROLLBAR_WIDTH;
@@ -159,6 +158,8 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
                 iline = -indexDifference;
             } else {
+                if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
+
                 renderString(
                         guiGraphics,
                         EmojiHandler.getDisplayableCategoryName(currentSegment.getA()),
@@ -168,6 +169,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 );
 
                 iline++;
+
                 if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
             }
 
@@ -196,7 +198,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 }
             }
 
-            if (currentSegment.getB().size() != MAX_NUMBER_OF_EMOJIS_IN_LINE) iline++;
+            if (currentSegment.getB().size() % MAX_NUMBER_OF_EMOJIS_IN_LINE != 0) iline++;
         }
 
         /*
