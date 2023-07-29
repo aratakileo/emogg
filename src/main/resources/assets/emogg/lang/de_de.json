@@ -1,11 +1,10 @@
 {
   "emogg.settings.title": "Emogg-Einstellungen",
-  "emogg.settings.option.is_using_builtin_emojis.title": "Verwenden integrierte Emojis: %s",
-  "emogg.settings.option.is_using_builtin_emojis.description": "Wenn diese Option deaktiviert ist, werden integrierte Emojis nicht in den Vorschlägen angeboten, wenn Sie den Namen des Emojis eingeben, und sie werden auch aus dem Emoji-Auswahlmenü entfernt",
   "emogg.settings.save_and_quit": "Speichern und beenden",
   "emogg.gui.state.enabled": "Aktiviert",
   "emogg.gui.state.disabled": "Deaktiviert",
   "emogg.category.food": "Essen",
   "emogg.category.other": "Sonstige",
-  "emogg.category.people": "Menschen"
+  "emogg.category.people": "Menschen",
+  "emogg.resourcepack.builtin.name": "Integrierte Emojis"
 }

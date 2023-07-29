@@ -1,11 +1,10 @@
 {
   "emogg.settings.title": "Налаштування Emogg",
-  "emogg.settings.option.is_using_builtin_emojis.title": "Використовувати вбудовані емодзі: %s",
-  "emogg.settings.option.is_using_builtin_emojis.description": "Якщо цю опцію вимкнено, вбудовані емодзі не будуть пропонуватися в підказках при введенні назви емодзі, і вони також будуть видалені з меню вибору емодзі",
   "emogg.settings.save_and_quit": "Зберегти та вийти",
   "emogg.gui.state.enabled": "Увімкнено",
   "emogg.gui.state.disabled": "Вимкнено",
   "emogg.category.food": "Їжа",
   "emogg.category.other": "Інше",
-  "emogg.category.people": "Люди"
+  "emogg.category.people": "Люди",
+  "emogg.resourcepack.builtin.name": "Вбудовані емодзі"
 }

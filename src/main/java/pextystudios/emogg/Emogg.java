@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pextystudios.emogg.emoji.EmojiHandler;
-import pextystudios.emogg.util.RenderUtil;
 
 
 public class Emogg implements ClientModInitializer {
@@ -26,7 +25,7 @@ public class Emogg implements ClientModInitializer {
         ResourceManagerHelper.registerBuiltinResourcePack(
                 new ResourceLocation(NAMESPACE, "builtin_emojis"),
                 FabricLoader.getInstance().getModContainer(NAMESPACE).orElseThrow(),
-                Component.translatable("emogg.resourcepack.builtin"),
+                Component.translatable("emogg.resourcepack.builtin.name"),
                 ResourcePackActivationType.DEFAULT_ENABLED
         );
     }
