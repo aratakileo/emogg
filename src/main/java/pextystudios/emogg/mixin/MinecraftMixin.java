@@ -1,20 +1,22 @@
 package pextystudios.emogg.mixin;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.main.GameConfig;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.font.FontManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pextystudios.emogg.Emogg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import pextystudios.emogg.emoji.EmojiFontRenderer;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
-    @Inject(method="<init>*", at=@At("RETURN"))
-    private void init(GameConfig gameConfig, CallbackInfo ci) {
-        var minecraft = Minecraft.getInstance();
-        minecraft.font = new EmojiFontRenderer(minecraft.font);
-        minecraft.fontFilterFishy = new EmojiFontRenderer(minecraft.fontFilterFishy);
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/FontManager;createFont()Lnet/minecraft/client/gui/Font;"))
+    private Font createFontWhenInit(FontManager fontManager) {
+        return new EmojiFontRenderer(fontManager.createFont());
+    }
+
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/font/FontManager;createFontFilterFishy()Lnet/minecraft/client/gui/Font;"))
+    private Font createFontFilterFishyWhenInit(FontManager fontManager) {
+        return new EmojiFontRenderer(fontManager.createFontFilterFishy());
     }
 }
