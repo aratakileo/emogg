@@ -22,10 +22,15 @@ public class Emogg implements ClientModInitializer {
 
         EmoggConfig.load();
 
+        registerBuiltinResourcePack("builtin");
+        registerBuiltinResourcePack("twemogg");
+    }
+
+    private void registerBuiltinResourcePack(String resourcepackName) {
         ResourceManagerHelper.registerBuiltinResourcePack(
-                new ResourceLocation(NAMESPACE, "builtin_emojis"),
+                new ResourceLocation(NAMESPACE, resourcepackName),
                 FabricLoader.getInstance().getModContainer(NAMESPACE).orElseThrow(),
-                Component.translatable("emogg.resourcepack.builtin.name"),
+                Component.translatable(String.format("emogg.resourcepack.%s.name", resourcepackName)),
                 ResourcePackActivationType.DEFAULT_ENABLED
         );
     }
