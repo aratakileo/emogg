@@ -100,7 +100,7 @@ public class EmojiHandler {
 
     public void regEmoji(ResourceLocation resourceLocation) {
         var emojiName = Emoji.normalizeNameOrCategory(Emoji.getNameFromPath(resourceLocation));
-        emojiName = getUniqueName(resourceLocation, emojiName, allEmojis);
+        emojiName = getUniqueName(resourceLocation, emojiName);
 
         if (emojiName == null) {
             Emogg.LOGGER.error(String.format(
@@ -132,15 +132,15 @@ public class EmojiHandler {
         ));
     }
 
-    private String getUniqueName(ResourceLocation resourceLocation, String emojiName, ConcurrentHashMap<String, Emoji> emojis) {
-        if (emojis.containsKey(emojiName)) {
-            if (emojis.get(emojiName).getResourceLocation().equals(resourceLocation))
+    private String getUniqueName(ResourceLocation resourceLocation, String emojiName) {
+        if (allEmojis.containsKey(emojiName)) {
+            if (allEmojis.get(emojiName).getResourceLocation().equals(resourceLocation))
                 return null;
 
             var emojiNameIndex = 0;
             var newEmojiName = emojiName + emojiNameIndex;
 
-            while (emojis.containsKey(newEmojiName)) {
+            while (allEmojis.containsKey(newEmojiName)) {
                 emojiNameIndex++;
                 newEmojiName = emojiName + emojiNameIndex;
             }
@@ -165,6 +165,7 @@ public class EmojiHandler {
 
     private void load(ResourceManager resourceManager) {
         Emogg.LOGGER.info("Updating emoji lists...");
+
         emojiCategories.clear();
         allEmojis.clear();
 
