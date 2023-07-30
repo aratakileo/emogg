@@ -5,3 +5,4 @@
 - now the built-in emojis can be disabled via the resource packs selection menu instead of the settings screen ([#11](https://github.com/aratakileo/emogg/pull/11) by [@Abbie5](https://github.com/Abbie5))
 - now Twemogg is part of the emoji packs built into the mod (the first version of this resource pack without dividing emojis into categories was compiled by [@sisby-folk](https://github.com/sisby-folk))
 - the emoji selection menu is no longer part of the experimental user experience
+- now the size of the buttons in the settings will change according to the changes in their texts
