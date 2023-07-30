@@ -21,7 +21,7 @@ public class SettingsScreen extends AbstractScreen {
             setHint(Component.translatable("emogg.settings.option.is_debug_mode_enabled.description"));
             setOnClicked(button -> {
                 EmoggConfig.instance.isDebugModeEnabled = !EmoggConfig.instance.isDebugModeEnabled;
-                button.setMessage(getIsDebugModeEnabledText());
+                ((Button)button).setMessage(getIsDebugModeEnabledText(), true);
             });
             x = horizontalCenter() - width / 2;
         }});
