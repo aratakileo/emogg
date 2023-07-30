@@ -1,15 +1,11 @@
 package pextystudios.emogg.emoji.resource;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
-import org.joml.Matrix4f;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.EmojiHandler;
-import pextystudios.emogg.util.EmojiUtil;
-import pextystudios.emogg.util.RenderUtil;
+import pextystudios.emogg.emoji.EmojiRenderer;
 import pextystudios.emogg.util.StringUtil;
 
 import javax.imageio.ImageIO;
@@ -49,64 +45,6 @@ public class Emoji {
         load();
     }
 
-    public void render(int x, int y, int size, GuiGraphics guiGraphics) {
-        var width = size;
-        var height = size;
-
-        if (this.width < this.height) {
-            width *= ((float) this.width / this.height);
-            x += (size - width) / 2;
-        }
-        else if (this.height < this.width) {
-            height *= ((float) this.height / this.width);
-            y += (size - height) / 2;
-        }
-
-        RenderUtil.renderTexture(guiGraphics, getRenderResourceLocation(), x, y, width, height);
-    }
-
-    public void render(
-            float x,
-            float y,
-            Matrix4f matrix4f,
-            MultiBufferSource multiBufferSource,
-            int light
-    ) {
-        float textureSize = 16, textureX = 0, textureY = 0, textureOffset = 16 / textureSize, offsetY = 1, offsetX = 0,
-                width = EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE, height = EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE;
-        if (this.width < this.height) {
-            width *= ((float) this.width / this.height);
-            x += (EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE - width) / 2;
-        }
-        else if (this.height < this.width) {
-            height *= ((float) this.height / this.width);
-            y += (EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE - height) / 2;
-        }
-
-        var buffer = multiBufferSource.getBuffer(EmojiUtil.getRenderType(getRenderResourceLocation()));
-
-        buffer.vertex(matrix4f, x - offsetX, y - offsetY, 0.0f)
-                .color(255, 255, 255, 255)
-                .uv(textureX, textureY)
-                .uv2(light)
-                .endVertex();
-        buffer.vertex(matrix4f, x - offsetX, y + height - offsetY, 0.0F)
-                .color(255, 255, 255, 255)
-                .uv(textureX, textureY + textureOffset)
-                .uv2(light)
-                .endVertex();
-        buffer.vertex(matrix4f, x - offsetX + width, y + height - offsetY, 0.0F)
-                .color(255, 255, 255, 255)
-                .uv(textureX + textureOffset, textureY + textureOffset)
-                .uv2(light)
-                .endVertex();
-        buffer.vertex(matrix4f, x - offsetX + width, y - offsetY, 0.0F)
-                .color(255, 255, 255, 255)
-                .uv(textureX + textureOffset, textureY / textureSize)
-                .uv2(light)
-                .endVertex();
-    }
-
     public String getName() {return name;}
 
     public String getCategory() {return category;}
@@ -135,6 +73,14 @@ public class Emoji {
 
     public boolean isValid() {
         return width != -1 && height != -1;
+    }
+
+    public EmojiRenderer getRenderer() {
+        return new EmojiRenderer(this);
+    }
+
+    public EmojiRenderer getRenderer(boolean isEscaped) {
+        return new EmojiRenderer(this, isEscaped);
     }
 
     protected void load() {

@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class EmojiFontRenderer extends Font {
+public class EmojiFont extends Font {
     private static final LoadingCache<String, EmojiTextBuilder> EMOJI_TEXT_BUILDERS_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(60, TimeUnit.SECONDS)
             .build(new CacheLoader<>() {
@@ -36,7 +36,7 @@ public class EmojiFontRenderer extends Font {
                 }
             });
 
-    public EmojiFontRenderer(Font font) {
+    public EmojiFont(Font font) {
         super(font.fonts, font.filterFishyGlyphs);
     }
 
@@ -74,7 +74,18 @@ public class EmojiFontRenderer extends Font {
     }
 
     @Override
-    public int drawInBatch(FormattedCharSequence formattedCharSequence, float x, float y, int color, boolean shadow, Matrix4f matrix4f, MultiBufferSource multiBufferSource, DisplayMode displayMode, int backgroundColor, int light) {
+    public int drawInBatch(
+            FormattedCharSequence formattedCharSequence,
+            float x,
+            float y,
+            int color,
+            boolean shadow,
+            Matrix4f matrix4f,
+            MultiBufferSource multiBufferSource,
+            DisplayMode displayMode,
+            int backgroundColor,
+            int light
+    ) {
         final EmojiTextBuilder emojiTextBuilder;
 
         try {
@@ -183,7 +194,7 @@ public class EmojiFontRenderer extends Font {
                     formattedCharSequence.accept((index, style, ch) -> {
                         if (!ignore.get()) {
                             if (emojiTextBuilder.hasEmojiFor(renderCharIndex.get())) {
-                                offsettedX.updateAndGet(value -> value + EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE);
+                                offsettedX.updateAndGet(value -> value + EmojiRenderer.EMOJI_DEFAULT_RENDER_SIZE);
                                 ignore.set(true);
                                 return true;
                             }
@@ -298,7 +309,7 @@ public class EmojiFontRenderer extends Font {
             }
 
             if (!effects.isEmpty()) {
-                FontSet fontSet = EmojiFontRenderer.this.getFontSet(Style.DEFAULT_FONT);
+                FontSet fontSet = EmojiFont.this.getFontSet(Style.DEFAULT_FONT);
                 BakedGlyph bakedGlyph = fontSet.whiteGlyph();
 
                 VertexConsumer buffer = multiBufferSource.getBuffer(
@@ -313,18 +324,13 @@ public class EmojiFontRenderer extends Font {
         @Override
         public boolean accept(int index, Style style, int codePoint) {
             if (emojiTextBuilder.hasEmojiFor(index)) {
-                final var emojiContainer = emojiTextBuilder.getEmojiContainerFor(index);
-
-                if (emojiContainer.isEscaped()) return true;
-
-                emojiContainer.emoji().render(x, y, matrix, multiBufferSource, light);
-                x += EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE;
+                x += emojiTextBuilder.getEmojiRendererFor(index).render(x, y, matrix, multiBufferSource, light);;
 
                 return true;
             }
 
-            final var fontSet = EmojiFontRenderer.this.getFontSet(style.getFont());
-            final var glyph = fontSet.getGlyphInfo(codePoint, EmojiFontRenderer.this.filterFishyGlyphs);
+            final var fontSet = EmojiFont.this.getFontSet(style.getFont());
+            final var glyph = fontSet.getGlyphInfo(codePoint, EmojiFont.this.filterFishyGlyphs);
             final var bakedGlyph = style.isObfuscated() && codePoint != 32 ? fontSet.getRandomGlyph(glyph) : fontSet.getGlyph(codePoint);
             final var textColor = style.getColor();
 
@@ -346,7 +352,7 @@ public class EmojiFontRenderer extends Font {
                 final var shadowOffset = shadow ? glyph.getShadowOffset() : 0f;
 
                 VertexConsumer buffer = multiBufferSource.getBuffer(bakedGlyph.renderType(displayMode));
-                EmojiFontRenderer.this.renderChar(
+                EmojiFont.this.renderChar(
                         bakedGlyph,
                         style.isBold(),
                         style.isItalic(),

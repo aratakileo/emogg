@@ -1,6 +1,7 @@
 package pextystudios.emogg.gui.component;
 
 import net.minecraft.client.gui.GuiGraphics;
+import pextystudios.emogg.emoji.EmojiRenderer;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.emoji.EmojiHandler;
 
@@ -8,7 +9,7 @@ public class EmojiSelectionButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
     public EmojiSelectionButton(int x, int y) {
-        this(x, y, EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE);
+        this(x, y, EmojiRenderer.EMOJI_DEFAULT_RENDER_SIZE);
     }
 
     public EmojiSelectionButton(int x, int y, int size) {
@@ -51,7 +52,7 @@ public class EmojiSelectionButton extends Button {
             renderSize += 2;
         }
 
-        displayableEmoji.render(renderX, renderY, renderSize, guiGraphics);
+        displayableEmoji.getRenderer().render(guiGraphics, renderX, renderY, renderSize);
     }
 
     protected void changeDisplayableEmoji() {

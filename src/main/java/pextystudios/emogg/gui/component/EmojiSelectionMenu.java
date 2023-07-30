@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Triplet;
 import pextystudios.emogg.Emogg;
+import pextystudios.emogg.emoji.EmojiRenderer;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.gui.screen.SettingsScreen;
 import pextystudios.emogg.emoji.EmojiHandler;
@@ -187,7 +188,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                         RenderUtil.drawRect(emojiX, emojiY, (int) emojiSize, (int) emojiSize, 0x77ffffff);
                     }
 
-                    emoji.render(emojiX + 1, emojiY + 1, (int) (emojiSize - 2), guiGraphics);
+                    emoji.getRenderer().render(guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
                 }
 
                 icolumn++;

@@ -31,7 +31,6 @@ public class EmojiHandler {
     public final static Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(resourceLocation.getPath());
     public final static String EMOJIS_PATH_PREFIX = "emoji";
     public final static String DEFAULT_CATEGORY_NAME = "other";
-    public final static int EMOJI_DEFAULT_RENDER_SIZE = 10;
 
     private final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, List<String>> emojiCategories = new ConcurrentHashMap<>();

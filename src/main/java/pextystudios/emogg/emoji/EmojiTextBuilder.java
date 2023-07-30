@@ -1,7 +1,6 @@
 package pextystudios.emogg.emoji;
 
 import org.jetbrains.annotations.Nullable;
-import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
 
 import java.util.HashMap;
@@ -14,7 +13,7 @@ public class EmojiTextBuilder {
     private final static Pattern pattern = Pattern.compile("(\\\\?)(:([_A-Za-z0-9]+):)");
     private final static int BACKSLASH_PATTERN_GROUP = 1, EMOJI_CODE_PATTERN_GROUP = 2, EMOJI_NAME_PATTERN_GROUP = 3;
 
-    private HashMap<Integer, EmojiContainer> emojiIndexes;
+    private HashMap<Integer, EmojiRenderer> emojiIndexes;
     private String builtText;
     private int lengthDifference;
 
@@ -22,7 +21,7 @@ public class EmojiTextBuilder {
         setSourceText(sourceText);
     }
 
-    public @Nullable EmojiContainer getEmojiContainerFor(int charRenderIndex) {
+    public @Nullable EmojiRenderer getEmojiRendererFor(int charRenderIndex) {
         return emojiIndexes.get(charRenderIndex);
     }
 
@@ -67,7 +66,7 @@ public class EmojiTextBuilder {
             if (!backslashBeforeEmojiCode.isEmpty()) {
                 emojiIndexes.put(
                         matcher.start(BACKSLASH_PATTERN_GROUP) - lengthDifference,
-                        new EmojiContainer(emoji, true)
+                        emoji.getRenderer(true)
                 );
 
                 builtText = StringUtil.replaceStartEndIndex(
@@ -92,12 +91,10 @@ public class EmojiTextBuilder {
 
             emojiIndexes.put(
                     matcher.start(EMOJI_CODE_PATTERN_GROUP) - lengthDifference,
-                    new EmojiContainer(emoji, false)
+                    emoji.getRenderer()
             );
 
             lengthDifference += lengthBeforeChanges - builtText.length();
         }
     }
-
-    public record EmojiContainer(Emoji emoji, boolean isEscaped) {}
 }
