@@ -30,7 +30,16 @@ public class EmojiHandler {
     };
     public final static Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(resourceLocation.getPath());
     public final static String EMOJIS_PATH_PREFIX = "emoji";
-    public final static String DEFAULT_CATEGORY_NAME = "other";
+    public final static String CATEGORY_DEFAULT = "other",
+            CATEGORY_ANIME = "anime",
+            CATEGORY_PEOPLE = "people",
+            CATEGORY_NATURE = "nature",
+            CATEGORY_FOOD = "food",
+            CATEGORY_ACTIVITIES = "activities",
+            CATEGORY_TRAVEL = "travel",
+            CATEGORY_OBJECTS = "objects",
+            CATEGORY_SYMBOLS = "symbols",
+            CATEGORY_FLAGS = "flags";
 
     private final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, List<String>> emojiCategories = new ConcurrentHashMap<>();

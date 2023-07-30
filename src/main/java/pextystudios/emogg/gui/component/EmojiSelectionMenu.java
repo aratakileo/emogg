@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Triplet;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.emoji.EmojiRenderer;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.gui.screen.SettingsScreen;
 import pextystudios.emogg.emoji.EmojiHandler;
@@ -39,6 +38,13 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private int scrollLinesAmount = 0;
     private int scrollingThumbMouseOffset = -1;
 
+    private void moveCategoryDown(List<String> categoryNames, String category) {
+        if (categoryNames.contains(category)) {
+            categoryNames.remove(category);
+            categoryNames.add(category);
+        }
+    }
+
     protected EmojiSelectionMenu(float emojiSize, int headerHeight) {
         super(
                 0,
@@ -61,10 +67,17 @@ public class EmojiSelectionMenu extends AbstractWidget {
         final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategories().stream().toList());
         var totalLinesAmount = 0;
 
-        if (categoryNames.contains(EmojiHandler.DEFAULT_CATEGORY_NAME)) {
-            categoryNames.remove(EmojiHandler.DEFAULT_CATEGORY_NAME);
-            categoryNames.add(EmojiHandler.DEFAULT_CATEGORY_NAME);
-        }
+        // Reordering categories
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_ANIME);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_PEOPLE);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_NATURE);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_FOOD);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_ACTIVITIES);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_TRAVEL);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_OBJECTS);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_SYMBOLS);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_FLAGS);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_DEFAULT);
 
         for (var categoryName: categoryNames) {
             final var categoryEmojis = emojiHandler.getEmojisByCategory(categoryName);

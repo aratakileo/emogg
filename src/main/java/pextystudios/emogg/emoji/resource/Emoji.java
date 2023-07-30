@@ -38,7 +38,7 @@ public class Emoji {
 
             category = splitPath[splitPath.length - 2];
         } else
-            category = EmojiHandler.DEFAULT_CATEGORY_NAME;
+            category = EmojiHandler.CATEGORY_DEFAULT;
 
         this.category = normalizeNameOrCategory(category);
 
