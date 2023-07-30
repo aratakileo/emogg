@@ -8,6 +8,13 @@
   "emogg.category.food": "Food",
   "emogg.category.other": "Other",
   "emogg.category.people": "People",
+  "emogg.category.flags": "Flags",
+  "emogg.category.nature": "Nature",
+  "emogg.category.objects": "Objects",
+  "emogg.category.symbols": "Symbols",
+  "emogg.category.travel": "Travel",
+  "emogg.category.anime": "Anime",
+  "emogg.category.activities": "Activities",
   "emogg.resourcepack.builtin.name": "Built-in emojis",
   "emogg.resourcepack.twemogg.name": "Twemogg"
 }

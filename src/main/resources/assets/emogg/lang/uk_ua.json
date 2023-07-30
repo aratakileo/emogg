@@ -8,5 +8,12 @@
   "emogg.category.food": "Їжа",
   "emogg.category.other": "Інше",
   "emogg.category.people": "Люди",
+  "emogg.category.flags": "Прапори",
+  "emogg.category.nature": "Природа",
+  "emogg.category.objects": "Речі",
+  "emogg.category.symbols": "Символи",
+  "emogg.category.travel": "Подорожі",
+  "emogg.category.anime": "Аніме",
+  "emogg.category.activities": "Дії",
   "emogg.resourcepack.builtin.name": "Вбудовані емодзі"
 }

@@ -7,6 +7,13 @@
   "emogg.gui.state.disabled": "Deaktiviert",
   "emogg.category.food": "Essen",
   "emogg.category.other": "Sonstige",
-  "emogg.category.people": "Menschen",
+  "emogg.category.people": "Personen",
+  "emogg.category.flags": "Flaggen",
+  "emogg.category.nature": "Natur",
+  "emogg.category.objects": "Objekte",
+  "emogg.category.symbols": "Symbole",
+  "emogg.category.travel": "Reisen",
+  "emogg.category.anime": "Anime",
+  "emogg.category.activities": "Aktivitäten",
   "emogg.resourcepack.builtin.name": "Integrierte Emojis"
 }
