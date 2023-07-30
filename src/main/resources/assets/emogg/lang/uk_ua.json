@@ -1,5 +1,7 @@
 {
   "emogg.settings.title": "Налаштування Emogg",
+  "emogg.settings.option.is_debug_mode_enabled.title": "Режим налагодження: %s",
+  "emogg.settings.option.is_debug_mode_enabled.description": "Якщо цей режим включений, то при користуванні мода, надаватиметься додаткова інформація, як всередині графічного інтерфейсу, так і в консоль. Цей режим може призвести до зниження продуктивності, тому включення цього режиму повинно здійснюватись у разі, якщо це дійсно необхідно",
   "emogg.settings.save_and_quit": "Зберегти та вийти",
   "emogg.gui.state.enabled": "Увімкнено",
   "emogg.gui.state.disabled": "Вимкнено",

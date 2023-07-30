@@ -106,20 +106,22 @@ public class EmojiHandler {
         emojiName = getUniqueName(resourceLocation, emojiName);
 
         if (emojiName == null) {
-            Emogg.LOGGER.error(String.format(
-                    "Failed to load %s, because it is already defined",
-                    StringUtil.repr(resourceLocation)
-            ));
+            if (EmoggConfig.instance.isDebugModeEnabled)
+                Emogg.LOGGER.error(String.format(
+                        "Failed to load %s, because it is already defined",
+                        StringUtil.repr(resourceLocation)
+                ));
             return;
         }
 
         var emoji = Emoji.from(emojiName, resourceLocation);
 
         if (!emoji.isValid()) {
-            Emogg.LOGGER.error(String.format(
-                    "Failed to load %s, because it has invalid format",
-                    StringUtil.repr(resourceLocation)
-            ));
+            if (EmoggConfig.instance.isDebugModeEnabled)
+                Emogg.LOGGER.error(String.format(
+                        "Failed to load %s, because it has invalid format",
+                        StringUtil.repr(resourceLocation)
+                ));
             return;
         }
 
@@ -127,12 +129,13 @@ public class EmojiHandler {
 
         regEmojiInItsCategory(emoji);
 
-        Emogg.LOGGER.info(String.format(
-                "Loaded %s as %s to %s",
-                StringUtil.repr(resourceLocation),
-                emoji.getCode(),
-                emoji.getCategory()
-        ));
+        if (EmoggConfig.instance.isDebugModeEnabled)
+            Emogg.LOGGER.info(String.format(
+                    "Loaded %s as %s to %s",
+                    StringUtil.repr(resourceLocation),
+                    emoji.getCode(),
+                    emoji.getCategory()
+            ));
     }
 
     private String getUniqueName(ResourceLocation resourceLocation, String emojiName) {
@@ -167,7 +170,8 @@ public class EmojiHandler {
     }
 
     private void load(ResourceManager resourceManager) {
-        Emogg.LOGGER.info("Updating emoji lists...");
+        if (EmoggConfig.instance.isDebugModeEnabled)
+            Emogg.LOGGER.info("Updating emoji lists...");
 
         emojiCategories.clear();
         allEmojis.clear();
@@ -175,10 +179,11 @@ public class EmojiHandler {
         for (var resourceLocation: resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet())
             regEmoji(resourceLocation);
 
-        Emogg.LOGGER.info(String.format(
-                "Updating the lists is complete. %s emojis have been defined!",
-                allEmojis.size()
-        ));
+        if (EmoggConfig.instance.isDebugModeEnabled)
+            Emogg.LOGGER.info(String.format(
+                    "Updating the lists is complete. %s emojis have been defined!",
+                    allEmojis.size()
+            ));
     }
 
     public static EmojiHandler getInstance() {

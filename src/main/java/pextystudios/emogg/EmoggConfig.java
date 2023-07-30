@@ -14,7 +14,7 @@ public class EmoggConfig {
     public static EmoggConfig instance = new EmoggConfig();
 
     // JSON values
-    // nothing here...
+    public boolean isDebugModeEnabled = false;
 
     public static void load() {
         if (file.exists())

@@ -1,5 +1,7 @@
 {
   "emogg.settings.title": "Emogg settings",
+  "emogg.settings.option.is_debug_mode_enabled.title": "Debug mode: %s",
+  "emogg.settings.option.is_debug_mode_enabled.description": "If this mode is enabled, then when using the mod, additional information will be provided, both inside the GUI and in the console. This mode can lead to a decrease in performance, so enabling this mode should be carried out if it is really necessary",
   "emogg.settings.save_and_quit": "Save & Quit",
   "emogg.gui.state.enabled": "Enabled",
   "emogg.gui.state.disabled": "Disabled",

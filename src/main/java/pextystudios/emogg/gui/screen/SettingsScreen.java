@@ -17,11 +17,27 @@ public class SettingsScreen extends AbstractScreen {
 
     @Override
     protected void init() {
+        addRenderableWidget(new Button(0, 40, getIsDebugModeEnabledText()) {{
+            setHint(Component.translatable("emogg.settings.option.is_debug_mode_enabled.description"));
+            setOnClicked(button -> {
+                EmoggConfig.instance.isDebugModeEnabled = !EmoggConfig.instance.isDebugModeEnabled;
+                button.setMessage(getIsDebugModeEnabledText());
+            });
+            x = horizontalCenter() - width / 2;
+        }});
+
         addRenderableWidget(new Button(0, 0, Component.translatable("emogg.settings.save_and_quit")) {{
             setOnClicked(button -> onClose());
             x = horizontalCenter() - width / 2;
             y = SettingsScreen.this.height - height - 20;
         }});
+    }
+
+    private Component getIsDebugModeEnabledText() {
+        return Component.translatable(
+                "emogg.settings.option.is_debug_mode_enabled.title",
+                getState(EmoggConfig.instance.isDebugModeEnabled)
+        );
     }
 
     private String getState(boolean state) {
