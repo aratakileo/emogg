@@ -1,5 +1,6 @@
 package pextystudios.emogg.emoji;
 
+import org.jetbrains.annotations.Nullable;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
 
@@ -13,7 +14,7 @@ public class EmojiTextBuilder {
     private final static Pattern pattern = Pattern.compile("(\\\\?)(:([_A-Za-z0-9]+):)");
     private final static int BACKSLASH_PATTERN_GROUP = 1, EMOJI_CODE_PATTERN_GROUP = 2, EMOJI_NAME_PATTERN_GROUP = 3;
 
-    private HashMap<Integer, Emoji> emojiIndexes;
+    private HashMap<Integer, EmojiContainer> emojiIndexes;
     private String builtText;
     private int lengthDifference;
 
@@ -21,8 +22,12 @@ public class EmojiTextBuilder {
         setSourceText(sourceText);
     }
 
-    public HashMap<Integer, Emoji> getEmojiIndexes() {
-        return emojiIndexes;
+    public @Nullable EmojiContainer getEmojiContainerFor(int charRenderIndex) {
+        return emojiIndexes.get(charRenderIndex);
+    }
+
+    public boolean hasEmojiFor(int charRenderIndex) {
+        return emojiIndexes.containsKey(charRenderIndex);
     }
 
     public String getBuiltText() {
@@ -33,8 +38,11 @@ public class EmojiTextBuilder {
         return lengthDifference;
     }
 
-    private void setSourceText(String sourceText) {
+    public boolean isEmpty() {
+        return builtText.isEmpty();
+    }
 
+    private void setSourceText(String sourceText) {
         if (sourceText == null)
             sourceText = "";
 
@@ -59,7 +67,7 @@ public class EmojiTextBuilder {
             if (!backslashBeforeEmojiCode.isEmpty()) {
                 emojiIndexes.put(
                         matcher.start(BACKSLASH_PATTERN_GROUP) - lengthDifference,
-                        null
+                        new EmojiContainer(emoji, true)
                 );
 
                 builtText = StringUtil.replaceStartEndIndex(
@@ -84,10 +92,12 @@ public class EmojiTextBuilder {
 
             emojiIndexes.put(
                     matcher.start(EMOJI_CODE_PATTERN_GROUP) - lengthDifference,
-                    emoji
+                    new EmojiContainer(emoji, false)
             );
 
             lengthDifference += lengthBeforeChanges - builtText.length();
         }
     }
+
+    public record EmojiContainer(Emoji emoji, boolean isEscaped) {}
 }

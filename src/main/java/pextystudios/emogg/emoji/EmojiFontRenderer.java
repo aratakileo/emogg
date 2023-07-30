@@ -17,16 +17,14 @@ import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import pextystudios.emogg.emoji.resource.Emoji;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class EmojiFontRenderer extends Font {
     private static final LoadingCache<String, EmojiTextBuilder> EMOJI_TEXT_BUILDERS_CACHE = CacheBuilder.newBuilder()
@@ -54,7 +52,7 @@ public class EmojiFontRenderer extends Font {
             EmojiTextBuilder emojiTextBuilder = getEmojiTextBuilder(text);
 
             EmojiCharSink emojiCharSink = new EmojiCharSink(
-                    emojiTextBuilder.getEmojiIndexes(),
+                    emojiTextBuilder,
                     multiBufferSource,
                     x,
                     y,
@@ -77,47 +75,46 @@ public class EmojiFontRenderer extends Font {
 
     @Override
     public int drawInBatch(FormattedCharSequence formattedCharSequence, float x, float y, int color, boolean shadow, Matrix4f matrix4f, MultiBufferSource multiBufferSource, DisplayMode displayMode, int backgroundColor, int light) {
-        String text;
-
-        if (formattedCharSequence == null || (text = asString(formattedCharSequence)).isEmpty())
-            return 0;
-
-        color = (color & -67108864) == 0 ? color | -16777216 : color;
-        HashMap<Integer, Emoji> emojiIndexes = new LinkedHashMap<>();
+        final EmojiTextBuilder emojiTextBuilder;
 
         try {
-            emojiIndexes = getEmojiTextBuilder(text).getEmojiIndexes();
+            emojiTextBuilder = getEmojiTextBuilder(asString(formattedCharSequence));
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        List<FormattedCharSequence> processors = new ArrayList<>();
-        HashMap<Integer, Emoji> finalEmojis = emojiIndexes;
-        AtomicInteger cleanPos = new AtomicInteger();
-        AtomicBoolean ignore = new AtomicBoolean(false);
+        if (emojiTextBuilder.isEmpty()) return 0;
+
+        color = adjustColor(color);
+
+        final var formattedCharSequences = new ArrayList<FormattedCharSequence>();
+        final var renderCharIndex = new AtomicInteger();
+        final var ignore = new AtomicBoolean(false);
 
         formattedCharSequence.accept((index, style, ch) -> {
             if (!ignore.get()) {
-                if (finalEmojis.get(cleanPos.get()) == null) {
-                    processors.add(new FormattedEmojiSequence(cleanPos.getAndIncrement(), style, ch));
-                } else {
-                    processors.add(new FormattedEmojiSequence(cleanPos.get(), style, ' '));
+                if (emojiTextBuilder.hasEmojiFor(renderCharIndex.get())) {
+                    formattedCharSequences.add(new FormattedEmojiSequence(renderCharIndex.get(), style, ' '));
                     ignore.set(true);
                     return true;
                 }
+
+                formattedCharSequences.add(new FormattedEmojiSequence(renderCharIndex.getAndIncrement(), style, ch));
             }
+
             if (ignore.get() && ch == ':') {
                 ignore.set(false);
-                cleanPos.getAndIncrement();
+                renderCharIndex.getAndIncrement();
             }
+
             return true;
         });
 
-        Matrix4f frontMatrix = new Matrix4f(matrix4f);
+        final var frontMatrix = new Matrix4f(matrix4f);
 
         if (shadow) {
-            EmojiCharSink emojiCharSink = new EmojiCharSink(
-                    emojiIndexes,
+            final var emojiCharSink = new EmojiCharSink(
+                    emojiTextBuilder,
                     multiBufferSource,
                     x,
                     y,
@@ -127,13 +124,13 @@ public class EmojiFontRenderer extends Font {
                     displayMode,
                     light
             );
-            FormattedCharSequence.fromList(processors).accept(emojiCharSink);
+            FormattedCharSequence.fromList(formattedCharSequences).accept(emojiCharSink);
             emojiCharSink.finish(backgroundColor, x);
             matrix4f.translate(Font.SHADOW_OFFSET);
         }
 
-        EmojiCharSink emojiCharSink = new EmojiCharSink(
-                emojiIndexes,
+        final var emojiCharSink = new EmojiCharSink(
+                emojiTextBuilder,
                 multiBufferSource,
                 x,
                 y,
@@ -143,10 +140,88 @@ public class EmojiFontRenderer extends Font {
                 displayMode,
                 light
         );
-        FormattedCharSequence.fromList(processors).accept(emojiCharSink);
+        FormattedCharSequence.fromList(formattedCharSequences).accept(emojiCharSink);
         emojiCharSink.finish(backgroundColor, x);
 
         return (int) emojiCharSink.x;
+    }
+
+    @Override
+    public void drawInBatch8xOutline(FormattedCharSequence formattedCharSequence, float x, float y, int color, int strokeColor, Matrix4f matrix4f, MultiBufferSource multiBufferSource, int light) {
+        final EmojiTextBuilder emojiTextBuilder;
+
+        try {
+            emojiTextBuilder = getEmojiTextBuilder(asString(formattedCharSequence));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (emojiTextBuilder.isEmpty()) return;
+
+        final var finalStrokeColor = adjustColor(strokeColor);
+        final var emojiCharSinkFromBehind = new EmojiCharSink(
+                emojiTextBuilder,
+                multiBufferSource,
+                0.0F,
+                0.0F,
+                strokeColor,
+                false,
+                matrix4f,
+                Font.DisplayMode.NORMAL,
+                light
+        );
+
+        for(int localX = -1; localX <= 1; ++localX) {
+            for(int localY = -1; localY <= 1; ++localY) {
+                if (localX != 0 || localY != 0) {
+                    AtomicReference<Float> offsettedX = new AtomicReference<>(x);
+                    final var finalLocalX = localX;
+                    final var finalLocalY = localY;
+                    final var renderCharIndex = new AtomicInteger();
+                    final var ignore = new AtomicBoolean(false);
+
+                    formattedCharSequence.accept((index, style, ch) -> {
+                        if (!ignore.get()) {
+                            if (emojiTextBuilder.hasEmojiFor(renderCharIndex.get())) {
+                                offsettedX.updateAndGet(value -> value + EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE);
+                                ignore.set(true);
+                                return true;
+                            }
+
+                            final var glyphInfo = getFontSet(style.getFont()).getGlyphInfo(ch, this.filterFishyGlyphs);
+
+                            emojiCharSinkFromBehind.x = offsettedX.get() + (float) finalLocalX * glyphInfo.getShadowOffset();
+                            emojiCharSinkFromBehind.y = y + (float) finalLocalY * glyphInfo.getShadowOffset();
+
+                            offsettedX.updateAndGet(value -> value + glyphInfo.getAdvance(style.isBold()));
+                            renderCharIndex.incrementAndGet();
+
+                            return emojiCharSinkFromBehind.accept(index, style.withColor(finalStrokeColor), ch);
+                        }
+
+                        if (ignore.get() && ch == ':') {
+                            ignore.set(false);
+                            renderCharIndex.getAndIncrement();
+                        }
+
+                        return true;
+                    });
+                }
+            }
+        }
+
+        drawInBatch(
+                formattedCharSequence,
+                x,
+                y,
+                color,
+                false,
+                matrix4f,
+                multiBufferSource,
+                DisplayMode.POLYGON_OFFSET,
+                0,
+                light
+        );
     }
 
     @Override
@@ -171,10 +246,10 @@ public class EmojiFontRenderer extends Font {
     }
 
     class EmojiCharSink implements FormattedCharSink {
-        private final HashMap<Integer, Emoji> emojiIndexes;
+        private final EmojiTextBuilder emojiTextBuilder;
         private final MultiBufferSource multiBufferSource;
         private float x;
-        private final float y;
+        private float y;
         private final int color;
         private final boolean shadow;
         private final Matrix4f matrix;
@@ -184,7 +259,7 @@ public class EmojiFontRenderer extends Font {
         private final List<BakedGlyph.Effect> effects = new ArrayList<>();
 
         public EmojiCharSink(
-                HashMap<Integer, Emoji> emojiIndexes,
+                EmojiTextBuilder emojiTextBuilder,
                 MultiBufferSource multiBufferSource,
                 float x,
                 float y,
@@ -194,7 +269,7 @@ public class EmojiFontRenderer extends Font {
                 DisplayMode displayMode,
                 int light
         ) {
-            this.emojiIndexes = emojiIndexes;
+            this.emojiTextBuilder = emojiTextBuilder;
             this.multiBufferSource = multiBufferSource;
             this.x = x;
             this.y = y;
@@ -237,13 +312,12 @@ public class EmojiFontRenderer extends Font {
 
         @Override
         public boolean accept(int index, Style style, int codePoint) {
-            if (emojiIndexes.containsKey(index)) {
-                Emoji emoji;
+            if (emojiTextBuilder.hasEmojiFor(index)) {
+                final var emojiContainer = emojiTextBuilder.getEmojiContainerFor(index);
 
-                if ((emoji = emojiIndexes.get(index)) == null)
-                    return true;
+                if (emojiContainer.isEscaped()) return true;
 
-                emoji.render(x, y, matrix, multiBufferSource, light);
+                emojiContainer.emoji().render(x, y, matrix, multiBufferSource, light);
                 x += EmojiHandler.EMOJI_DEFAULT_RENDER_SIZE;
 
                 return true;

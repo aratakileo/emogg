@@ -29,6 +29,7 @@ accessible method net/minecraft/client/gui/GuiGraphics <init> (Lnet/minecraft/cl
 accessible field net/minecraft/client/gui/components/Tooltip message Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/components/Tooltip narration Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/components/AbstractWidget isHovered Z
+accessible method net/minecraft/client/gui/Font adjustColor (I)I
 
 mutable field net/minecraft/client/Minecraft font Lnet/minecraft/client/gui/Font;
 mutable field net/minecraft/client/Minecraft fontFilterFishy Lnet/minecraft/client/gui/Font;
