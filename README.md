@@ -24,7 +24,9 @@ Next, the `assets/emogg/emoji` directory of the resource pack will be designated
 
 To add your emojis to the game, just add pictures in the format `.gif` or `.png` to the main directory inside your resource pack. Each picture added in this way will be automatically added to the game as an emoji.
 
-The name of the image file, without extension, will be used as the name of the emoji, which can consist only of lowercase Latin characters `a-z`, numbers `0-9`, underscores `_`. Moreover, the underscores cannot stand at the beginning or at the end of the emoji name. The name of the image file can be anything, however, when uploading emojis, all names are modified as follows:
+The optimal resolution for each emoji will be approximately `128x128` pixels. There is not much point in a higher resolution. Emoji will look better in the game if there is not too much empty space between the edges of the picture and the content. It is better to avoid adding emojis with too small details, because they can be difficult to distinguish.
+
+The name of the image file, without extension, will be used as the name of the emoji, which can consist only of lowercase Latin characters `a-z`, numbers `0-9`, underscores `_`. Moreover, the underscores cannot stand at the beginning or at the end of the emoji name. The name of the image file can be anything, however, when loading emojis, all names are modified as follows:
 - all spaces and dashes will be replaced with underscores
 - the underscores at the beginning and at the end of the name will be removed
 - unsupported characters will be removed from the name
@@ -44,7 +46,7 @@ By default, the following category names are already registered in the mod:
 - `flags`
 - `other`
 
-You can add your emojis to these categories or create your own. Also, for these categories, translation into four languages has already been implemented: English, German, Ukrainian, Russian. You can [help with translating](https://github.com/aratkileo/emogg) the mod into other languages. If you do not add a translation for your new categories using the resource pack language files, the folder name with a capital letter will be used. To add a translation of your category, you need to use the translation key `emogg.category.your_category_name`, where it is necessary to replace `your_category_name` with the name of your category.
+You can add your emojis to these categories or create your own. Also, for these categories, translation into four languages has already been implemented: English, German, Ukrainian, Russian. You can [help with translating](https://github.com/aratkileo/emogg) the mod into other languages. If you don't add a translation for your new categories using the resource pack language files, the folder name with a capital letter will be used. To add a translation of your category, you need to use the translation key `emogg.category.your_category_name`, where it is necessary to replace `your_category_name` with the name of your category.
 
 If the mod detects two or more emojis with the same name, these emojis will be added to the game, but the names of such emojis will be modified. At the end of the name of such emojis, an ordinal number will be added to distinguish them.
 
