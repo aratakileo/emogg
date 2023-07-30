@@ -106,6 +106,12 @@ public class EmojiFont extends Font {
             if (!ignore.get()) {
                 if (emojiTextBuilder.hasEmojiFor(renderCharIndex.get())) {
                     formattedCharSequences.add(new FormattedEmojiSequence(renderCharIndex.get(), style, ' '));
+
+                    if (emojiTextBuilder.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
+                        renderCharIndex.getAndIncrement();
+                        return true;
+                    }
+
                     ignore.set(true);
                     return true;
                 }
@@ -194,6 +200,11 @@ public class EmojiFont extends Font {
                     formattedCharSequence.accept((index, style, ch) -> {
                         if (!ignore.get()) {
                             if (emojiTextBuilder.hasEmojiFor(renderCharIndex.get())) {
+                                if (emojiTextBuilder.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
+                                    renderCharIndex.getAndIncrement();
+                                    return true;
+                                }
+
                                 offsettedX.updateAndGet(value -> value + EmojiRenderer.EMOJI_DEFAULT_RENDER_SIZE);
                                 ignore.set(true);
                                 return true;

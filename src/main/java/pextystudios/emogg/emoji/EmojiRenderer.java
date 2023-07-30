@@ -84,4 +84,8 @@ public class EmojiRenderer {
 
         return EMOJI_DEFAULT_RENDER_SIZE;
     }
+
+    public boolean isEscaped() {
+        return isEscaped;
+    }
 }
