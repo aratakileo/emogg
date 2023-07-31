@@ -6,7 +6,7 @@ Adds emoji support to the chat and to most of the Minecraft interface!
 
 ### Features
 - support for both static and animated emojis
-- ease of adding your own emojis! Just create a texture pack, add pictures there along the way `assets/emogg/emoji`, add a resource pack to the game - done!
+- ease of adding your own emojis. Just create a texture pack, add pictures there along the way `assets/emogg/emoji`, add a resource pack to the game - done!
 - you can use emojis in chat, on signs and in other places where there is text!
 - when you enter the emoji name, auto-completion hints appear in the input field (available only for chat)
 - you can choose the emoji you like in the emoji selection menu! (available only for chat)
