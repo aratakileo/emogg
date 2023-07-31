@@ -1,4 +1,4 @@
-# Emogg for better chatting experienсe! <img src="https://github.com/teacondemns/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
+# Emogg for better chatting experienсe! <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 Adds emoji support to the chat and to most of the Minecraft interface!
 
 ![](preview/preview-1.gif)
