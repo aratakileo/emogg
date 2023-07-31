@@ -2,7 +2,7 @@
 Adds emoji support to the chat and to most of the Minecraft interface!
 
 ![](preview/preview-1.gif)
-![](preview/preview-2.png)
+![](preview/preview-2.gif)
 
 ### Features
 - support for both static and animated emojis
