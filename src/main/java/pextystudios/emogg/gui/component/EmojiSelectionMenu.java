@@ -314,7 +314,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     public void refreshRecentlyUsedEmojis() {
         applyScrollByThumbY(headerHeight + 1);
 
-        final var recentlyUsedEmojis = FrequentlyUsedEmojiController.getRecentlyUsedEmojis();
+        final var recentlyUsedEmojis = FrequentlyUsedEmojiController.getEmojis();
 
         if (recentlyUsedEmojis.isEmpty() || segments.isEmpty()) return;
 

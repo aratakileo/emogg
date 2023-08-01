@@ -11,14 +11,19 @@ public class FrequentlyUsedEmojiController {
 
     public final static int MAX_NUMBER_OF_RECENTLY_USED_EMOJIS = 50;
 
-    public static List<Emoji> getRecentlyUsedEmojis() {
+    public static List<Emoji> getEmojis() {
         return EmojiHandler.getInstance().getEmojisByCategory(CATEGORY_FREQUENTLY_USED);
     }
 
-    public static void markEmojiAsRecentlyUsed(@NotNull Emoji emoji) {
+    public static void removeAllNonExistentEmojisFromList() {
+        EmoggConfig.instance.frequentlyUsedEmojis.removeIf(emojiStatistic -> !EmojiHandler.getInstance().hasEmoji(emojiStatistic.emojiName));
+        EmoggConfig.save();
+    }
+
+    public static void markEmojiUse(@NotNull Emoji emoji) {
         final var emojiName = emoji.getName();
         final var recentlyUsedEmojis = EmoggConfig.instance.frequentlyUsedEmojis;
-        final var recentlyUsedEmojiNames = getRecentlyUsedEmojiNames();
+        final var recentlyUsedEmojiNames = EmoggConfig.instance.frequentlyUsedEmojis.stream().map(EmojiStatistic::getEmojiName).toList();
 
         if (recentlyUsedEmojiNames.contains(emojiName)) {
             final var increasableEmojiIndex = recentlyUsedEmojiNames.indexOf(emojiName);
@@ -26,9 +31,23 @@ public class FrequentlyUsedEmojiController {
 
             increasableEmojiStatistic.useAmount++;
 
-            if (increasableEmojiIndex != 0 && recentlyUsedEmojis.get(increasableEmojiIndex - 1).useAmount < increasableEmojiStatistic.useAmount) {
+            if (increasableEmojiIndex == 1 && recentlyUsedEmojis.get(0).useAmount == increasableEmojiStatistic.useAmount) {
+                EmoggConfig.save();
+                return;
+            }
+
+            if (increasableEmojiIndex != 0) {
+                var prevIndex = -1;
+
+                for (var i = 0; i < increasableEmojiIndex; i++) {
+                    final var iEmojiStatistic = recentlyUsedEmojis.get(i);
+
+                    prevIndex++;
+                    if (iEmojiStatistic.useAmount < increasableEmojiStatistic.useAmount) break;
+                }
+
                 recentlyUsedEmojis.remove(increasableEmojiIndex);
-                recentlyUsedEmojis.set(increasableEmojiIndex - 1, increasableEmojiStatistic);
+                recentlyUsedEmojis.add(prevIndex, increasableEmojiStatistic);
             }
 
             EmoggConfig.save();
@@ -38,14 +57,8 @@ public class FrequentlyUsedEmojiController {
         if (recentlyUsedEmojis.size() == MAX_NUMBER_OF_RECENTLY_USED_EMOJIS)
             recentlyUsedEmojis.remove(MAX_NUMBER_OF_RECENTLY_USED_EMOJIS - 1);
 
-        recentlyUsedEmojis.add(0, new EmojiStatistic(emojiName));
+        recentlyUsedEmojis.add(new EmojiStatistic(emojiName));
         EmoggConfig.save();
-    }
-
-    private static List<String> getRecentlyUsedEmojiNames() {
-        if (EmoggConfig.instance.frequentlyUsedEmojis.isEmpty()) return List.of();
-
-        return EmoggConfig.instance.frequentlyUsedEmojis.stream().map(EmojiStatistic::getEmojiName).toList();
     }
 
     public static class EmojiStatistic {

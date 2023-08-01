@@ -194,6 +194,8 @@ public class EmojiHandler {
                     "Updating the lists is complete. %s emojis have been defined!",
                     allEmojis.size()
             ));
+
+        FrequentlyUsedEmojiController.removeAllNonExistentEmojisFromList();
     }
 
     public static EmojiHandler getInstance() {

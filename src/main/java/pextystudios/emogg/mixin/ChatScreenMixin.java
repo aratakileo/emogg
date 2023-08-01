@@ -77,7 +77,7 @@ public class ChatScreenMixin {
         if (text.isEmpty()) return;
 
         for (var emojiRenderer: new EmojiTextProcessor(text).getMojiRenderers())
-            FrequentlyUsedEmojiController.markEmojiAsRecentlyUsed(EmojiHandler.getInstance().getEmoji(emojiRenderer.getEmojiName()));
+            FrequentlyUsedEmojiController.markEmojiUse(EmojiHandler.getInstance().getEmoji(emojiRenderer.getEmojiName()));
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
