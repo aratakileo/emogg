@@ -28,15 +28,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
     private final float emojiSize;
     private final Font font;
-    private final int headerHeight, totalLinesAmount;
+    private final int headerHeight;
     private final RenderUtil.Rect2i settingsButtonRect, scrollbarRect, scrollbarThumbRect;
-    private final boolean isSinglePage;
     private final LinkedHashMap<Integer, Segment> segments = new LinkedHashMap<>();
+    private final boolean isSinglePage;
 
     private Consumer<Emoji> onEmojiSelected = null;
     private Emoji hoveredEmoji = null;
-    private int scrollLinesAmount = 0;
-    private int scrollingThumbMouseOffset = -1;
+    private int scrollLinesAmount = 0, totalLinesAmount, scrollingThumbMouseOffset = -1;
 
     private void moveCategoryDown(List<String> categoryNames, String category) {
         moveCategoryTo(categoryNames, category, true);
@@ -60,11 +59,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 (int) ((emojiSize + 1) * MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1 + SCROLLBAR_WIDTH,
                 (int) ((emojiSize + 1) * MAX_NUMBER_OF_LINES_ON_PAGE) + 1 + headerHeight
         );
-
-        this.isSinglePage = EmojiHandler.getInstance().getNumberOfEmojis() < MAX_NUMBER_OF_EMOJIS_IN_LINE * MAX_NUMBER_OF_LINES_ON_PAGE;
-
-        if (isSinglePage)
-            width -= SCROLLBAR_WIDTH;
 
         this.visible = false;
         this.emojiSize = emojiSize;
@@ -100,7 +94,12 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         totalLinesAmount--;
 
+        this.isSinglePage = totalLinesAmount < MAX_NUMBER_OF_LINES_ON_PAGE;
         this.totalLinesAmount = totalLinesAmount;
+
+        if (isSinglePage)
+            width -= SCROLLBAR_WIDTH;
+
         this.settingsButtonRect = new RenderUtil.Rect2i(
                 width - font.lineHeight - 3,
                 1,
@@ -116,7 +115,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 scrollbarRect.xPos + 1,
                 scrollbarRect.yPos + 1,
                 SCROLLBAR_WIDTH - 2,
-                Math.max(8, scrollbarRect.height - 2 - (totalLinesAmount - MAX_NUMBER_OF_LINES_ON_PAGE) / 2)
+                Math.min(scrollbarRect.height - 12, Math.max(8, scrollbarRect.height - 2 - (totalLinesAmount - MAX_NUMBER_OF_LINES_ON_PAGE) / 2))
         );
 
         setHintPositioner(MOUSE_HINT_POSITIONER);
@@ -312,31 +311,34 @@ public class EmojiSelectionMenu extends AbstractWidget {
     }
 
     public void refreshRecentlyUsedEmojis() {
-        applyScrollByThumbY(headerHeight + 1);
-
         final var recentlyUsedEmojis = FrequentlyUsedEmojiController.getEmojis();
 
         if (recentlyUsedEmojis.isEmpty() || segments.isEmpty()) return;
+        else applyScrollByThumbY(headerHeight + 1);
 
         if (segments.get(0).getName().equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED)) {
             segments.get(0).refreshEmojis();
-            return;
+        } else {
+            final var recentlyUsedEmojisSegment = new Segment(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED);
+
+            if (!recentlyUsedEmojisSegment.isEmpty()) {
+                final var newSegments = new LinkedHashMap<Integer, Segment>();
+                final var indexOffset = recentlyUsedEmojisSegment.getNumberOfLines();
+
+                newSegments.put(0, recentlyUsedEmojisSegment);
+
+                for (var index : segments.keySet())
+                    newSegments.put(index + indexOffset, segments.get(index));
+
+                segments.clear();
+                segments.putAll(newSegments);
+            }
         }
 
-        final var recentlyUsedEmojisSegment = new Segment(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED);
-
-        if (recentlyUsedEmojisSegment.isEmpty()) return;
-
-        final var newSegments = new LinkedHashMap<Integer, Segment>();
-        final var indexOffset = recentlyUsedEmojisSegment.getNumberOfLines();
-
-        newSegments.put(0, recentlyUsedEmojisSegment);
-
-        for (var index: segments.keySet())
-            newSegments.put(index + indexOffset, segments.get(index));
-
-        segments.clear();
-        segments.putAll(newSegments);
+        final var lastSegmentEntry = segments.entrySet().stream().toList().get(segments.size() - 1);
+        totalLinesAmount = lastSegmentEntry.getKey() + lastSegmentEntry.getValue().numberOfLines - 1;
+        scrollbarThumbRect.height = Math.min(scrollbarRect.height - 12, Math.max(8, scrollbarRect.height - 2 - (totalLinesAmount - MAX_NUMBER_OF_LINES_ON_PAGE) / 2));
+        applyScrollByThumbY(headerHeight + 1);
     }
 
     public void setOnEmojiSelected(Consumer<Emoji> onEmojiSelected) {
@@ -361,14 +363,12 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private static class Segment {
         private final String name;
         private List<Emoji> emojis;
-        private final int numberOfLines;
+        private int numberOfLines;
 
         public Segment(String name) {
             this.name = name;
 
             refreshEmojis();
-
-            this.numberOfLines = (int) (Math.ceil((double)emojis.size() / (double) MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1);
         }
 
         public boolean isEmpty() {
@@ -389,6 +389,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         public void refreshEmojis() {
             emojis = EmojiHandler.getInstance().getEmojisByCategory(name);
+            numberOfLines = (int) (Math.ceil((double)emojis.size() / (double) MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1);
         }
     }
 }
