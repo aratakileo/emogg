@@ -5,18 +5,23 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import pextystudios.emogg.emoji.EmojiHandler;
+import pextystudios.emogg.emoji.font.EmojiTextProcessor;
+import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
 import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiSelectionButton;
 import pextystudios.emogg.util.KeyboardUtil;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
+    @Unique
     protected EmojiSelectionButton emojiSelectionButton;
+    @Unique
     protected EmojiSelectionMenu emojiSelectionMenu;
 
     @Shadow public EditBox input;
@@ -38,7 +43,11 @@ public class ChatScreenMixin {
         emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
         self.addRenderableWidget(emojiSelectionMenu);
 
-        emojiSelectionButton.setOnClicked(emojiPickerButton -> emojiSelectionMenu.visible = !emojiSelectionMenu.visible);
+        emojiSelectionButton.setOnClicked(emojiPickerButton -> {
+            if (!emojiSelectionMenu.visible) emojiSelectionMenu.refreshRecentlyUsedEmojis();
+
+            emojiSelectionMenu.visible = !emojiSelectionMenu.visible;
+        });
 
         if (EmojiHandler.getInstance().isEmpty()) {
             emojiSelectionButton.active = false;
@@ -61,6 +70,14 @@ public class ChatScreenMixin {
         }
 
         self.setFocused(input);
+    }
+
+    @Inject(method = "handleChatInput", at = @At("HEAD"))
+    public void handleChatInput(String text, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
+        if (text.isEmpty()) return;
+
+        for (var emojiRenderer: new EmojiTextProcessor(text).getMojiRenderers())
+            FrequentlyUsedEmojiController.markEmojiAsRecentlyUsed(EmojiHandler.getInstance().getEmoji(emojiRenderer.getEmojiName()));
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)

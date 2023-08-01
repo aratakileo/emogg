@@ -1,9 +1,9 @@
 package pextystudios.emogg.gui.component;
 
 import net.minecraft.client.gui.GuiGraphics;
-import pextystudios.emogg.emoji.EmojiRenderer;
+import pextystudios.emogg.emoji.font.EmojiRenderer;
 import pextystudios.emogg.emoji.resource.Emoji;
-import pextystudios.emogg.emoji.EmojiHandler;
+import pextystudios.emogg.emoji.handler.EmojiHandler;
 
 public class EmojiSelectionButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;

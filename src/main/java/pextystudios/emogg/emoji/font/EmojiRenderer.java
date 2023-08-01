@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji;
+package pextystudios.emogg.emoji.font;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -87,5 +87,9 @@ public class EmojiRenderer {
 
     public boolean isEscaped() {
         return isEscaped;
+    }
+
+    public String getEmojiName() {
+        return emoji.getName();
     }
 }

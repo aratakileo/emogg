@@ -1,10 +1,13 @@
 package pextystudios.emogg;
 
 import com.google.gson.Gson;
+import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmoggConfig {
     // Non-JSON values
@@ -15,6 +18,7 @@ public class EmoggConfig {
 
     // JSON values
     public boolean isDebugModeEnabled = false;
+    public List<FrequentlyUsedEmojiController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
 
     public static void load() {
         if (file.exists())

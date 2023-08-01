@@ -1,36 +1,42 @@
-package pextystudios.emogg.emoji;
+package pextystudios.emogg.emoji.font;
 
 import org.jetbrains.annotations.Nullable;
+import pextystudios.emogg.emoji.handler.EmojiHandler;
 import pextystudios.emogg.util.StringUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
-public class EmojiTextBuilder {
-    public final static EmojiTextBuilder EMPTY = new EmojiTextBuilder(null);
+public class EmojiTextProcessor {
+    public final static EmojiTextProcessor EMPTY = new EmojiTextProcessor(null);
 
     private final static Pattern pattern = Pattern.compile("(\\\\?)(:([_A-Za-z0-9]+):)");
     private final static int BACKSLASH_PATTERN_GROUP = 1, EMOJI_CODE_PATTERN_GROUP = 2, EMOJI_NAME_PATTERN_GROUP = 3;
 
-    private HashMap<Integer, EmojiRenderer> emojiIndexes;
-    private String builtText;
+    private HashMap<Integer, EmojiRenderer> emojiRendererIndexes;
+    private String processedText;
     private int lengthDifference;
 
-    public EmojiTextBuilder(String sourceText) {
+    public EmojiTextProcessor(String sourceText) {
         setSourceText(sourceText);
     }
 
     public @Nullable EmojiRenderer getEmojiRendererFor(int charRenderIndex) {
-        return emojiIndexes.get(charRenderIndex);
+        return emojiRendererIndexes.get(charRenderIndex);
+    }
+
+    public Collection<EmojiRenderer> getMojiRenderers() {
+        return emojiRendererIndexes.values();
     }
 
     public boolean hasEmojiFor(int charRenderIndex) {
-        return emojiIndexes.containsKey(charRenderIndex);
+        return emojiRendererIndexes.containsKey(charRenderIndex);
     }
 
-    public String getBuiltText() {
-        return builtText;
+    public String getProcessedText() {
+        return processedText;
     }
 
     public int getLengthDifference() {
@@ -38,21 +44,21 @@ public class EmojiTextBuilder {
     }
 
     public boolean isEmpty() {
-        return builtText.isEmpty();
+        return processedText.isEmpty();
     }
 
     private void setSourceText(String sourceText) {
         if (sourceText == null)
             sourceText = "";
 
-        emojiIndexes = new LinkedHashMap<>();
-        builtText = sourceText;
+        emojiRendererIndexes = new LinkedHashMap<>();
+        processedText = sourceText;
         lengthDifference = 0;
 
         if (sourceText.isEmpty())
             return;
 
-        var matcher = pattern.matcher(builtText);
+        var matcher = pattern.matcher(processedText);
 
         while (matcher.find()) {
             var backslashBeforeEmojiCode = matcher.group(BACKSLASH_PATTERN_GROUP);
@@ -64,13 +70,13 @@ public class EmojiTextBuilder {
             var emoji = EmojiHandler.getInstance().getEmoji(matchedEmojiName);
 
             if (!backslashBeforeEmojiCode.isEmpty()) {
-                emojiIndexes.put(
+                emojiRendererIndexes.put(
                         matcher.start(BACKSLASH_PATTERN_GROUP) - lengthDifference,
                         emoji.getRenderer(true)
                 );
 
-                builtText = StringUtil.replaceStartEndIndex(
-                        builtText,
+                processedText = StringUtil.replaceStartEndIndex(
+                        processedText,
                         matcher.start() - lengthDifference,
                         matcher.end() - lengthDifference,
                         emoji.getCode()
@@ -80,21 +86,21 @@ public class EmojiTextBuilder {
                 continue;
             }
 
-            var lengthBeforeChanges = builtText.length();
+            var lengthBeforeChanges = processedText.length();
 
-            builtText = StringUtil.replaceStartEndIndex(
-                    builtText,
+            processedText = StringUtil.replaceStartEndIndex(
+                    processedText,
                     matcher.start(EMOJI_CODE_PATTERN_GROUP) - lengthDifference,
                     matcher.end(EMOJI_CODE_PATTERN_GROUP) - lengthDifference,
                     '\u2603'
             );
 
-            emojiIndexes.put(
+            emojiRendererIndexes.put(
                     matcher.start(EMOJI_CODE_PATTERN_GROUP) - lengthDifference,
                     emoji.getRenderer()
             );
 
-            lengthDifference += lengthBeforeChanges - builtText.length();
+            lengthDifference += lengthBeforeChanges - processedText.length();
         }
     }
 }

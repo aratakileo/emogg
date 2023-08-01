@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji;
+package pextystudios.emogg.emoji.handler;
 
 import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EmojiHandler {
-
     private static EmojiHandler INSTANCE;
 
     public final static String STATIC_EMOJI_EXTENSION = ".png";
@@ -85,6 +84,9 @@ public class EmojiHandler {
     public ConcurrentHashMap.KeySetView<String, List<String>> getCategories() {return emojiCategories.keySet();}
 
     public List<Emoji> getEmojisByCategory(String category) {
+        if (category.equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED))
+            return EmoggConfig.instance.frequentlyUsedEmojis.stream().map(segment -> allEmojis.get(segment.emojiName)).toList();
+
         if (!emojiCategories.containsKey(category)) return null;
 
         return emojiCategories.get(category).stream().map(allEmojis::get).toList();
@@ -126,11 +128,10 @@ public class EmojiHandler {
         var emoji = Emoji.from(emojiName, resourceLocation);
 
         if (!emoji.isValid()) {
-            if (EmoggConfig.instance.isDebugModeEnabled)
-                Emogg.LOGGER.error(String.format(
-                        "Failed to load %s, because it has invalid format",
-                        StringUtil.repr(resourceLocation)
-                ));
+            Emogg.LOGGER.error(String.format(
+                    "Failed to load %s, because it has invalid format",
+                    StringUtil.repr(resourceLocation)
+            ));
             return;
         }
 
@@ -203,7 +204,7 @@ public class EmojiHandler {
         final var categoryLangKey = "emogg.category." + category;
         final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
 
-        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category);
+        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category).replaceAll("_", " ");
 
         return displayableName;
     }

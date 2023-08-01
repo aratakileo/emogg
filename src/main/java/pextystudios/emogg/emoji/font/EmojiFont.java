@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji;
+package pextystudios.emogg.emoji.font;
 
 
 import com.google.common.cache.CacheBuilder;
@@ -27,12 +27,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EmojiFont extends Font {
-    private static final LoadingCache<String, EmojiTextBuilder> EMOJI_TEXT_BUILDERS_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<String, EmojiTextProcessor> EMOJI_TEXT_BUILDERS_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(60, TimeUnit.SECONDS)
             .build(new CacheLoader<>() {
                 @Override
-                public @NotNull EmojiTextBuilder load(@NotNull String key) {
-                    return new EmojiTextBuilder(key);
+                public @NotNull EmojiTextProcessor load(@NotNull String key) {
+                    return new EmojiTextProcessor(key);
                 }
             });
 
@@ -40,8 +40,8 @@ public class EmojiFont extends Font {
         super(font.fonts, font.filterFishyGlyphs);
     }
 
-    public EmojiTextBuilder getEmojiTextBuilder(String text) throws ExecutionException {
-        return text == null || text.isEmpty() ? EmojiTextBuilder.EMPTY : EMOJI_TEXT_BUILDERS_CACHE.get(text);
+    public EmojiTextProcessor getEmojiTextBuilder(String text) throws ExecutionException {
+        return text == null || text.isEmpty() ? EmojiTextProcessor.EMPTY : EMOJI_TEXT_BUILDERS_CACHE.get(text);
     }
 
     @Override
@@ -49,10 +49,10 @@ public class EmojiFont extends Font {
         if (text.isEmpty()) return 0;
 
         try {
-            EmojiTextBuilder emojiTextBuilder = getEmojiTextBuilder(text);
+            EmojiTextProcessor emojiTextProcessor = getEmojiTextBuilder(text);
 
             EmojiCharSink emojiCharSink = new EmojiCharSink(
-                    emojiTextBuilder,
+                    emojiTextProcessor,
                     multiBufferSource,
                     x,
                     y,
@@ -63,7 +63,7 @@ public class EmojiFont extends Font {
                     light
             );
 
-            StringDecomposer.iterateFormatted(emojiTextBuilder.getBuiltText(), Style.EMPTY, emojiCharSink);
+            StringDecomposer.iterateFormatted(emojiTextProcessor.getProcessedText(), Style.EMPTY, emojiCharSink);
 
             emojiCharSink.finish(underlineColor, x);
 
@@ -86,15 +86,15 @@ public class EmojiFont extends Font {
             int backgroundColor,
             int light
     ) {
-        final EmojiTextBuilder emojiTextBuilder;
+        final EmojiTextProcessor emojiTextProcessor;
 
         try {
-            emojiTextBuilder = getEmojiTextBuilder(asString(formattedCharSequence));
+            emojiTextProcessor = getEmojiTextBuilder(asString(formattedCharSequence));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
 
-        if (emojiTextBuilder.isEmpty()) return 0;
+        if (emojiTextProcessor.isEmpty()) return 0;
 
         color = adjustColor(color);
 
@@ -104,10 +104,10 @@ public class EmojiFont extends Font {
 
         formattedCharSequence.accept((index, style, ch) -> {
             if (!ignore.get()) {
-                if (emojiTextBuilder.hasEmojiFor(renderCharIndex.get())) {
+                if (emojiTextProcessor.hasEmojiFor(renderCharIndex.get())) {
                     formattedCharSequences.add(new FormattedEmojiSequence(renderCharIndex.get(), style, ' '));
 
-                    if (emojiTextBuilder.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
+                    if (emojiTextProcessor.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
                         renderCharIndex.getAndIncrement();
                         return true;
                     }
@@ -131,7 +131,7 @@ public class EmojiFont extends Font {
 
         if (shadow) {
             final var emojiCharSink = new EmojiCharSink(
-                    emojiTextBuilder,
+                    emojiTextProcessor,
                     multiBufferSource,
                     x,
                     y,
@@ -147,7 +147,7 @@ public class EmojiFont extends Font {
         }
 
         final var emojiCharSink = new EmojiCharSink(
-                emojiTextBuilder,
+                emojiTextProcessor,
                 multiBufferSource,
                 x,
                 y,
@@ -165,19 +165,19 @@ public class EmojiFont extends Font {
 
     @Override
     public void drawInBatch8xOutline(FormattedCharSequence formattedCharSequence, float x, float y, int color, int strokeColor, Matrix4f matrix4f, MultiBufferSource multiBufferSource, int light) {
-        final EmojiTextBuilder emojiTextBuilder;
+        final EmojiTextProcessor emojiTextProcessor;
 
         try {
-            emojiTextBuilder = getEmojiTextBuilder(asString(formattedCharSequence));
+            emojiTextProcessor = getEmojiTextBuilder(asString(formattedCharSequence));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
 
-        if (emojiTextBuilder.isEmpty()) return;
+        if (emojiTextProcessor.isEmpty()) return;
 
         final var finalStrokeColor = adjustColor(strokeColor);
         final var emojiCharSinkFromBehind = new EmojiCharSink(
-                emojiTextBuilder,
+                emojiTextProcessor,
                 multiBufferSource,
                 0.0F,
                 0.0F,
@@ -199,8 +199,8 @@ public class EmojiFont extends Font {
 
                     formattedCharSequence.accept((index, style, ch) -> {
                         if (!ignore.get()) {
-                            if (emojiTextBuilder.hasEmojiFor(renderCharIndex.get())) {
-                                if (emojiTextBuilder.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
+                            if (emojiTextProcessor.hasEmojiFor(renderCharIndex.get())) {
+                                if (emojiTextProcessor.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
                                     renderCharIndex.getAndIncrement();
                                     return true;
                                 }
@@ -249,7 +249,7 @@ public class EmojiFont extends Font {
     @Override
     public int width(String text) {
         try {
-            text = getEmojiTextBuilder(text).getBuiltText();
+            text = getEmojiTextBuilder(text).getProcessedText();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -268,7 +268,7 @@ public class EmojiFont extends Font {
     }
 
     class EmojiCharSink implements FormattedCharSink {
-        private final EmojiTextBuilder emojiTextBuilder;
+        private final EmojiTextProcessor emojiTextProcessor;
         private final MultiBufferSource multiBufferSource;
         private float x;
         private float y;
@@ -281,7 +281,7 @@ public class EmojiFont extends Font {
         private final List<BakedGlyph.Effect> effects = new ArrayList<>();
 
         public EmojiCharSink(
-                EmojiTextBuilder emojiTextBuilder,
+                EmojiTextProcessor emojiTextProcessor,
                 MultiBufferSource multiBufferSource,
                 float x,
                 float y,
@@ -291,7 +291,7 @@ public class EmojiFont extends Font {
                 DisplayMode displayMode,
                 int light
         ) {
-            this.emojiTextBuilder = emojiTextBuilder;
+            this.emojiTextProcessor = emojiTextProcessor;
             this.multiBufferSource = multiBufferSource;
             this.x = x;
             this.y = y;
@@ -334,8 +334,8 @@ public class EmojiFont extends Font {
 
         @Override
         public boolean accept(int index, Style style, int codePoint) {
-            if (emojiTextBuilder.hasEmojiFor(index)) {
-                x += emojiTextBuilder.getEmojiRendererFor(index).render(x, y, matrix, multiBufferSource, light);;
+            if (emojiTextProcessor.hasEmojiFor(index)) {
+                x += emojiTextProcessor.getEmojiRendererFor(index).render(x, y, matrix, multiBufferSource, light);;
 
                 return true;
             }

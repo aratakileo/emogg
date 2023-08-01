@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.emoji.EmojiHandler;
-import pextystudios.emogg.emoji.EmojiRenderer;
+import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.emoji.font.EmojiRenderer;
 import pextystudios.emogg.util.StringUtil;
 
 import javax.imageio.ImageIO;

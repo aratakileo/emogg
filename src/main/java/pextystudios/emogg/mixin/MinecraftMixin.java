@@ -6,7 +6,7 @@ import net.minecraft.client.gui.font.FontManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import pextystudios.emogg.emoji.EmojiFont;
+import pextystudios.emogg.emoji.font.EmojiFont;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
