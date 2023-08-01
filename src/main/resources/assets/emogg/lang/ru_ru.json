@@ -5,6 +5,7 @@
   "emogg.settings.save_and_quit": "Сохранить и выйти",
   "emogg.gui.state.enabled": "Включено",
   "emogg.gui.state.disabled": "Выключено",
+  "emogg.category.$frequently_used": "Часто используемые",
   "emogg.category.food": "Еда и напитки",
   "emogg.category.other": "Другое",
   "emogg.category.people": "Люди",

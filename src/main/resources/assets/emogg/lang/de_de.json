@@ -5,6 +5,7 @@
   "emogg.settings.save_and_quit": "Speichern und beenden",
   "emogg.gui.state.enabled": "Aktiviert",
   "emogg.gui.state.disabled": "Deaktiviert",
+  "emogg.category.$frequently_used": "Häufig verwendet",
   "emogg.category.food": "Essen",
   "emogg.category.other": "Sonstige",
   "emogg.category.people": "Personen",
