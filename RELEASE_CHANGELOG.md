@@ -1,1 +1,2 @@
-
+- optimisation: emoji loading was accelerated by about 6.7 times! (the speed may vary from device to device)
+- added a section with frequently used emojis in the emoji selection menu
