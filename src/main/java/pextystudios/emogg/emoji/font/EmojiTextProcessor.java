@@ -15,7 +15,7 @@ public class EmojiTextProcessor {
     private final static Pattern pattern = Pattern.compile("(\\\\?)(:([_A-Za-z0-9]+):)");
     private final static int BACKSLASH_PATTERN_GROUP = 1, EMOJI_CODE_PATTERN_GROUP = 2, EMOJI_NAME_PATTERN_GROUP = 3;
 
-    private HashMap<Integer, EmojiRenderer> emojiRendererIndexes;
+    private HashMap<Integer, EmojiLiteral> emojiRendererIndexes;
     private String processedText;
     private int lengthDifference;
 
@@ -23,11 +23,11 @@ public class EmojiTextProcessor {
         setSourceText(sourceText);
     }
 
-    public @Nullable EmojiRenderer getEmojiRendererFor(int charRenderIndex) {
+    public @Nullable EmojiLiteral getEmojiRendererFor(int charRenderIndex) {
         return emojiRendererIndexes.get(charRenderIndex);
     }
 
-    public Collection<EmojiRenderer> getMojiRenderers() {
+    public Collection<EmojiLiteral> getMojiRenderers() {
         return emojiRendererIndexes.values();
     }
 

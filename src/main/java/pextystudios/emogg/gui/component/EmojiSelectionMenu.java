@@ -10,6 +10,7 @@ import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.gui.screen.SettingsScreen;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.RenderUtil;
 
 import java.util.LinkedHashMap;
@@ -217,7 +218,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                         RenderUtil.drawRect(emojiX, emojiY, (int) emojiSize, (int) emojiSize, 0x77ffffff);
                     }
 
-                    emoji.getRenderer().render(guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
+                    EmojiUtil.render(emoji, guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
                 }
 
                 icolumn++;
@@ -286,7 +287,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
     public void refreshRecentlyUsedEmojis() {
         final var recentlyUsedEmojis = FrequentlyUsedEmojiController.getEmojis();
-        
+
         verticalScrollbar.setScrollProgress(0);
 
         if (recentlyUsedEmojis.isEmpty() || segments.isEmpty()) return;

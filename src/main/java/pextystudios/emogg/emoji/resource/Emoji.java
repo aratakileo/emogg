@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
-import pextystudios.emogg.emoji.font.EmojiRenderer;
+import pextystudios.emogg.emoji.font.EmojiLiteral;
 import pextystudios.emogg.util.StringUtil;
 
 
@@ -75,12 +75,12 @@ public class Emoji {
         return width != -1 && height != -1;
     }
 
-    public EmojiRenderer getRenderer() {
-        return new EmojiRenderer(this);
+    public EmojiLiteral getRenderer() {
+        return new EmojiLiteral(this);
     }
 
-    public EmojiRenderer getRenderer(boolean isEscaped) {
-        return new EmojiRenderer(this, isEscaped);
+    public EmojiLiteral getRenderer(boolean isEscaped) {
+        return new EmojiLiteral(this, isEscaped);
     }
 
     protected void load() {

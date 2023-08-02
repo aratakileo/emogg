@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -15,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 import org.w3c.dom.Node;
 import oshi.util.tuples.Pair;
 import oshi.util.tuples.Triplet;
+import pextystudios.emogg.emoji.resource.Emoji;
 
 import javax.imageio.ImageIO;
 import javax.imageio.metadata.IIOMetadataNode;
@@ -26,6 +28,22 @@ import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 
 public final class EmojiUtil {
+    public static void render(Emoji emoji, GuiGraphics guiGraphics, int x, int y, int size) {
+        var width = size;
+        var height = size;
+
+        if (emoji.getWidth() < emoji.getHeight()) {
+            width *= ((float) emoji.getWidth() / emoji.getHeight());
+            x += (size - width) / 2;
+        }
+        else if (emoji.getHeight() < emoji.getWidth()) {
+            height *= ((float) emoji.getHeight() / emoji.getWidth());
+            y += (size - height) / 2;
+        }
+
+        RenderUtil.renderTexture(guiGraphics, emoji.getRenderResourceLocation(), x, y, width, height);
+    }
+
     public static Triplet<Pair<Integer, Integer>, Integer, ConcurrentHashMap<Integer, Pair<ResourceLocation, Integer>>> splitGif(
             ResourceLocation resourceLocation
     ) throws IOException {

@@ -205,7 +205,7 @@ public class EmojiFont extends Font {
                                     return true;
                                 }
 
-                                offsettedX.updateAndGet(value -> value + EmojiRenderer.EMOJI_DEFAULT_RENDER_SIZE);
+                                offsettedX.updateAndGet(value -> value + EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE);
                                 ignore.set(true);
                                 return true;
                             }
