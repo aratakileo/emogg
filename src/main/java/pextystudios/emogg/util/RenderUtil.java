@@ -52,6 +52,22 @@ public final class RenderUtil {
             this.height = height;
         }
 
+        public int getRight() {
+            return xPos + width;
+        }
+
+        public void setRight(int right) {
+            xPos = right - width;
+        }
+
+        public int getBottom() {
+            return yPos + height;
+        }
+
+        public void setBottom(int bottom) {
+            yPos = bottom - height;
+        }
+
         public Rect2i copy() {
             return new Rect2i(xPos, yPos, width, height);
         }

@@ -14,13 +14,13 @@ import pextystudios.emogg.emoji.font.EmojiTextProcessor;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
 import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
 import pextystudios.emogg.gui.component.EmojiSelectionMenu;
-import pextystudios.emogg.gui.component.EmojiSelectionButton;
+import pextystudios.emogg.gui.component.EmojiButton;
 import pextystudios.emogg.util.KeyboardUtil;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
     @Unique
-    protected EmojiSelectionButton emojiSelectionButton;
+    protected EmojiButton emojiButton;
     @Unique
     protected EmojiSelectionMenu emojiSelectionMenu;
 
@@ -31,27 +31,27 @@ public class ChatScreenMixin {
         final var self = (ChatScreen)(Object)this;
 
         final var positionOffset = input.getHeight();
-        emojiSelectionButton = new EmojiSelectionButton(
+        emojiButton = new EmojiButton(
                 self.width - positionOffset,
                 self.height - positionOffset,
                 input.getHeight() - 4
         );
-        self.addRenderableWidget(emojiSelectionButton);
+        self.addRenderableWidget(emojiButton);
 
-        emojiSelectionMenu = new EmojiSelectionMenu(emojiSelectionButton.getHeight() + 4);
+        emojiSelectionMenu = new EmojiSelectionMenu(emojiButton.getHeight() + 4);
         emojiSelectionMenu.setRightBottom(self.width - 2, self.height - input.getHeight() - 3);
         emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
         self.addRenderableWidget(emojiSelectionMenu);
 
-        emojiSelectionButton.setOnClicked(emojiPickerButton -> {
+        emojiButton.setOnClicked(emojiPickerButton -> {
             if (!emojiSelectionMenu.visible) emojiSelectionMenu.refreshRecentlyUsedEmojis();
 
             emojiSelectionMenu.visible = !emojiSelectionMenu.visible;
         });
 
         if (EmojiHandler.getInstance().isEmpty()) {
-            emojiSelectionButton.active = false;
-            emojiSelectionButton.visible = false;
+            emojiButton.active = false;
+            emojiButton.visible = false;
         }
     }
 
@@ -64,8 +64,8 @@ public class ChatScreenMixin {
             return;
         }
 
-        if (emojiSelectionButton.isMouseOver(mouseX, mouseY)) {
-            self.setFocused(emojiSelectionButton);
+        if (emojiButton.isMouseOver(mouseX, mouseY)) {
+            self.setFocused(emojiButton);
             return;
         }
 
@@ -91,13 +91,13 @@ public class ChatScreenMixin {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionButton.isHovered) {
+        if (!emojiButton.isHovered) {
             if (!emojiSelectionMenu.isHovered) emojiSelectionMenu.visible = false;
 
             return;
         }
 
-        cir.setReturnValue(emojiSelectionButton.mouseClicked(mouseX, mouseY, 0));
+        cir.setReturnValue(emojiButton.mouseClicked(mouseX, mouseY, 0));
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)

@@ -78,13 +78,13 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     public void setLeftTop(int left, int top) {
-        x = left;
-        y = top;
+        setX(left);
+        setY(top);
     }
 
     public void setRightBottom(int right, int bottom) {
-        x = right - width;
-        y = bottom - height;
+        setX(right - width);
+        setY(bottom - height);
     }
 
     public int getRight() {

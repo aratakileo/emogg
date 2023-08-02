@@ -5,14 +5,14 @@ import pextystudios.emogg.emoji.font.EmojiRenderer;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
 
-public class EmojiSelectionButton extends Button {
+public class EmojiButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
-    public EmojiSelectionButton(int x, int y) {
+    public EmojiButton(int x, int y) {
         this(x, y, EmojiRenderer.EMOJI_DEFAULT_RENDER_SIZE);
     }
 
-    public EmojiSelectionButton(int x, int y, int size) {
+    public EmojiButton(int x, int y, int size) {
         super(
                 x,
                 y,
