@@ -286,9 +286,10 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
     public void refreshRecentlyUsedEmojis() {
         final var recentlyUsedEmojis = FrequentlyUsedEmojiController.getEmojis();
+        
+        verticalScrollbar.setScrollProgress(0);
 
         if (recentlyUsedEmojis.isEmpty() || segments.isEmpty()) return;
-        else verticalScrollbar.setScrollProgressByThumbY(1);
 
         if (segments.get(0).getName().equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED)) {
             segments.get(0).refreshEmojis();
@@ -311,7 +312,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         final var lastSegmentEntry = segments.entrySet().stream().toList().get(segments.size() - 1);
         verticalScrollbar.setNumberOfScrollingPositions((lastSegmentEntry.getKey() + lastSegmentEntry.getValue().numberOfLines - 1) - MAX_NUMBER_OF_LINES_ON_PAGE);
-        verticalScrollbar.setScrollProgressByThumbY(1);
+        verticalScrollbar.setScrollProgress(0);
     }
 
     public void setOnEmojiSelected(Consumer<Emoji> onEmojiSelected) {
