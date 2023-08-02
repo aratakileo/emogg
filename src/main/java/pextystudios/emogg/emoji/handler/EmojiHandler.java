@@ -13,8 +13,11 @@ import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
 
+import javax.xml.transform.Result;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -180,6 +183,10 @@ public class EmojiHandler {
     }
 
     private void load(ResourceManager resourceManager) {
+        final var startsLoadingAt = System.currentTimeMillis();
+        final List<Callable<Result>> emojiRegistrationTasks = new ArrayList<>();
+        final var emojiRegistrationService = Executors.newCachedThreadPool();
+
         if (EmoggConfig.instance.isDebugModeEnabled)
             Emogg.LOGGER.info("Updating emoji lists...");
 
@@ -187,12 +194,22 @@ public class EmojiHandler {
         allEmojis.clear();
 
         for (var resourceLocation: resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet())
-            regEmoji(resourceLocation);
+            emojiRegistrationTasks.add(() -> {
+                regEmoji(resourceLocation);
+                return null;
+            });
+
+        try {
+            emojiRegistrationService.invokeAll(emojiRegistrationTasks);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         if (EmoggConfig.instance.isDebugModeEnabled)
             Emogg.LOGGER.info(String.format(
-                    "Updating the lists is complete. %s emojis have been defined!",
-                    allEmojis.size()
+                    "Updating the lists is complete. %s emojis have been defined in %ss!",
+                    allEmojis.size(),
+                    (System.currentTimeMillis() - startsLoadingAt) / 1000d
             ));
 
         FrequentlyUsedEmojiController.removeAllNonExistentEmojisFromList();

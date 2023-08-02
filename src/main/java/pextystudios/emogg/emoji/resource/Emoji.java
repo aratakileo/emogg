@@ -1,5 +1,6 @@
 package pextystudios.emogg.emoji.resource;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +9,6 @@ import pextystudios.emogg.emoji.handler.EmojiHandler;
 import pextystudios.emogg.emoji.font.EmojiRenderer;
 import pextystudios.emogg.util.StringUtil;
 
-import javax.imageio.ImageIO;
 
 public class Emoji {
     protected final String name;
@@ -86,7 +86,7 @@ public class Emoji {
     protected void load() {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-            var bufferedImage = ImageIO.read(resource.get().open());
+            var bufferedImage = NativeImage.read(resource.get().open());
 
             width = bufferedImage.getWidth();
             height = bufferedImage.getHeight();
