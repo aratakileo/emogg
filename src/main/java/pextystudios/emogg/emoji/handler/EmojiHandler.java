@@ -184,8 +184,6 @@ public class EmojiHandler {
 
     private void load(ResourceManager resourceManager) {
         final var startsLoadingAt = System.currentTimeMillis();
-        final List<Callable<Result>> emojiRegistrationTasks = new ArrayList<>();
-        final var emojiRegistrationService = Executors.newCachedThreadPool();
 
         if (EmoggConfig.instance.isDebugModeEnabled)
             Emogg.LOGGER.info("Updating emoji lists...");
@@ -193,17 +191,7 @@ public class EmojiHandler {
         emojiCategories.clear();
         allEmojis.clear();
 
-        for (var resourceLocation: resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet())
-            emojiRegistrationTasks.add(() -> {
-                regEmoji(resourceLocation);
-                return null;
-            });
-
-        try {
-            emojiRegistrationService.invokeAll(emojiRegistrationTasks);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet().parallelStream().forEach(this::regEmoji);
 
         if (EmoggConfig.instance.isDebugModeEnabled)
             Emogg.LOGGER.info(String.format(
