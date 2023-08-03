@@ -13,11 +13,8 @@ import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
 
-import javax.xml.transform.Result;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -108,7 +105,7 @@ public class EmojiHandler {
                 .findFirst();
     }
 
-    public Collection<String> getEmojiSuggestions() {
+    public Collection<String> getEmojiKeys() {
         return Lists.newArrayList(this.allEmojis.values())
                 .stream()
                 .map(Emoji::getCode)

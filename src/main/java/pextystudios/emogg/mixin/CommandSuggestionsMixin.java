@@ -38,46 +38,49 @@ public abstract class CommandSuggestionsMixin {
     @Shadow @Final private boolean commandsOnly;
 
     @Inject(method = "updateCommandInfo", at = @At("TAIL"), cancellable = true)
-    private void inject(CallbackInfo ci){
-        String text = this.input.getValue();
-        StringReader stringReader = new StringReader(text);
-        boolean hasSlash = stringReader.canRead() && stringReader.peek() == '/';
-        if (hasSlash) {
+    private void updateCommandInfo(CallbackInfo ci){
+        final var contentText = this.input.getValue();
+        final var stringReader = new StringReader(contentText);
+        final var hasSlash = stringReader.canRead() && stringReader.peek() == '/';
+        final var cursorPosition = this.input.getCursorPosition();
+
+        if (hasSlash)
             stringReader.skip();
-        }
-        boolean isCommand = this.commandsOnly || hasSlash;
-        int cursor = this.input.getCursorPosition();
-        if (!isCommand) {
-            String textUptoCursor = text.substring(0, cursor);
-            int start = Math.max(getLastPattern(textUptoCursor, COLON_PATTERN) - 1, 0);
-            int whitespace = getLastPattern(textUptoCursor, WHITESPACE_PATTERN);
-            if(start < textUptoCursor.length() && start >= whitespace){
-                if(textUptoCursor.charAt(start) == ':') {
-                    this.pendingSuggestions = SharedSuggestionProvider.suggest(
-                            EmojiHandler.getInstance().getEmojiSuggestions(),
-                            new SuggestionsBuilder(textUptoCursor, start)
-                    );
-                    this.pendingSuggestions.thenRun(() -> {
-                        if (!this.pendingSuggestions.isDone()) {
-                            return;
-                        }
-                        this.showSuggestions(false);
-                    });
-                    ci.cancel();
-                }
-            }
-        }
+
+        if (this.commandsOnly || hasSlash) return;
+
+        final var textUptoCursor = contentText.substring(0, cursorPosition);
+        final var start = Math.max(getLastPattern(COLON_PATTERN) - 1, 0);
+        final var whitespace = getLastPattern(WHITESPACE_PATTERN);
+
+        if(start >= textUptoCursor.length() || start < whitespace || textUptoCursor.charAt(start) != ':') return;
+
+        this.pendingSuggestions = SharedSuggestionProvider.suggest(
+                EmojiHandler.getInstance().getEmojiKeys(),
+                new SuggestionsBuilder(textUptoCursor, start)
+        );
+
+        this.pendingSuggestions.thenRun(() -> {
+            if (!this.pendingSuggestions.isDone()) return;
+            this.showSuggestions(false);
+        });
+
+        ci.cancel();
     }
 
-    private int getLastPattern(String input, Pattern pattern){
-        if (Strings.isNullOrEmpty(input)) {
+    @Unique
+    private int getLastPattern(Pattern pattern){
+        if (Strings.isNullOrEmpty(input.getValue())) {
             return 0;
         }
-        int i = 0;
-        Matcher matcher = pattern.matcher(input);
+
+        var i = 0;
+        final var matcher = pattern.matcher(input.getValue());
+
         while (matcher.find()) {
             i = matcher.end();
         }
+
         return i;
     }
 }
