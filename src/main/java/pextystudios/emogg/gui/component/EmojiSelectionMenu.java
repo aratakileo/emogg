@@ -33,10 +33,11 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private final RenderUtil.Rect2i settingsButtonRect;
     private final LinkedHashMap<Integer, Segment> segments = new LinkedHashMap<>();
     private final boolean isSinglePage;
-    private final VerticalScrollbar verticalScrollbar;
 
     private Consumer<Emoji> onEmojiSelected = null;
     private Emoji hoveredEmoji = null;
+
+    public final VerticalScrollbar verticalScrollbar;
 
     private void moveCategoryDown(List<String> categoryNames, String category) {
         moveCategoryTo(categoryNames, category, true);

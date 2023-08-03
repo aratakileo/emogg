@@ -1,5 +1,6 @@
 package pextystudios.emogg.mixin;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -10,9 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import oshi.util.tuples.Pair;
 import pextystudios.emogg.emoji.font.EmojiTextProcessor;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
 import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
+import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.gui.component.EmojiSelectionMenu;
 import pextystudios.emogg.gui.component.EmojiButton;
 import pextystudios.emogg.util.KeyboardUtil;
@@ -22,7 +25,11 @@ public class ChatScreenMixin {
     @Unique
     protected EmojiButton emojiButton;
     @Unique
-    protected EmojiSelectionMenu emojiSelectionMenu;
+    protected EmojiSelectionMenu emojiSelectionMenu = null;
+    @Unique
+    protected Pair<Integer, Boolean> emojiSelectionMenuState;
+    @Unique
+    protected Emoji emojiButtonDisplayableEmojiState;
 
     @Shadow public EditBox input;
 
@@ -53,6 +60,20 @@ public class ChatScreenMixin {
             emojiButton.active = false;
             emojiButton.visible = false;
         }
+    }
+
+    @Inject(method = "resize", at = @At("HEAD"))
+    public void resizeHead(Minecraft minecraft, int x, int y, CallbackInfo ci) {
+        emojiSelectionMenuState = new Pair<>(emojiSelectionMenu.verticalScrollbar.getScrollProgress(), emojiSelectionMenu.visible);
+        emojiButtonDisplayableEmojiState = emojiButton.getDisplayableEmoji();
+    }
+
+    @Inject(method = "resize", at = @At("TAIL"))
+    public void resizeTail(Minecraft minecraft, int x, int y, CallbackInfo ci) {
+        emojiSelectionMenu.refreshRecentlyUsedEmojis();
+        emojiSelectionMenu.verticalScrollbar.setScrollProgress(emojiSelectionMenuState.getA());
+        emojiSelectionMenu.visible = emojiSelectionMenuState.getB();
+        emojiButton.setDisplayableEmoji(emojiButtonDisplayableEmojiState);
     }
 
     @Inject(method = "render", at = @At("HEAD"))
