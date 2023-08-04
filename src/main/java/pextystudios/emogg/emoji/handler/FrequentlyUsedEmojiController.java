@@ -15,10 +15,6 @@ public class FrequentlyUsedEmojiController {
         return EmojiHandler.getInstance().getEmojisByCategory(CATEGORY_FREQUENTLY_USED);
     }
 
-    public static int getNumberOfEmojis() {
-        return EmoggConfig.instance.frequentlyUsedEmojis.size();
-    }
-
     public static void removeAllNonExistentEmojisFromList() {
         EmoggConfig.instance.frequentlyUsedEmojis.removeIf(emojiStatistic -> !EmojiHandler.getInstance().hasEmoji(emojiStatistic.emojiName));
         EmoggConfig.save();
