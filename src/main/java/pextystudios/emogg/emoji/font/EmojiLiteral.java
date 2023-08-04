@@ -6,19 +6,13 @@ import org.joml.Matrix4f;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.EmojiUtil;
 
-public class EmojiLiteral {
+public record EmojiLiteral(Emoji emoji, int originalPosition, boolean isEscaped) {
     public final static int EMOJI_DEFAULT_RENDER_SIZE = 10;
-    
-    private final Emoji emoji;
-    private final boolean isEscaped;
 
-    public EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
+    public EmojiLiteral(@NotNull Emoji emoji, int originalPosition, boolean isEscaped) {
         this.emoji = emoji;
+        this.originalPosition = originalPosition;
         this.isEscaped = isEscaped;
-    }
-
-    public EmojiLiteral(@NotNull Emoji emoji) {
-        this(emoji, false);
     }
 
     public float render(
@@ -65,13 +59,5 @@ public class EmojiLiteral {
                 .endVertex();
 
         return EMOJI_DEFAULT_RENDER_SIZE;
-    }
-
-    public boolean isEscaped() {
-        return isEscaped;
-    }
-
-    public String getEmojiName() {
-        return emoji.getName();
     }
 }

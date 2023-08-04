@@ -97,8 +97,8 @@ public class ChatScreenMixin {
     public void handleChatInput(String text, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
         if (text.isEmpty()) return;
 
-        for (var emojiRenderer: EmojiTextProcessor.getEmojiTextProcessor(text).getMojiRenderers())
-            FrequentlyUsedEmojiController.markEmojiUse(EmojiHandler.getInstance().getEmoji(emojiRenderer.getEmojiName()));
+        for (var emojiRenderer: EmojiTextProcessor.from(text).getEmojiLiterals())
+            FrequentlyUsedEmojiController.markEmojiUse(EmojiHandler.getInstance().getEmoji(emojiRenderer.emoji().getName()));
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)

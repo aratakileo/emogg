@@ -30,8 +30,16 @@ accessible field net/minecraft/client/gui/components/Tooltip message Lnet/minecr
 accessible field net/minecraft/client/gui/components/Tooltip narration Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/components/AbstractWidget isHovered Z
 accessible method net/minecraft/client/gui/Font adjustColor (I)I
+accessible class net/minecraft/client/StringSplitter$LineComponent
+accessible class net/minecraft/client/StringSplitter$FlatComponents
+accessible class net/minecraft/client/StringSplitter$LineBreakFinder
+accessible field net/minecraft/client/StringSplitter$LineComponent contents Ljava/lang/String;
+accessible field net/minecraft/client/StringSplitter$LineComponent style Lnet/minecraft/network/chat/Style;
+accessible field net/minecraft/client/StringSplitter$FlatComponents parts Ljava/util/List;
+accessible field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/StringSplitter;
 
 mutable field net/minecraft/client/Minecraft font Lnet/minecraft/client/gui/Font;
 mutable field net/minecraft/client/Minecraft fontFilterFishy Lnet/minecraft/client/gui/Font;
+mutable field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/StringSplitter;
 
 extendable method net/minecraft/client/gui/Font renderText (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)F

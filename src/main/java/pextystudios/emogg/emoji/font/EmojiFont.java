@@ -1,9 +1,6 @@
 package pextystudios.emogg.emoji.font;
 
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -27,13 +24,16 @@ public class EmojiFont extends Font {
 
     public EmojiFont(Font font) {
         super(font.fonts, font.filterFishyGlyphs);
+        this.splitter = new EmojiStringSlitter((i, style) -> {
+            return this.getFontSet(style.getFont()).getGlyphInfo(i, this.filterFishyGlyphs).getAdvance(style.isBold());
+        });
     }
 
     @Override
     public float renderText(String text, float x, float y, int color, boolean shadow, Matrix4f matrix4f, MultiBufferSource multiBufferSource, DisplayMode displayMode, int underlineColor, int light) {
         if (text.isEmpty()) return 0;
 
-        final var emojiTextProcessor = EmojiTextProcessor.getEmojiTextProcessor(text);
+        final var emojiTextProcessor = EmojiTextProcessor.from(text);
 
         final var emojiCharSink = new EmojiCharSink(
                 emojiTextProcessor,
@@ -67,7 +67,7 @@ public class EmojiFont extends Font {
             int backgroundColor,
             int light
     ) {
-        final var emojiTextProcessor = EmojiTextProcessor.getEmojiTextProcessor(asString(formattedCharSequence));
+        final var emojiTextProcessor = EmojiTextProcessor.from(asString(formattedCharSequence));
 
         if (emojiTextProcessor.isEmpty()) return 0;
 
@@ -82,7 +82,7 @@ public class EmojiFont extends Font {
                 if (emojiTextProcessor.hasEmojiFor(renderCharIndex.get())) {
                     formattedCharSequences.add(new FormattedEmojiSequence(renderCharIndex.get(), style, ' '));
 
-                    if (emojiTextProcessor.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
+                    if (emojiTextProcessor.getEmojiLiteralFor(renderCharIndex.get()).isEscaped()) {
                         renderCharIndex.getAndIncrement();
                         return true;
                     }
@@ -140,7 +140,7 @@ public class EmojiFont extends Font {
 
     @Override
     public void drawInBatch8xOutline(FormattedCharSequence formattedCharSequence, float x, float y, int color, int strokeColor, Matrix4f matrix4f, MultiBufferSource multiBufferSource, int light) {
-        final var emojiTextProcessor = EmojiTextProcessor.getEmojiTextProcessor(asString(formattedCharSequence));
+        final var emojiTextProcessor = EmojiTextProcessor.from(asString(formattedCharSequence));
 
         if (emojiTextProcessor.isEmpty()) return;
 
@@ -169,7 +169,7 @@ public class EmojiFont extends Font {
                     formattedCharSequence.accept((index, style, ch) -> {
                         if (!ignore.get()) {
                             if (emojiTextProcessor.hasEmojiFor(renderCharIndex.get())) {
-                                if (emojiTextProcessor.getEmojiRendererFor(renderCharIndex.get()).isEscaped()) {
+                                if (emojiTextProcessor.getEmojiLiteralFor(renderCharIndex.get()).isEscaped()) {
                                     renderCharIndex.getAndIncrement();
                                     return true;
                                 }
@@ -217,7 +217,7 @@ public class EmojiFont extends Font {
 
     @Override
     public int width(String text) {
-        text = EmojiTextProcessor.getEmojiTextProcessor(text).getProcessedText();
+        text = EmojiTextProcessor.from(text).getProcessedText();
 
         return super.width(text);
     }
@@ -300,7 +300,7 @@ public class EmojiFont extends Font {
         @Override
         public boolean accept(int index, Style style, int codePoint) {
             if (emojiTextProcessor.hasEmojiFor(index)) {
-                x += emojiTextProcessor.getEmojiRendererFor(index).render(x, y, matrix, multiBufferSource, light);;
+                x += emojiTextProcessor.getEmojiLiteralFor(index).render(x, y, matrix, multiBufferSource, light);;
 
                 return true;
             }

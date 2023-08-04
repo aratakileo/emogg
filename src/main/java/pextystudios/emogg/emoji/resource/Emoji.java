@@ -75,14 +75,6 @@ public class Emoji {
         return width != -1 && height != -1;
     }
 
-    public EmojiLiteral getLiteral() {
-        return new EmojiLiteral(this);
-    }
-
-    public EmojiLiteral getLiteral(boolean isEscaped) {
-        return new EmojiLiteral(this, isEscaped);
-    }
-
     protected void load() {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
