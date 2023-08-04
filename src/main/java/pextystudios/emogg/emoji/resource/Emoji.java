@@ -75,11 +75,11 @@ public class Emoji {
         return width != -1 && height != -1;
     }
 
-    public EmojiLiteral getRenderer() {
+    public EmojiLiteral getLiteral() {
         return new EmojiLiteral(this);
     }
 
-    public EmojiLiteral getRenderer(boolean isEscaped) {
+    public EmojiLiteral getLiteral(boolean isEscaped) {
         return new EmojiLiteral(this, isEscaped);
     }
 

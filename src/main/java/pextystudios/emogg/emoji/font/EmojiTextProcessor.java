@@ -88,7 +88,7 @@ public class EmojiTextProcessor {
             if (!backslashBeforeEmojiCode.isEmpty()) {
                 emojiRendererIndexes.put(
                         matcher.start(BACKSLASH_PATTERN_GROUP) - lengthDifference,
-                        emoji.getRenderer(true)
+                        emoji.getLiteral(true)
                 );
 
                 processedText = StringUtil.replaceStartEndIndex(
@@ -113,7 +113,7 @@ public class EmojiTextProcessor {
 
             emojiRendererIndexes.put(
                     matcher.start(EMOJI_CODE_PATTERN_GROUP) - lengthDifference,
-                    emoji.getRenderer()
+                    emoji.getLiteral()
             );
 
             lengthDifference += lengthBeforeChanges - processedText.length();
