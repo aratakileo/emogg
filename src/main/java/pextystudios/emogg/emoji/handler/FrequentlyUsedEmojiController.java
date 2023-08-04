@@ -9,7 +9,7 @@ import java.util.List;
 public class FrequentlyUsedEmojiController {
     public final static String CATEGORY_FREQUENTLY_USED = "$frequently_used";
 
-    public final static int MAX_NUMBER_OF_RECENTLY_USED_EMOJIS = 50;
+    public final static int MAX_NUMBER_OF_RECENTLY_USED_EMOJIS = 27;
 
     public static List<Emoji> getEmojis() {
         return EmojiHandler.getInstance().getEmojisByCategory(CATEGORY_FREQUENTLY_USED);
