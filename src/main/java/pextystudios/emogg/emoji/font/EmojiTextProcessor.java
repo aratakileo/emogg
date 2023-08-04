@@ -1,5 +1,10 @@
 package pextystudios.emogg.emoji.font;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import joptsimple.internal.Strings;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
 import pextystudios.emogg.util.StringUtil;
@@ -7,9 +12,20 @@ import pextystudios.emogg.util.StringUtil;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class EmojiTextProcessor {
+    private static final LoadingCache<String, EmojiTextProcessor> EMOJI_TEXT_PROCESSORS_BUFFER = CacheBuilder.newBuilder()
+            .expireAfterAccess(60, TimeUnit.SECONDS)
+            .build(new CacheLoader<>() {
+                @Override
+                public @NotNull EmojiTextProcessor load(@NotNull String key) {
+                    return new EmojiTextProcessor(key);
+                }
+            });
+
     public final static EmojiTextProcessor EMPTY = new EmojiTextProcessor(null);
 
     private final static Pattern pattern = Pattern.compile("(\\\\?)(:([_A-Za-z0-9]+):)");
@@ -101,6 +117,16 @@ public class EmojiTextProcessor {
             );
 
             lengthDifference += lengthBeforeChanges - processedText.length();
+        }
+    }
+
+    public static EmojiTextProcessor getEmojiTextProcessor(String text) {
+        if (Strings.isNullOrEmpty(text)) return EmojiTextProcessor.EMPTY;
+
+        try {
+            return EMOJI_TEXT_PROCESSORS_BUFFER.get(text);
+        } catch (ExecutionException e) {
+            return new EmojiTextProcessor(text);
         }
     }
 }

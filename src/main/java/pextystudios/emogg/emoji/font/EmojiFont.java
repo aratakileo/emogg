@@ -15,62 +15,43 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EmojiFont extends Font {
-    private static final LoadingCache<String, EmojiTextProcessor> EMOJI_TEXT_BUILDERS_CACHE = CacheBuilder.newBuilder()
-            .expireAfterAccess(60, TimeUnit.SECONDS)
-            .build(new CacheLoader<>() {
-                @Override
-                public @NotNull EmojiTextProcessor load(@NotNull String key) {
-                    return new EmojiTextProcessor(key);
-                }
-            });
 
     public EmojiFont(Font font) {
         super(font.fonts, font.filterFishyGlyphs);
-    }
-
-    public EmojiTextProcessor getEmojiTextBuilder(String text) throws ExecutionException {
-        return text == null || text.isEmpty() ? EmojiTextProcessor.EMPTY : EMOJI_TEXT_BUILDERS_CACHE.get(text);
     }
 
     @Override
     public float renderText(String text, float x, float y, int color, boolean shadow, Matrix4f matrix4f, MultiBufferSource multiBufferSource, DisplayMode displayMode, int underlineColor, int light) {
         if (text.isEmpty()) return 0;
 
-        try {
-            EmojiTextProcessor emojiTextProcessor = getEmojiTextBuilder(text);
+        final var emojiTextProcessor = EmojiTextProcessor.getEmojiTextProcessor(text);
 
-            EmojiCharSink emojiCharSink = new EmojiCharSink(
-                    emojiTextProcessor,
-                    multiBufferSource,
-                    x,
-                    y,
-                    color,
-                    shadow,
-                    matrix4f,
-                    displayMode,
-                    light
-            );
+        final var emojiCharSink = new EmojiCharSink(
+                emojiTextProcessor,
+                multiBufferSource,
+                x,
+                y,
+                color,
+                shadow,
+                matrix4f,
+                displayMode,
+                light
+        );
 
-            StringDecomposer.iterateFormatted(emojiTextProcessor.getProcessedText(), Style.EMPTY, emojiCharSink);
+        StringDecomposer.iterateFormatted(emojiTextProcessor.getProcessedText(), Style.EMPTY, emojiCharSink);
 
-            emojiCharSink.finish(underlineColor, x);
+        emojiCharSink.finish(underlineColor, x);
 
-            return emojiCharSink.x;
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return emojiCharSink.x;
     }
 
     @Override
@@ -86,13 +67,7 @@ public class EmojiFont extends Font {
             int backgroundColor,
             int light
     ) {
-        final EmojiTextProcessor emojiTextProcessor;
-
-        try {
-            emojiTextProcessor = getEmojiTextBuilder(asString(formattedCharSequence));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        final var emojiTextProcessor = EmojiTextProcessor.getEmojiTextProcessor(asString(formattedCharSequence));
 
         if (emojiTextProcessor.isEmpty()) return 0;
 
@@ -165,13 +140,7 @@ public class EmojiFont extends Font {
 
     @Override
     public void drawInBatch8xOutline(FormattedCharSequence formattedCharSequence, float x, float y, int color, int strokeColor, Matrix4f matrix4f, MultiBufferSource multiBufferSource, int light) {
-        final EmojiTextProcessor emojiTextProcessor;
-
-        try {
-            emojiTextProcessor = getEmojiTextBuilder(asString(formattedCharSequence));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        final var emojiTextProcessor = EmojiTextProcessor.getEmojiTextProcessor(asString(formattedCharSequence));
 
         if (emojiTextProcessor.isEmpty()) return;
 
@@ -248,11 +217,7 @@ public class EmojiFont extends Font {
 
     @Override
     public int width(String text) {
-        try {
-            text = getEmojiTextBuilder(text).getProcessedText();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        text = EmojiTextProcessor.getEmojiTextProcessor(text).getProcessedText();
 
         return super.width(text);
     }
