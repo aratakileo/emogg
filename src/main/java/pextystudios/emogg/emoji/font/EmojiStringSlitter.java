@@ -79,11 +79,13 @@ public class EmojiStringSlitter extends StringSplitter {
     private static class TextOriginalizer {
         private final EmojiTextProcessor emojiTextProcessor;
         private final BiConsumer<FormattedText, Boolean> biConsumer;
+        private final String sourceText;
 
         private int renderPositionOffset = 0;
 
         public TextOriginalizer(FormattedText sourceFormattedText, BiConsumer<FormattedText, Boolean> biConsumer) {
-            this.emojiTextProcessor = EmojiTextProcessor.from(sourceFormattedText.getString());
+            this.sourceText = sourceFormattedText.getString();
+            this.emojiTextProcessor = EmojiTextProcessor.from(sourceText);
             this.biConsumer = biConsumer;
         }
 
@@ -91,13 +93,18 @@ public class EmojiStringSlitter extends StringSplitter {
             renderPositionOffset++;
         }
 
-        public void originalizeAndAccept(FormattedText formattedtext, Style localStyle, boolean prevContentsWereWithoutNewline) {
+        public void originalizeAndAccept(FormattedText formattedtext, Style style, boolean prevContentsWereWithoutNewline) {
             if (formattedtext == null) {
                 biConsumer.accept(FormattedText.EMPTY, false);
                 return;
             }
 
             final var preprocessedText = formattedtext.getString();
+
+            if (preprocessedText.equals(sourceText)) {
+                biConsumer.accept(FormattedText.of(sourceText, style), prevContentsWereWithoutNewline);
+                return;
+            }
 
             var processedText = preprocessedText;
             var localOffset = 0;
@@ -118,7 +125,7 @@ public class EmojiStringSlitter extends StringSplitter {
                 }
             }
 
-            biConsumer.accept(FormattedText.of(processedText, localStyle), prevContentsWereWithoutNewline);
+            biConsumer.accept(FormattedText.of(processedText, style), prevContentsWereWithoutNewline);
             renderPositionOffset += preprocessedText.length();
         }
     }
