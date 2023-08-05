@@ -1,4 +1,4 @@
-- optimisation: emoji loading was accelerated by about 6.7 times! (the speed may vary from device to device)
-- fixed emoji wrapping in chat ([#4](https://github.com/aratakileo/emogg/issues/4) and [#5](https://github.com/aratakileo/emogg/issues/5))
+- optimisation: emoji loading was accelerated by about 6.5 times! (the speed may vary from device to device)
+- fixed wrapping text with emojis in various interfaces (for example, in a chat, in a sign and in others) [#4](https://github.com/aratakileo/emogg/issues/4) [#5](https://github.com/aratakileo/emogg/issues/5)
 - added a section with frequently used emojis in the emoji selection menu
 - minor bugfix
