@@ -32,11 +32,11 @@ public class EmojiTextProcessor {
             EMOJI_CODE_PATTERN_GROUP = 2,
             EMOJI_NAME_PATTERN_GROUP = 3;
 
-    private HashMap<Integer, EmojiLiteral> emojiRenderIndexes;
-    private String processedText;
+    private final HashMap<Integer, EmojiLiteral> emojiRenderIndexes = new LinkedHashMap<>();
+    private final String processedText;
 
-    public EmojiTextProcessor(String sourceText) {
-        setSourceText(sourceText);
+    private EmojiTextProcessor(String sourceText) {
+        this.processedText = getSourceText(sourceText);
     }
 
     public @Nullable EmojiLiteral getEmojiLiteralFor(int renderCharPosition) {
@@ -51,24 +51,6 @@ public class EmojiTextProcessor {
         return emojiRenderIndexes.containsKey(renderCharPosition);
     }
 
-    public boolean hasEmojis() {
-        return !emojiRenderIndexes.isEmpty();
-    }
-
-    public int originalizeCharPosition(int renderCharPosition) {
-        for (var emojiRenderPosition: emojiRenderIndexes.keySet()) {
-            if (renderCharPosition <= emojiRenderPosition) continue;
-
-            final var leftNearestEmojiLiteral = emojiRenderIndexes.get(emojiRenderPosition);
-
-            return leftNearestEmojiLiteral.originalPosition() + leftNearestEmojiLiteral.emoji().getCode().length() + (
-                    renderCharPosition - emojiRenderPosition - (leftNearestEmojiLiteral.isEscaped() ? 0 : 1)
-            );
-        }
-
-        return -1;
-    }
-
     public String getProcessedText() {
         return processedText;
     }
@@ -77,15 +59,11 @@ public class EmojiTextProcessor {
         return processedText.isEmpty();
     }
 
-    private void setSourceText(String sourceText) {
-        if (sourceText == null)
-            sourceText = "";
+    private String getSourceText(String sourceText) {
+        if (Strings.isNullOrEmpty(sourceText))
+            return "";
 
-        emojiRenderIndexes = new LinkedHashMap<>();
-        processedText = sourceText;
-
-        if (sourceText.isEmpty())
-            return;
+        var processedText = sourceText;
 
         final var matcher = EMOJI_CODE_PATTERN.matcher(processedText);
         var lengthDifference = 0;
@@ -102,7 +80,7 @@ public class EmojiTextProcessor {
             if (!backslashBeforeEmojiCode.isEmpty()) {
                 emojiRenderIndexes.put(
                         matcher.start(BACKSLASH_PATTERN_GROUP) - lengthDifference,
-                        new EmojiLiteral(emoji, matcher.start(BACKSLASH_PATTERN_GROUP), true)
+                        new EmojiLiteral(emoji, true)
                 );
 
                 processedText = StringUtil.replaceStartEndIndex(
@@ -128,11 +106,13 @@ public class EmojiTextProcessor {
 
             emojiRenderIndexes.put(
                     emojiCodeStart - lengthDifference,
-                    new EmojiLiteral(emoji, emojiCodeStart, false)
+                    new EmojiLiteral(emoji, false)
             );
 
             lengthDifference += lengthBeforeChanges - processedText.length();
         }
+
+        return processedText;
     }
 
     public static EmojiTextProcessor from(String text) {

@@ -6,14 +6,8 @@ import org.joml.Matrix4f;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.EmojiUtil;
 
-public record EmojiLiteral(Emoji emoji, int originalPosition, boolean isEscaped) {
+public record EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
     public final static int EMOJI_DEFAULT_RENDER_SIZE = 8;
-
-    public EmojiLiteral(@NotNull Emoji emoji, int originalPosition, boolean isEscaped) {
-        this.emoji = emoji;
-        this.originalPosition = originalPosition;
-        this.isEscaped = isEscaped;
-    }
 
     public float render(
             float x,
