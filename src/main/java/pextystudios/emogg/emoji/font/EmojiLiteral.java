@@ -7,7 +7,7 @@ import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.EmojiUtil;
 
 public record EmojiLiteral(Emoji emoji, int originalPosition, boolean isEscaped) {
-    public final static int EMOJI_DEFAULT_RENDER_SIZE = 10;
+    public final static int EMOJI_DEFAULT_RENDER_SIZE = 8;
 
     public EmojiLiteral(@NotNull Emoji emoji, int originalPosition, boolean isEscaped) {
         this.emoji = emoji;
