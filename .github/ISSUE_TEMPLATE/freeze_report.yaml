@@ -1,0 +1,58 @@
+name: Freeze Report
+description: Create a freeze report to help us fix bugs in Emogg.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "## Welcome!"
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking your time to report this freeze! If you need real-time help, join us on [Discord](https://discord.gg/t5ZqftXG4b).
+        Make sure you are running the latest version of Emogg before reporting.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: "Describe the freeze as clearly as possible. More info means the freeze can be fixed faster."
+    validations:
+      required: true
+  - type: dropdown
+    id: side
+    attributes:
+      label: Which side have you encountered the bug on?
+      options:
+        - Client
+        - Server
+        - Both
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: What is your OS?
+      options:
+        - Windows
+        - MacOS
+        - Android
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: |
+        How do you trigger this freeze? Please walk us through it step by step.
+        If applicable, add screenshots to help explain your problem.
+      value: |
+        1.
+        2.
+        3.
+        ...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: "Add any other context about the problem here, such as the modpack you're playing or other mods that might be causing this bug."
