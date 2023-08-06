@@ -1,6 +1,6 @@
 name: Freeze Report
 description: Create a freeze report to help us fix bugs in Emogg.
-labels: [bug]
+labels: [freeze]
 body:
   - type: markdown
     attributes:
