@@ -1,5 +1,5 @@
 name: Bug Report
-description: Create a bug report to help us fix bugs in Architecture Extensions.
+description: Create a bug report to help us fix bugs in Emogg.
 labels: [bug]
 body:
   - type: markdown
@@ -8,8 +8,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking your time to report this bug! If you need real-time help, join us on [Discord](https://debuggy.gay/discord).
-        Make sure you are running the latest version of Architecture Extensions before reporting.
+        Thanks for taking your time to report this bug! If you need real-time help, join us on [Discord](https://discord.gg/wpNTd9PjEa).
+        Make sure you are running the latest version of Emogg before reporting.
   - type: textarea
     id: description
     attributes:
