@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking your time to report this bug! If you need real-time help, join us on [Discord](https://discord.gg/wpNTd9PjEa).
+        Thanks for taking your time to report this bug! If you need real-time help, join us on [Discord](https://discord.gg/t5ZqftXG4b).
         Make sure you are running the latest version of Emogg before reporting.
   - type: textarea
     id: description
