@@ -1,5 +1,5 @@
 name: Freeze Report
-description: Create a freeze report to help us fix bugs in Emogg.
+description: Create a freeze report to help us fix freezes in Emogg.
 labels: [freeze]
 body:
   - type: markdown
@@ -13,14 +13,14 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Describe the bug
+      label: Describe the freeze
       description: "Describe the freeze as clearly as possible. More info means the freeze can be fixed faster."
     validations:
       required: true
   - type: dropdown
     id: side
     attributes:
-      label: Which side have you encountered the bug on?
+      label: Which side have you encountered the freeze on?
       options:
         - Client
         - Server
@@ -55,4 +55,4 @@ body:
     id: context
     attributes:
       label: Additional context
-      description: "Add any other context about the problem here, such as the modpack you're playing or other mods that might be causing this bug."
+      description: "Add any other context about the problem here, such as the modpack you're playing or other mods that might be causing this freeze."
