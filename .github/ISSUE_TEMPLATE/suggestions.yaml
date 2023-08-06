@@ -16,7 +16,7 @@ body:
       label: List the features you want added to Emogg.
       description: 
       value: |
-        Middle of the block vertical slabs similar to vanilla wall blocks.
+        New emojis for the Twemogg pack
 
   - type: textarea
     id: description
@@ -24,7 +24,7 @@ body:
       label: Describe how your feature(s) will work if applicable.
       description: "Describe the suggestion as clearly as possible. More info means the suggestion is more likely to be accepted."
       value: |
-        Basically the shape formed when stacking vanilla walls on top of each other.
+        Twitter emoji recently had an update where new emojis were added
 
   - type: textarea
     id: context
