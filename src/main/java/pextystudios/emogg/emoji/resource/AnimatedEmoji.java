@@ -1,9 +1,11 @@
 package pextystudios.emogg.emoji.resource;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Pair;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.util.EmojiUtil;
+import pextystudios.emogg.NativeGifImage;
 import pextystudios.emogg.util.StringUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,12 +56,36 @@ public class AnimatedEmoji extends Emoji {
     @Override
     protected void load() {
         try {
-            var imageData = EmojiUtil.splitGif(resourceLocation);
+            final var minecraft = Minecraft.getInstance();
+            final var nativeGifImage = NativeGifImage.read(resourceLocation);
+            final var sourceFilePath = resourceLocation.getPath();
+            final var sourceFileName = sourceFilePath.substring(sourceFilePath.lastIndexOf('/') + 1);
 
-            width = imageData.getA().getA();
-            height = imageData.getA().getB();
-            totalDelayTime = imageData.getB();
-            framesData = imageData.getC();
+            width = nativeGifImage.getWidth();
+            height = nativeGifImage.getHeight();
+            framesData = new ConcurrentHashMap<>();
+
+            var i = 0;
+            var totalDelayTime = 0;
+
+            for (var frame: nativeGifImage.getFrames()) {
+                final var framePath = "emoji/" + sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_frame_" + i + ".png";
+                final var frameDynamicTexture = new DynamicTexture(frame.nativeImage());
+
+                framesData.put(totalDelayTime, new Pair<>(
+                        minecraft.getTextureManager().register(framePath, frameDynamicTexture),
+                        frame.delay()
+                ));
+                totalDelayTime += frame.delay();
+                i++;
+            }
+
+//            var imageData = EmojiUtil.splitGif(resourceLocation);
+//
+//            width = imageData.getA().getA();
+//            height = imageData.getA().getB();
+//            totalDelayTime = imageData.getB();
+//            framesData = imageData.getC();
         } catch (Exception e) {
             Emogg.LOGGER.error("Failed to load: " + StringUtil.repr(resourceLocation), e);
         }

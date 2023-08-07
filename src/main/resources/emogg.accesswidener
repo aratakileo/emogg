@@ -37,6 +37,7 @@ accessible field net/minecraft/client/StringSplitter$LineComponent contents Ljav
 accessible field net/minecraft/client/StringSplitter$LineComponent style Lnet/minecraft/network/chat/Style;
 accessible field net/minecraft/client/StringSplitter$FlatComponents parts Ljava/util/List;
 accessible field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/StringSplitter;
+accessible method com/mojang/blaze3d/platform/NativeImage$Format getStbFormat (I)Lcom/mojang/blaze3d/platform/NativeImage$Format;
 
 mutable field net/minecraft/client/Minecraft font Lnet/minecraft/client/gui/Font;
 mutable field net/minecraft/client/Minecraft fontFilterFishy Lnet/minecraft/client/gui/Font;
