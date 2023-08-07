@@ -11,9 +11,9 @@ import java.util.List;
 public class FrequentlyUsedEmojiController {
     public final static String CATEGORY_FREQUENTLY_USED = "$frequently_used";
 
-    private final static int MAX_NUMBER_OF_RECENTLY_USED_EMOJIS = 27,
-            MAX_NUMBER_OF_USES = 10,
-            MAX_NUMBER_OF_NOT_USES = 10;
+    private final static int MAX_NUMBER_OF_RECENTLY_USED_EMOJIS = 45,
+            MAX_USES_POINTS = 20,
+            INITIAL_POINTS = 10;
 
     public static List<Emoji> getEmojis() {
         return EmojiHandler.getInstance().getEmojisByCategory(CATEGORY_FREQUENTLY_USED);
@@ -41,9 +41,9 @@ public class FrequentlyUsedEmojiController {
         for (var frequentlyUsedEmojiStatistic: Lists.newArrayList(EmoggConfig.instance.frequentlyUsedEmojis)) {
             if (emojisInText.contains(frequentlyUsedEmojiStatistic.emojiName)) continue;
 
-            frequentlyUsedEmojiStatistic.useAmount--;
+            frequentlyUsedEmojiStatistic.usePoints--;
 
-            if (frequentlyUsedEmojiStatistic.useAmount <= -MAX_NUMBER_OF_NOT_USES)
+            if (frequentlyUsedEmojiStatistic.usePoints == 0)
                 EmoggConfig.instance.frequentlyUsedEmojis.remove(frequentlyUsedEmojiStatistic);
         }
 
@@ -62,7 +62,7 @@ public class FrequentlyUsedEmojiController {
             for (var k = frequentlyUsedEmojis.size() - 1; k > i; k--) {
                 temp = frequentlyUsedEmojis.get(k);
 
-                if (temp.useAmount <= frequentlyUsedEmojis.get(k - 1).useAmount) continue;
+                if (temp.usePoints <= frequentlyUsedEmojis.get(k - 1).usePoints) continue;
 
                 frequentlyUsedEmojis.set(k, frequentlyUsedEmojis.get(k - 1));
                 frequentlyUsedEmojis.set(k - 1, temp);
@@ -80,7 +80,7 @@ public class FrequentlyUsedEmojiController {
 
         if (frequentlyUsedEmojiNames.contains(emojiName)) {
             final var emojiStatistic = frequentlyUsedEmojis.get(frequentlyUsedEmojiNames.indexOf(emojiName));
-            emojiStatistic.useAmount = Math.min(MAX_NUMBER_OF_USES, emojiStatistic.useAmount + 1);
+            emojiStatistic.usePoints = Math.min(MAX_USES_POINTS, emojiStatistic.usePoints + 1);
             return;
         }
 
@@ -96,7 +96,7 @@ public class FrequentlyUsedEmojiController {
 
     public static class EmojiStatistic {
         public final String emojiName;
-        public int useAmount = 1;
+        public int usePoints = INITIAL_POINTS;
 
         public EmojiStatistic(String emojiName) {
             this.emojiName = emojiName;
