@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import oshi.util.tuples.Pair;
-import pextystudios.emogg.emoji.font.EmojiTextProcessor;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
 import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
 import pextystudios.emogg.emoji.resource.Emoji;
