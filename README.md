@@ -8,7 +8,7 @@ Adds emoji support to the chat and to most of the Minecraft interface!
 - support for both static and animated emojis
 - ease of adding your own emojis. Just create a texture pack, add pictures there along the way `assets/emogg/emoji`, add a resource pack to the game - done!
 - you can use emojis in chat, on signs and in other places where there is text!
-- when you enter the emoji name, suggestions appear in the input field (available only for chat)
+- when you enter the emoji name, emoji suggestions appear above the input field (available only for chat)
 - you can choose the emoji you like in the emoji selection menu! (available only for chat)
 - by default, two emoji texture packs are built into the mod at once, each of which you can disable through the resource pack selection menu, like a regular resource pack
 
