@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Mixin(CommandSuggestions.class)
@@ -31,11 +30,14 @@ public abstract class CommandSuggestionsMixin {
     @Shadow @Final
     EditBox input;
 
-    @Shadow @Nullable private CompletableFuture<Suggestions> pendingSuggestions;
+    @Shadow @Nullable
+    private CompletableFuture<Suggestions> pendingSuggestions;
 
-    @Shadow public abstract void showSuggestions(boolean narrateFirstSuggestion);
+    @Shadow
+    public abstract void showSuggestions(boolean narrateFirstSuggestion);
 
-    @Shadow @Final private boolean commandsOnly;
+    @Shadow @Final
+    private boolean commandsOnly;
 
     @Inject(method = "updateCommandInfo", at = @At("TAIL"), cancellable = true)
     private void updateCommandInfo(CallbackInfo ci){
