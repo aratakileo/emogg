@@ -45,7 +45,7 @@ public class ChatScreenMixin {
         );
         self.addRenderableWidget(emojiButton);
 
-        emojiSelectionMenu = new EmojiSelectionMenu(emojiButton.getHeight() + 4);
+        emojiSelectionMenu = new EmojiSelectionMenu((float) (emojiButton.getHeight() * 1.5));
         emojiSelectionMenu.setRightBottom(self.width - 2, self.height - input.getHeight() - 3);
         emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
         self.addRenderableWidget(emojiSelectionMenu);
