@@ -9,7 +9,8 @@
     "ChatScreenMixin",
     "CommandSuggestionsMixin",
     "InBedChatScreenMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "SuggestionsListMixin"
   ],
   "injectors": {
     "defaultRequire": 1

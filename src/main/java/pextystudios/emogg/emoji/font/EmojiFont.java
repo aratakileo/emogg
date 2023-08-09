@@ -220,20 +220,25 @@ public class EmojiFont extends Font {
     }
 
     @Override
-    public int width(String text) {
-        text = EmojiTextProcessor.from(text).getProcessedText();
+    public int width(String string) {
+        return width(string, true);
+    }
+
+    public int width(String text, boolean emojiSupport) {
+        if (emojiSupport)
+            return super.width(EmojiTextProcessor.processText(text));
 
         return super.width(text);
     }
 
     @Override
     public int width(FormattedCharSequence formattedCharSequence) {
-        return width(asString(formattedCharSequence));
+        return width(asString(formattedCharSequence), true);
     }
 
     @Override
     public int width(FormattedText formattedText) {
-        return this.width(formattedText.getString());
+        return this.width(formattedText.getString(), true);
     }
 
     class EmojiCharSink implements FormattedCharSink {

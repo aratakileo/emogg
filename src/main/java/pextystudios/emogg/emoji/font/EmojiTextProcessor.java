@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 public class EmojiTextProcessor {
     public final static EmojiTextProcessor EMPTY = new EmojiTextProcessor(null);
@@ -123,5 +122,9 @@ public class EmojiTextProcessor {
         } catch (ExecutionException e) {
             return new EmojiTextProcessor(text);
         }
+    }
+
+    public static String processText(String text) {
+        return from(text).processedText;
     }
 }
