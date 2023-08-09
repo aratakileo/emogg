@@ -16,5 +16,6 @@
   "emogg.category.travel": "Путешествия",
   "emogg.category.anime": "Аниме",
   "emogg.category.activities": "Активности",
-  "emogg.resourcepack.builtin.name": "Встроенные эмодзи"
+  "emogg.resourcepack.builtin.name": "Встроенные эмодзи",
+  "emogg.message.new_version_is_available": "Доступна новая версия! Её можно скачать на Modrinth"
 }

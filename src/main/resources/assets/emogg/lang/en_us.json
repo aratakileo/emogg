@@ -17,5 +17,6 @@
   "emogg.category.anime": "Anime",
   "emogg.category.activities": "Activities",
   "emogg.resourcepack.builtin.name": "Built-in emojis",
-  "emogg.resourcepack.twemogg.name": "Twemogg"
+  "emogg.resourcepack.twemogg.name": "Twemogg",
+  "emogg.message.new_version_is_available": "New version is available! Download it at Modrinth"
 }
