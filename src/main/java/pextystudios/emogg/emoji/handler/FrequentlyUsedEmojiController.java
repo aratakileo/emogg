@@ -37,6 +37,9 @@ public class FrequentlyUsedEmojiController {
             emojisInText.add(emojiName);
             markEmojiUse(emojiLiteral.emoji());
         }
+        
+        if (emojisInText.isEmpty())
+            return;
 
         for (var frequentlyUsedEmojiStatistic: Lists.newArrayList(EmoggConfig.instance.frequentlyUsedEmojis)) {
             if (emojisInText.contains(frequentlyUsedEmojiStatistic.emojiName)) continue;
