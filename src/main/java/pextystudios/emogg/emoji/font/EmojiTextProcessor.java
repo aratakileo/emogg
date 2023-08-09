@@ -27,7 +27,7 @@ public class EmojiTextProcessor {
                     return new EmojiTextProcessor(key);
                 }
             });
-    private final static Pattern EMOJI_CODE_PATTERN = Pattern.compile("(\\\\?)(:([_A-Za-z0-9]+):)");
+
     private final static int BACKSLASH_PATTERN_GROUP = 1,
             EMOJI_CODE_PATTERN_GROUP = 2,
             EMOJI_NAME_PATTERN_GROUP = 3;
@@ -65,7 +65,7 @@ public class EmojiTextProcessor {
 
         var processedText = sourceText;
 
-        final var matcher = EMOJI_CODE_PATTERN.matcher(processedText);
+        final var matcher = EmojiLiteral.EMOJI_LITERAL_PATTERN.matcher(processedText);
         var lengthDifference = 0;
 
         while (matcher.find()) {

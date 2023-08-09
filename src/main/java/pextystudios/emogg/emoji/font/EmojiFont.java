@@ -13,6 +13,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.joml.Matrix4f;
+import pextystudios.emogg.Emogg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,14 +81,16 @@ public class EmojiFont extends Font {
         formattedCharSequence.accept((index, style, ch) -> {
             if (!ignore.get()) {
                 if (emojiTextProcessor.hasEmojiFor(renderCharIndex.get())) {
-                    formattedCharSequences.add(new FormattedEmojiSequence(renderCharIndex.get(), style, ' '));
-
                     if (emojiTextProcessor.getEmojiLiteralFor(renderCharIndex.get()).isEscaped()) {
                         renderCharIndex.getAndIncrement();
                         return true;
-                    }
+                    } else
+                        formattedCharSequences.add(
+                                new FormattedEmojiSequence(renderCharIndex.get(), style, ' ')
+                        );
 
                     ignore.set(true);
+
                     return true;
                 }
 
@@ -172,10 +175,11 @@ public class EmojiFont extends Font {
                                 if (emojiTextProcessor.getEmojiLiteralFor(renderCharIndex.get()).isEscaped()) {
                                     renderCharIndex.getAndIncrement();
                                     return true;
-                                }
+                                } else
+                                    offsettedX.updateAndGet(value -> value + EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE);
 
-                                offsettedX.updateAndGet(value -> value + EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE);
                                 ignore.set(true);
+
                                 return true;
                             }
 
@@ -299,8 +303,10 @@ public class EmojiFont extends Font {
 
         @Override
         public boolean accept(int index, Style style, int codePoint) {
-            if (emojiTextProcessor.hasEmojiFor(index)) {
-                x += emojiTextProcessor.getEmojiLiteralFor(index).render(x, y, matrix, multiBufferSource, light);;
+            final EmojiLiteral emojiLiteral;
+
+            if (emojiTextProcessor.hasEmojiFor(index) && !(emojiLiteral = emojiTextProcessor.getEmojiLiteralFor(index)).isEscaped()) {
+                x += emojiLiteral.render(x, y, matrix, multiBufferSource, light);
 
                 return true;
             }

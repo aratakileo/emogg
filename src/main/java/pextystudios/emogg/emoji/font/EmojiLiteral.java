@@ -6,7 +6,12 @@ import org.joml.Matrix4f;
 import pextystudios.emogg.emoji.resource.Emoji;
 import pextystudios.emogg.util.EmojiUtil;
 
+import java.util.regex.Pattern;
+
 public record EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
+    public final static Pattern EMOJI_CODE_PATTERN = Pattern.compile("(:([_A-Za-z0-9]+):)"),
+            EMOJI_LITERAL_PATTERN = Pattern.compile("(\\\\?)" + EMOJI_CODE_PATTERN.pattern());
+
     public final static int EMOJI_DEFAULT_RENDER_SIZE = 8;
 
     public float render(
@@ -16,8 +21,6 @@ public record EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
             MultiBufferSource multiBufferSource,
             int light
     ) {
-        if (isEscaped) return 0;
-
         float textureSize = 16, textureX = 0, textureY = 0, textureOffset = 16 / textureSize, offsetY = 1, offsetX = 0,
                 width = EMOJI_DEFAULT_RENDER_SIZE, height = EMOJI_DEFAULT_RENDER_SIZE;
         if (emoji.getWidth() < emoji.getHeight()) {
