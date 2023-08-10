@@ -188,7 +188,7 @@ public class EmojiHandler {
         emojiCategories.clear();
         allEmojis.clear();
 
-        resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet().forEach(this::regEmoji);
+        resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet().parallelStream().forEach(this::regEmoji);
 
         if (EmoggConfig.instance.isDebugModeEnabled)
             Emogg.LOGGER.info(String.format(
