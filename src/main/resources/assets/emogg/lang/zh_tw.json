@@ -1,0 +1,21 @@
+{
+  "emogg.settings.title": "Emogg 設置",
+  "emogg.settings.option.is_debug_mode_enabled.title": "調試模式: %s",
+  "emogg.settings.option.is_debug_mode_enabled.description": "如果啟用此模式，在使用模組時將提供額外的資訊，無論是在圖形介面內部還是在控制台中。這種模式可能會導致效能下降，因此只有在真正有必要時才應該啟用此模式。",
+  "emogg.settings.save_and_quit": "完成",
+  "emogg.gui.state.enabled": "啟用",
+  "emogg.gui.state.disabled": "停用",
+  "emogg.category.$frequently_used": "常用",
+  "emogg.category.food": "食物",
+  "emogg.category.other": "其他",
+  "emogg.category.people": "人們",
+  "emogg.category.flags": "旗幟",
+  "emogg.category.nature": "自然",
+  "emogg.category.objects": "物體",
+  "emogg.category.symbols": "符號",
+  "emogg.category.travel": "旅行",
+  "emogg.category.anime": "動漫",
+  "emogg.category.activities": "活動",
+  "emogg.resourcepack.builtin.name": "固有的表情符號",
+  "emogg.message.new_version_is_available": "新版本上線了！在 Modrinth 下載"
+}
