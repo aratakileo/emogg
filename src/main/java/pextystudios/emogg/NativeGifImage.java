@@ -92,22 +92,20 @@ public class NativeGifImage {
     }
 
     public static NativeGifImage read(byte[] fileData) throws IOException {
-        final ByteBuffer byteBuffer = MemoryUtil.memAlloc(fileData.length);
-        NativeGifImage nativeGifImage;
+        final var byteBuffer = MemoryUtil.memAlloc(fileData.length);
+        final NativeGifImage nativeGifImage;
 
         try {
             byteBuffer.put(fileData);
             byteBuffer.position(0);
 
             try (final MemoryStack memoryStack = MemoryStack.stackPush()) {
-                final PointerBuffer delayBuffer = memoryStack.mallocPointer(1);
-
-                final IntBuffer widthBuffer = memoryStack.mallocInt(1),
-                        heightBuffer = memoryStack.mallocInt(1),
-                        frameBuffer = memoryStack.mallocInt(1),
-                        channelBuffer = memoryStack.mallocInt(1);
-
-                ByteBuffer gifByteBuffer = STBImage.stbi_load_gif_from_memory(
+                final var delayBuffer = memoryStack.mallocPointer(1);
+                final var widthBuffer = memoryStack.mallocInt(1);
+                final var heightBuffer = memoryStack.mallocInt(1);
+                final var frameBuffer = memoryStack.mallocInt(1);
+                final var channelBuffer = memoryStack.mallocInt(1);
+                final var gifByteBuffer = STBImage.stbi_load_gif_from_memory(
                         byteBuffer,
                         delayBuffer,
                         widthBuffer,
@@ -121,7 +119,7 @@ public class NativeGifImage {
                     if (gifByteBuffer == null)
                         throw new IOException("Could not load gif image: " + STBImage.stbi_failure_reason());
 
-                    int channels = channelBuffer.get();
+                    final var channels = channelBuffer.get();
 
                     if (channels != 4)
                         throw new RuntimeException(String.format(
@@ -129,15 +127,15 @@ public class NativeGifImage {
                                 channels
                         ));
 
-                    int width = widthBuffer.get(), height = heightBuffer.get(), frames = frameBuffer.get();
+                    final var width = widthBuffer.get();
+                    final var height = heightBuffer.get();
+                    final var frames = frameBuffer.get();
+                    final var delaysIntBuffer = delayBuffer.getIntBuffer(frames);
+                    final var pixelData = gifByteBuffer.asIntBuffer();
+                    final var delays = new int[frames];
+                    final var pixels = new int[width * height * frames];
 
-                    IntBuffer delaysIntBuffer = delayBuffer.getIntBuffer(frames);
-
-                    int[] delays = new int[frames];
                     delaysIntBuffer.get(delays);
-
-                    IntBuffer pixelData = gifByteBuffer.asIntBuffer();
-                    int[] pixels = new int[width * height * frames];
                     pixelData.get(pixels);
 
                     nativeGifImage = new NativeGifImage(width, height, frames, pixels, delays);

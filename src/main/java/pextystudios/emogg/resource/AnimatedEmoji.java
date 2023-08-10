@@ -9,7 +9,11 @@ import pextystudios.emogg.util.StringUtil;
 public class AnimatedEmoji extends Emoji {
     private AsyncResourceSlider asyncResourceSlider = null;
 
-    protected AnimatedEmoji(@NotNull String name, @NotNull ResourceLocation resourceLocation, @NotNull String category) {
+    protected AnimatedEmoji(
+            @NotNull String name,
+            @NotNull ResourceLocation resourceLocation,
+            @NotNull String category
+    ) {
         super(name, resourceLocation, category);
     }
 

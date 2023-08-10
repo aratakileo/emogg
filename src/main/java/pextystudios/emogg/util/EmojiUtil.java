@@ -37,22 +37,26 @@ public final class EmojiUtil {
         var compositeState = RenderType.CompositeState.builder()
                 .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeTextShader))
                 .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
-                .setTransparencyState(new RenderStateShard.TransparencyStateShard("translucent_transparency", () -> {
-                    RenderSystem.enableBlend();
-                    RenderSystem.blendFuncSeparate(
-                            GlStateManager.SourceFactor.SRC_ALPHA,
-                            GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                            GlStateManager.SourceFactor.ONE,
-                            GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-                    );
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                }, () -> {
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                    RenderSystem.disableBlend();
-                    RenderSystem.defaultBlendFunc();
-                }))
+                .setTransparencyState(new RenderStateShard.TransparencyStateShard(
+                        "translucent_transparency",
+                        () -> {
+                            RenderSystem.enableBlend();
+                            RenderSystem.blendFuncSeparate(
+                                    GlStateManager.SourceFactor.SRC_ALPHA,
+                                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+                                    GlStateManager.SourceFactor.ONE,
+                                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
+                            );
+                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                            },
+                        () -> {
+                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                            RenderSystem.disableBlend();
+                            RenderSystem.defaultBlendFunc();
+                        }
+                ))
                 .setLightmapState(new RenderStateShard.LightmapStateShard(true))
                 .createCompositeState(false);
 

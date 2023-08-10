@@ -12,7 +12,15 @@ public class VerticalScrollbar extends AbstractWidget {
             scrollingThumbTopToTouchOffset = -1,
             padding;
 
-    public VerticalScrollbar(int x, int y, int width, int height, int numberOfScrollingPositions, int scrollSegmentSize, int padding) {
+    public VerticalScrollbar(
+            int x,
+            int y,
+            int width,
+            int height,
+            int numberOfScrollingPositions,
+            int scrollSegmentSize,
+            int padding
+    ) {
         super(x, y, width, height);
 
         this.padding = padding;
@@ -44,13 +52,18 @@ public class VerticalScrollbar extends AbstractWidget {
     public void setNumberOfScrollingPositions(int numberOfScrollingPositions, int scrollSegmentSize) {
         this.numberOfScrollingPositions = numberOfScrollingPositions;
         this.scrollSegmentSize = scrollSegmentSize;
-        this.thumbRect.setHeight(Math.min(height - 10 - padding * 2, Math.max(8, height - padding * 2 - numberOfScrollingPositions / scrollSegmentSize)));
+        this.thumbRect.setHeight(Math.min(
+                height - 10 - padding * 2,
+                Math.max(8, height - padding * 2 - numberOfScrollingPositions / scrollSegmentSize)
+        ));
         this.thumbRect.setBottom(Math.min(width - padding * 2, thumbRect.getBottom()));
     }
 
     public void setScrollProgress(int scrollProgress) {
         this.scrollProgress = Math.min(numberOfScrollingPositions, Math.max(scrollProgress, 0));
-        this.thumbRect.setY((int) ((height - padding * 2) * ((double) this.scrollProgress / (double) this.numberOfScrollingPositions)));
+        this.thumbRect.setY((int) (
+                (height - padding * 2) * ((double) this.scrollProgress / (double) this.numberOfScrollingPositions)
+        ));
     }
 
     public void setScrollProgressByThumbY(int localY) {

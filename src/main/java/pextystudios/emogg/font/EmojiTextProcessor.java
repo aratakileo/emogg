@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class EmojiTextProcessor {
     public final static EmojiTextProcessor EMPTY = new EmojiTextProcessor(null);
 
-    private static final LoadingCache<String, EmojiTextProcessor> EMOJI_TEXT_PROCESSORS_BUFFER = CacheBuilder.newBuilder()
+    private static final LoadingCache<String, EmojiTextProcessor> EMOJI_TEXT_PROCESSORS_BUFFER = CacheBuilder
+            .newBuilder()
             .expireAfterAccess(60, TimeUnit.SECONDS)
             .build(new CacheLoader<>() {
                 @Override

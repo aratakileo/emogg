@@ -63,7 +63,10 @@ public class ChatScreenMixin {
 
     @Inject(method = "resize", at = @At("HEAD"))
     public void resizeHead(Minecraft minecraft, int x, int y, CallbackInfo ci) {
-        emojiSelectionMenuState = new Pair<>(emojiSelectionMenu.verticalScrollbar.getScrollProgress(), emojiSelectionMenu.visible);
+        emojiSelectionMenuState = new Pair<>(
+                emojiSelectionMenu.verticalScrollbar.getScrollProgress(),
+                emojiSelectionMenu.visible
+        );
         emojiButtonDisplayableEmojiState = emojiButton.getDisplayableEmoji();
     }
 

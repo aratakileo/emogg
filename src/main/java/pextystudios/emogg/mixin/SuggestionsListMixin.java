@@ -32,7 +32,15 @@ public class SuggestionsListMixin {
     private final HashMap<String, Emoji> emojis = new HashMap<>();
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(CommandSuggestions commandSuggestions, int x, int y, int width, List<Suggestion> suggestions, boolean bl, CallbackInfo ci){
+    private void init(
+            CommandSuggestions commandSuggestions,
+            int x,
+            int y,
+            int width,
+            List<Suggestion> suggestions,
+            boolean bl,
+            CallbackInfo ci
+    ){
         for (var suggestion: suggestions) {
             final var suggestionText = suggestion.getText();
             final var matcher = EmojiLiteral.EMOJI_CODE_PATTERN.matcher(suggestionText);

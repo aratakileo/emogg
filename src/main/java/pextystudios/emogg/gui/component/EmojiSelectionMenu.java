@@ -313,7 +313,10 @@ public class EmojiSelectionMenu extends AbstractWidget {
         }
 
         final var lastSegmentEntry = segments.entrySet().stream().toList().get(segments.size() - 1);
-        verticalScrollbar.setNumberOfScrollingPositions((lastSegmentEntry.getKey() + lastSegmentEntry.getValue().numberOfLines - 1) - MAX_NUMBER_OF_LINES_ON_PAGE);
+        verticalScrollbar.setNumberOfScrollingPositions(
+                (lastSegmentEntry.getKey() + lastSegmentEntry.getValue().numberOfLines - 1)
+                        - MAX_NUMBER_OF_LINES_ON_PAGE
+        );
         verticalScrollbar.setScrollProgress(0);
     }
 

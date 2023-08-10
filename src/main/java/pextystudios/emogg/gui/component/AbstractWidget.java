@@ -74,7 +74,10 @@ public abstract class AbstractWidget extends AbstractButton {
 
     @Override
     protected @NotNull ClientTooltipPositioner createTooltipPositioner() {
-        return this.isHovered && this.isFocused() && Minecraft.getInstance().getLastInputType().isKeyboard() ? super.createTooltipPositioner() : hintPositioner;
+        return this.isHovered
+                && this.isFocused()
+                && Minecraft.getInstance().getLastInputType().isKeyboard()
+                ? super.createTooltipPositioner() : hintPositioner;
     }
 
     public void setLeftTop(int left, int top) {

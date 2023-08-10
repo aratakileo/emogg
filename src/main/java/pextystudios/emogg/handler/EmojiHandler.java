@@ -27,7 +27,9 @@ public class EmojiHandler {
     public final static Predicate<String> HAS_EMOJIS_EXTENSION = path -> {
         return path.endsWith(STATIC_EMOJI_EXTENSION) || path.endsWith(ANIMATED_EMOJI_EXTENSION);
     };
-    public final static Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(resourceLocation.getPath());
+    public final static Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(
+            resourceLocation.getPath()
+    );
     public final static String EMOJIS_PATH_PREFIX = "emoji";
     public final static String CATEGORY_DEFAULT = "other",
             CATEGORY_ANIME = "anime",
@@ -186,7 +188,10 @@ public class EmojiHandler {
         emojiCategories.clear();
         allEmojis.clear();
 
-        resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet().parallelStream().forEach(this::regEmoji);
+        resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION)
+                .keySet()
+                .parallelStream()
+                .forEach(this::regEmoji);
 
         if (!allEmojis.isEmpty())
             Emogg.LOGGER.info(String.format(
@@ -208,7 +213,8 @@ public class EmojiHandler {
         final var categoryLangKey = "emogg.category." + category;
         final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
 
-        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category).replaceAll("_", " ");
+        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category)
+                .replaceAll("_", " ");
 
         return displayableName;
     }

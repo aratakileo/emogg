@@ -16,12 +16,18 @@ public class EmojiStringSlitter extends StringSplitter {
     }
 
     @Override
-    public void splitLines(FormattedText formattedText, int maxWidth, Style style, BiConsumer<FormattedText, Boolean> biConsumer) {
+    public void splitLines(
+            FormattedText formattedText,
+            int maxWidth,
+            Style style,
+            BiConsumer<FormattedText, Boolean> biConsumer
+    ) {
         final var textOriginalizer = new TextOriginalizer(formattedText, biConsumer);
         final List<LineComponent> list = Lists.newArrayList();
 
         formattedText.visit((_style, string) -> {
-            if (!string.isEmpty()) list.add(new StringSplitter.LineComponent(EmojiTextProcessor.from(string).getProcessedText(), _style));
+            if (!string.isEmpty())
+                list.add(new StringSplitter.LineComponent(EmojiTextProcessor.from(string).getProcessedText(), _style));
 
             return Optional.empty();
         }, style);
@@ -51,8 +57,16 @@ public class EmojiStringSlitter extends StringSplitter {
 
                     penultimateContentsHaveNewlineChar = hasNewlineChar;
 
-                    final var preprocessedFormattedText = flatComponents.splitAt(splitPosition, hasNewlineOrSpaceChar ? 1 : 0, splitStyle);
-                    textOriginalizer.originalizeAndAccept(preprocessedFormattedText, splitStyle, prevContentsWereWithoutNewline);
+                    final var preprocessedFormattedText = flatComponents.splitAt(
+                            splitPosition,
+                            hasNewlineOrSpaceChar ? 1 : 0,
+                            splitStyle
+                    );
+                    textOriginalizer.originalizeAndAccept(
+                            preprocessedFormattedText,
+                            splitStyle,
+                            prevContentsWereWithoutNewline
+                    );
 
                     if (hasNewlineOrSpaceChar) textOriginalizer.increaseRenderPositionOffset();
 
@@ -93,7 +107,11 @@ public class EmojiStringSlitter extends StringSplitter {
             renderPositionOffset++;
         }
 
-        public void originalizeAndAccept(FormattedText formattedtext, Style style, boolean prevContentsWereWithoutNewline) {
+        public void originalizeAndAccept(
+                FormattedText formattedtext,
+                Style style,
+                boolean prevContentsWereWithoutNewline
+        ) {
             if (formattedtext == null) {
                 biConsumer.accept(FormattedText.EMPTY, false);
                 return;
@@ -112,7 +130,8 @@ public class EmojiStringSlitter extends StringSplitter {
             for (var i = 0; i < preprocessedText.length(); i++) {
                 if (!emojiTextProcessor.hasEmojiFor(renderPositionOffset + i)) continue;
 
-                final var currentEmojiLiteral = emojiTextProcessor.getEmojiLiteralFor(renderPositionOffset + i);
+                final var currentEmojiLiteral = emojiTextProcessor
+                        .getEmojiLiteralFor(renderPositionOffset + i);
                 final var emojiStart = localOffset + i;
 
                 if (currentEmojiLiteral.isEscaped()) {
@@ -120,7 +139,9 @@ public class EmojiStringSlitter extends StringSplitter {
                     localOffset += 1;
                 } else {
                     final var currentEmojiString = currentEmojiLiteral.getEmoji().getCode();
-                    processedText = processedText.substring(0, emojiStart) + currentEmojiString + processedText.substring(emojiStart + 1);
+                    processedText = processedText.substring(0, emojiStart)
+                            + currentEmojiString
+                            + processedText.substring(emojiStart + 1);
                     localOffset += currentEmojiString.length() - 1;
                 }
             }

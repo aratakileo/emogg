@@ -41,7 +41,9 @@ public class SettingsScreen extends AbstractScreen {
     }
 
     private String getState(boolean state) {
-        return "§l" + (state ? "§2" : "§c") + Language.getInstance().getOrDefault("emogg.gui.state." + (state ? "enabled" : "disabled"));
+        return "§l"
+                + (state ? "§2" : "§c")
+                + Language.getInstance().getOrDefault("emogg.gui.state." + (state ? "enabled" : "disabled"));
     }
 
     @Override

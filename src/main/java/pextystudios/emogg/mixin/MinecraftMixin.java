@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.api.ModrinthUpdateChecker;
+import pextystudios.emogg.api.ModrinthApi;
 import pextystudios.emogg.font.EmojiFont;
 
 @Mixin(Minecraft.class)
@@ -39,8 +39,17 @@ public class MinecraftMixin {
 
     @Inject(method = "setScreen", at = @At("HEAD"))
     private void setScreen(Screen screen, CallbackInfo ci) {
-        if (screen == null && level != null && !Emogg.hasMessageAboutUpdateBeenShown && ModrinthUpdateChecker.needsToBeUpdated()) {
-            gui.getChat().addMessage(Component.literal("§7[§cemogg§7]§r " + Language.getInstance().getOrDefault("emogg.message.new_version_is_available")));
+        if (
+                screen == null
+                        && level != null
+                        && !Emogg.hasMessageAboutUpdateBeenShown
+                        && ModrinthApi.needsToBeUpdated()
+        ) {
+            gui.getChat().addMessage(Component.literal(
+                    "§7[§cemogg§7]§r "
+                            + Language.getInstance().getOrDefault("emogg.message.new_version_is_available")
+            ));
+
             Emogg.hasMessageAboutUpdateBeenShown = true;
         }
     }

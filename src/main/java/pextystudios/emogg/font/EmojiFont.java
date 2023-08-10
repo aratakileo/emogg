@@ -30,7 +30,18 @@ public class EmojiFont extends Font {
     }
 
     @Override
-    public float renderText(String text, float x, float y, int color, boolean shadow, Matrix4f matrix4f, MultiBufferSource multiBufferSource, DisplayMode displayMode, int underlineColor, int light) {
+    public float renderText(
+            String text,
+            float x,
+            float y,
+            int color,
+            boolean shadow,
+            Matrix4f matrix4f,
+            MultiBufferSource multiBufferSource,
+            DisplayMode displayMode,
+            int underlineColor,
+            int light
+    ) {
         if (text.isEmpty()) return 0;
 
         final var emojiTextProcessor = EmojiTextProcessor.from(text);
@@ -141,7 +152,16 @@ public class EmojiFont extends Font {
     }
 
     @Override
-    public void drawInBatch8xOutline(FormattedCharSequence formattedCharSequence, float x, float y, int color, int strokeColor, Matrix4f matrix4f, MultiBufferSource multiBufferSource, int light) {
+    public void drawInBatch8xOutline(
+            FormattedCharSequence formattedCharSequence,
+            float x,
+            float y,
+            int color,
+            int strokeColor,
+            Matrix4f matrix4f,
+            MultiBufferSource multiBufferSource,
+            int light
+    ) {
         final var emojiTextProcessor = EmojiTextProcessor.from(asString(formattedCharSequence));
 
         if (emojiTextProcessor.isEmpty()) return;
@@ -184,7 +204,8 @@ public class EmojiFont extends Font {
 
                             final var glyphInfo = getFontSet(style.getFont()).getGlyphInfo(ch, this.filterFishyGlyphs);
 
-                            emojiCharSinkFromBehind.x = offsettedX.get() + (float) finalLocalX * glyphInfo.getShadowOffset();
+                            emojiCharSinkFromBehind.x = offsettedX.get()
+                                    + (float) finalLocalX * glyphInfo.getShadowOffset();
                             emojiCharSinkFromBehind.y = y + (float) finalLocalY * glyphInfo.getShadowOffset();
 
                             offsettedX.updateAndGet(value -> value + glyphInfo.getAdvance(style.isBold()));
@@ -309,7 +330,9 @@ public class EmojiFont extends Font {
         public boolean accept(int index, Style style, int codePoint) {
             final EmojiLiteral emojiLiteral;
 
-            if (emojiTextProcessor.hasEmojiFor(index) && !(emojiLiteral = emojiTextProcessor.getEmojiLiteralFor(index)).isEscaped()) {
+            if (emojiTextProcessor.hasEmojiFor(index) && !(
+                    emojiLiteral = emojiTextProcessor.getEmojiLiteralFor(index)
+            ).isEscaped()) {
                 x += emojiLiteral.render(x, y, matrix, multiBufferSource, light);
 
                 return true;
@@ -317,7 +340,8 @@ public class EmojiFont extends Font {
 
             final var fontSet = EmojiFont.this.getFontSet(style.getFont());
             final var glyph = fontSet.getGlyphInfo(codePoint, EmojiFont.this.filterFishyGlyphs);
-            final var bakedGlyph = style.isObfuscated() && codePoint != 32 ? fontSet.getRandomGlyph(glyph) : fontSet.getGlyph(codePoint);
+            final var bakedGlyph = style.isObfuscated()
+                    && codePoint != 32 ? fontSet.getRandomGlyph(glyph) : fontSet.getGlyph(codePoint);
             final var textColor = style.getColor();
 
             float r, g, b, a = (float) (color >> 24 & 255) / 255.0F, dimFactor = shadow ? 0.25f : 1.0f;

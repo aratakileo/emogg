@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pextystudios.emogg.api.ModrinthUpdateChecker;
+import pextystudios.emogg.api.ModrinthApi;
 import pextystudios.emogg.handler.EmojiHandler;
 
 import java.util.Objects;
@@ -26,8 +26,8 @@ public class Emogg implements ClientModInitializer {
         LOGGER.info(String.format(
                 "[emogg] installed v%s, available to download (from modrinth.com) v%s - %s",
                 getVersion(),
-                Objects.requireNonNullElse(ModrinthUpdateChecker.getUpdateVersion(), "-unknown"),
-                ModrinthUpdateChecker.needsToBeUpdated() ? "needs to be updated": "not needs to be updated"
+                Objects.requireNonNullElse(ModrinthApi.getUpdateVersion(), "-unknown"),
+                ModrinthApi.needsToBeUpdated() ? "needs to be updated": "not needs to be updated"
         ));
 
         new EmojiHandler();
@@ -48,6 +48,11 @@ public class Emogg implements ClientModInitializer {
     }
 
     public static String getVersion() {
-        return FabricLoader.getInstance().getModContainer(NAMESPACE_OR_ID).get().getMetadata().getVersion().getFriendlyString();
+        return FabricLoader.getInstance()
+                .getModContainer(NAMESPACE_OR_ID)
+                .get()
+                .getMetadata()
+                .getVersion()
+                .getFriendlyString();
     }
 }
