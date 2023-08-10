@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
@@ -13,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NativeGifImage {
     private final int width;
@@ -39,10 +38,6 @@ public class NativeGifImage {
         return height;
     }
 
-    public int[] getDelays() {
-        return delays;
-    }
-
     public int getFrameCount() {
         return delays.length;
     }
@@ -57,8 +52,8 @@ public class NativeGifImage {
         return nativeImage;
     }
 
-    public List<Frame> getFrames() {
-        final var slicedFrames = new ArrayList<Frame>();
+    public int processFrames(FrameProcessor frameProcessor) {
+        var totalDelay = 0;
 
         for (var i = 0; i < getFrameCount(); i++) {
             final var currentNativeImage = new NativeImage(NativeImage.Format.RGBA, width, height, false);
@@ -67,10 +62,12 @@ public class NativeGifImage {
                 for (var y = 0; y < height; y++)
                     currentNativeImage.setPixelRGBA(x, y, pixels[(i * height + y) * width + x]);
 
-            slicedFrames.add(new Frame(currentNativeImage, delays[i]));
+            frameProcessor.process(i, totalDelay, new Frame(currentNativeImage, delays[i]));
+
+            totalDelay += delays[i];
         }
 
-        return slicedFrames;
+        return totalDelay;
     }
 
     public static NativeGifImage read(ResourceLocation resourceLocation) throws IOException {
@@ -150,6 +147,10 @@ public class NativeGifImage {
         }
 
         return nativeGifImage;
+    }
+
+    public interface FrameProcessor {
+        void process(int index, int delayAmountBefore, @NotNull Frame frame);
     }
 
     public record Frame(NativeImage nativeImage, int delay) {}
