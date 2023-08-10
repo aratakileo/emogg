@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class EmojiHandler {
     private static EmojiHandler INSTANCE;
@@ -72,14 +71,6 @@ public class EmojiHandler {
 
     public Emoji getEmoji(String name) {
         return allEmojis.get(name);
-    }
-
-    public Stream<Emoji> getEmojiStream() {
-        return allEmojis.values().stream();
-    }
-
-    public int getNumberOfEmojis() {
-        return allEmojis.size();
     }
 
     public ConcurrentHashMap.KeySetView<String, List<String>> getCategories() {return emojiCategories.keySet();}
