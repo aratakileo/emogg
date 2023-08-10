@@ -27,7 +27,7 @@ To add your emojis to the game, just add pictures in the format `.gif` or `.png`
 The optimal resolution for each emoji will be approximately `128x128` pixels. There is not much point in a higher resolution. Emoji will look better in the game if there is not too much empty space between the edges of the picture and the content. It is better to avoid adding emojis with too small details, because they can be difficult to distinguish.
 
 The name of the image file, without extension, will be used as the name of the emoji, which can consist only of lowercase Latin characters `a-z`, numbers `0-9`, underscores `_`. Moreover, the underscores cannot stand at the beginning or at the end of the emoji name. The name of the image file can be anything, however, when loading emojis, all names are modified as follows:
-- all spaces and dashes will be replaced with underscores
+- all spaces, dots and dashes will be replaced with underscores
 - the underscores at the beginning and at the end of the name will be removed
 - unsupported characters will be removed from the name
 - uppercase Latin characters will be converted to lowercase characters
