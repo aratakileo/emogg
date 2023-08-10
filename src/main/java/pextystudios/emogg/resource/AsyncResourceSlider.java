@@ -1,10 +1,11 @@
-package pextystudios.emogg;
+package pextystudios.emogg.resource;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import oshi.util.tuples.Pair;
+import pextystudios.emogg.NativeGifImage;
 
 import java.util.HashMap;
 

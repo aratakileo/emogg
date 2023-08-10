@@ -1,7 +1,7 @@
 package pextystudios.emogg;
 
 import com.google.gson.Gson;
-import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
+import pextystudios.emogg.handler.FrequentlyUsedEmojiController;
 
 import java.io.File;
 import java.io.FileReader;

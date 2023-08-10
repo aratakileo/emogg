@@ -1,10 +1,10 @@
-package pextystudios.emogg.emoji.handler;
+package pextystudios.emogg.handler;
 
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.NotNull;
 import pextystudios.emogg.EmoggConfig;
-import pextystudios.emogg.emoji.font.EmojiTextProcessor;
-import pextystudios.emogg.emoji.resource.Emoji;
+import pextystudios.emogg.font.EmojiTextProcessor;
+import pextystudios.emogg.resource.Emoji;
 
 import java.util.List;
 

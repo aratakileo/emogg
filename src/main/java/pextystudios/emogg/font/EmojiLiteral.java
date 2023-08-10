@@ -1,9 +1,9 @@
-package pextystudios.emogg.emoji.font;
+package pextystudios.emogg.font;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import pextystudios.emogg.emoji.resource.Emoji;
+import pextystudios.emogg.resource.Emoji;
 import pextystudios.emogg.util.EmojiUtil;
 
 import java.util.regex.Pattern;

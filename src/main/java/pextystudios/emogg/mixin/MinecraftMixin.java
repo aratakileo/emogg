@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.ModrinthUpdateChecker;
-import pextystudios.emogg.emoji.font.EmojiFont;
+import pextystudios.emogg.api.ModrinthUpdateChecker;
+import pextystudios.emogg.font.EmojiFont;
 
 @Mixin(Minecraft.class)
 public class MinecraftMixin {

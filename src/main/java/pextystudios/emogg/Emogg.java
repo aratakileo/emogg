@@ -8,7 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.api.ModrinthUpdateChecker;
+import pextystudios.emogg.handler.EmojiHandler;
 
 import java.util.Objects;
 

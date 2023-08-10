@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji.font;
+package pextystudios.emogg.font;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.StringSplitter;

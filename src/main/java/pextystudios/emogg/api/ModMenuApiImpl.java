@@ -1,4 +1,4 @@
-package pextystudios.emogg;
+package pextystudios.emogg.api;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

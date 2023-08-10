@@ -1,9 +1,8 @@
-package pextystudios.emogg.emoji.resource;
+package pextystudios.emogg.resource;
 
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.AsyncResourceSlider;
 import pextystudios.emogg.NativeGifImage;
 import pextystudios.emogg.util.StringUtil;
 

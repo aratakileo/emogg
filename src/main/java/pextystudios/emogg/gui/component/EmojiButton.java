@@ -2,9 +2,8 @@ package pextystudios.emogg.gui.component;
 
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
-import pextystudios.emogg.emoji.font.EmojiLiteral;
-import pextystudios.emogg.emoji.resource.Emoji;
-import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.resource.Emoji;
+import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
 
 public class EmojiButton extends Button {

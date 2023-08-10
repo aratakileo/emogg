@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pextystudios.emogg.emoji.font.EmojiFont;
-import pextystudios.emogg.emoji.font.EmojiLiteral;
-import pextystudios.emogg.emoji.handler.EmojiHandler;
-import pextystudios.emogg.emoji.resource.Emoji;
+import pextystudios.emogg.font.EmojiFont;
+import pextystudios.emogg.font.EmojiLiteral;
+import pextystudios.emogg.handler.EmojiHandler;
+import pextystudios.emogg.resource.Emoji;
 import pextystudios.emogg.util.EmojiUtil;
 
 import java.util.HashMap;

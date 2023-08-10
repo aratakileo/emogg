@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji.resource;
+package pextystudios.emogg.resource;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.StringUtil;
 
 

@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji.font;
+package pextystudios.emogg.font;
 
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -13,7 +13,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
 import org.joml.Matrix4f;
-import pextystudios.emogg.Emogg;
 
 import java.util.ArrayList;
 import java.util.List;

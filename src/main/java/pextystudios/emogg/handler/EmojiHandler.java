@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji.handler;
+package pextystudios.emogg.handler;
 
 import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -10,7 +10,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.lang3.StringUtils;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.EmoggConfig;
-import pextystudios.emogg.emoji.resource.Emoji;
+import pextystudios.emogg.resource.Emoji;
 import pextystudios.emogg.util.StringUtil;
 
 import java.util.*;

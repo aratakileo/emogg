@@ -1,9 +1,10 @@
-package pextystudios.emogg;
+package pextystudios.emogg.api;
 
 import com.google.gson.JsonParser;
 import net.minecraft.SharedConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pextystudios.emogg.Emogg;
 
 import java.net.URI;
 import java.net.http.HttpClient;

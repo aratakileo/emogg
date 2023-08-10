@@ -6,10 +6,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import pextystudios.emogg.Emogg;
-import pextystudios.emogg.emoji.handler.FrequentlyUsedEmojiController;
-import pextystudios.emogg.emoji.resource.Emoji;
+import pextystudios.emogg.handler.FrequentlyUsedEmojiController;
+import pextystudios.emogg.resource.Emoji;
 import pextystudios.emogg.gui.screen.SettingsScreen;
-import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.RenderUtil;
 

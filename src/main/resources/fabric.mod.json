@@ -20,7 +20,7 @@
       "pextystudios.emogg.Emogg"
     ],
     "modmenu": [
-      "pextystudios.emogg.ModMenuApiImpl"
+      "pextystudios.emogg.api.ModMenuApiImpl"
     ]
   },
   "mixins": [

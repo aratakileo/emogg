@@ -1,4 +1,4 @@
-package pextystudios.emogg.emoji.font;
+package pextystudios.emogg.font;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -6,7 +6,7 @@ import com.google.common.cache.LoadingCache;
 import joptsimple.internal.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pextystudios.emogg.emoji.handler.EmojiHandler;
+import pextystudios.emogg.handler.EmojiHandler;
 import pextystudios.emogg.util.StringUtil;
 
 import java.util.Collection;
