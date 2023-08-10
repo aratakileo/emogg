@@ -124,7 +124,10 @@ public class NativeGifImage {
                     int channels = channelBuffer.get();
 
                     if (channels != 4)
-                        throw new RuntimeException(String.format("Could not load gif image with less than 4 channels (%s)", channels));
+                        throw new RuntimeException(String.format(
+                                "Could not load gif image with less than 4 channels (%s)",
+                                channels
+                        ));
 
                     int width = widthBuffer.get(), height = heightBuffer.get(), frames = frameBuffer.get();
 
