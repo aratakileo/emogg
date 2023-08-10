@@ -71,7 +71,7 @@ public class Emoji {
     }
 
     public boolean isValid() {
-        return width != -1 && height != -1;
+        return width > 0 && height > 0;
     }
 
     protected void load() {
