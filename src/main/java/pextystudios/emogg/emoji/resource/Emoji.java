@@ -4,6 +4,8 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.emoji.handler.EmojiHandler;
 import pextystudios.emogg.util.StringUtil;
@@ -15,33 +17,10 @@ public class Emoji {
     protected final String category;
     protected int width = -1, height = -1;
 
-    public Emoji(String name) {
-        this(name, EmojiHandler.EMOJIS_PATH_PREFIX + '/' + name + EmojiHandler.STATIC_EMOJI_EXTENSION);
-    }
-
-    public Emoji(ResourceLocation resourceLocation) {
-        this(getNameFromPath(resourceLocation.getPath()), resourceLocation);
-    }
-
-    public Emoji(String name, String fileName) {
-        this(name, new ResourceLocation(Emogg.NAMESPACE, fileName.replace('\\', '/')));
-    }
-
-    public Emoji(String name, ResourceLocation resourceLocation) {
-        this.name = normalizeNameOrCategory(name);
+    protected Emoji(@NotNull String name, @NotNull ResourceLocation resourceLocation, @NotNull String category) {
+        this.name = name;
         this.resourceLocation = resourceLocation;
-
-        var category = resourceLocation.getPath().substring(EmojiHandler.EMOJIS_PATH_PREFIX.length() + 1);
-        if (category.contains("/")) {
-            var splitPath = category.split("/");
-
-            category = splitPath[splitPath.length - 2];
-        } else
-            category = EmojiHandler.CATEGORY_DEFAULT;
-
-        this.category = normalizeNameOrCategory(category);
-
-        load();
+        this.category = category;
     }
 
     public String getName() {return name;}
@@ -66,35 +45,42 @@ public class Emoji {
         return height;
     }
 
-    public boolean isAnimated() {
-        return false;
-    }
-
-    public boolean isValid() {
-        return width > 0 && height > 0;
-    }
-
-    protected void load() {
+    protected boolean load() {
         try {
             var resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
             var bufferedImage = NativeImage.read(resource.get().open());
 
             width = bufferedImage.getWidth();
             height = bufferedImage.getHeight();
+
+            return width > 0 && height > 0;
         } catch (Exception e) {
             Emogg.LOGGER.error("Failed to load " + StringUtil.repr(resourceLocation), e);
         }
+
+        return false;
     }
 
-    public static Emoji from(ResourceLocation resourceLocation) {
-        return from(normalizeNameOrCategory(getNameFromPath(resourceLocation)), resourceLocation);
-    }
+    public static @Nullable Emoji from(String name, ResourceLocation resourceLocation) {
+        name = normalizeNameOrCategory(name);
 
-    public static Emoji from(String name, ResourceLocation resourceLocation) {
-        if (resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION))
-            return new AnimatedEmoji(name, resourceLocation);
+        var category = resourceLocation.getPath().substring(EmojiHandler.EMOJIS_PATH_PREFIX.length() + 1);
+        if (category.contains("/")) {
+            var splitPath = category.split("/");
 
-        return new Emoji(name, resourceLocation);
+            category = splitPath[splitPath.length - 2];
+        } else
+            category = EmojiHandler.CATEGORY_DEFAULT;
+
+        category = normalizeNameOrCategory(category);
+
+        final var emoji = resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION) ?
+                new AnimatedEmoji(name, resourceLocation, category) : new Emoji(name, resourceLocation, category);
+
+        if (emoji.load())
+            return emoji;
+
+        return null;
     }
 
     public static String normalizeNameOrCategory(String sourceValue) {
