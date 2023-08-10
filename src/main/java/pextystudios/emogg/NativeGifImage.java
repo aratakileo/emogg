@@ -47,7 +47,7 @@ public class NativeGifImage {
         return delays.length;
     }
 
-    public NativeImage getFramesCanvas() {
+    public NativeImage getVerticalScroll() {
         final var nativeImage = new NativeImage(NativeImage.Format.RGBA, width, height * frames, false);
 
         for (var y = 0; y < height * frames; y++)
