@@ -127,9 +127,9 @@ public class EmojiHandler {
 
         var emoji = Emoji.from(emojiName, resourceLocation);
 
-        if (!emoji.isValid()) {
+        if (emoji == null) {
             Emogg.LOGGER.error(String.format(
-                    "Failed to load %s, because it has invalid format",
+                    "Failed to load %s, because it is invalid",
                     StringUtil.repr(resourceLocation)
             ));
             return;
