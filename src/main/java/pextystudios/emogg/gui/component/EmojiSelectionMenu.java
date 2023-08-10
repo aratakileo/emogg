@@ -23,7 +23,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
             SCROLLBAR_WIDTH = 5;
 
     private final static ResourceLocation SETTINGS_ICON = new ResourceLocation(
-            Emogg.NAMESPACE,
+            Emogg.NAMESPACE_OR_ID,
             "gui/icon/settings_icon.png"
     );
 

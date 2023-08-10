@@ -17,14 +17,14 @@ import java.util.Objects;
 public class Emogg implements ClientModInitializer {
     public static Logger LOGGER = LoggerFactory.getLogger(Emogg.class);
 
-    public static final String NAMESPACE = "emogg";
+    public static final String NAMESPACE_OR_ID = "emogg";
 
     public static boolean hasMessageAboutUpdateBeenShown = false;
 
     @Override
     public void onInitializeClient() {
         LOGGER.info(String.format(
-                "emogg client v%s, emogg modrinth v%s - %s",
+                "[emogg] installed v%s, available to download (from modrinth.com) v%s - %s",
                 getVersion(),
                 Objects.requireNonNullElse(ModrinthUpdateChecker.getUpdateVersion(), "-unknown"),
                 ModrinthUpdateChecker.needsToBeUpdated() ? "needs to be updated": "not needs to be updated"
@@ -40,14 +40,14 @@ public class Emogg implements ClientModInitializer {
 
     private void registerBuiltinResourcePack(String resourcepackName) {
         ResourceManagerHelper.registerBuiltinResourcePack(
-                new ResourceLocation(NAMESPACE, resourcepackName),
-                FabricLoader.getInstance().getModContainer(NAMESPACE).orElseThrow(),
+                new ResourceLocation(NAMESPACE_OR_ID, resourcepackName),
+                FabricLoader.getInstance().getModContainer(NAMESPACE_OR_ID).orElseThrow(),
                 Component.translatable(String.format("emogg.resourcepack.%s.name", resourcepackName)),
                 ResourcePackActivationType.DEFAULT_ENABLED
         );
     }
 
     public static String getVersion() {
-        return FabricLoader.getInstance().getModContainer(NAMESPACE).get().getMetadata().getVersion().getFriendlyString();
+        return FabricLoader.getInstance().getModContainer(NAMESPACE_OR_ID).get().getMetadata().getVersion().getFriendlyString();
     }
 }

@@ -32,7 +32,7 @@ public class ModrinthUpdateChecker {
 
     private static void checkUpdates() {
         if (!isRequested) {
-            final var request = HttpRequest.newBuilder(URI.create(getRequestUrl(Emogg.NAMESPACE))).setHeader("User-Agent", "github.com/aratakileo/" + Emogg.NAMESPACE + '/' + Emogg.getVersion() + " (aratakileo@gmail.com)").build();
+            final var request = HttpRequest.newBuilder(URI.create(getRequestUrl(Emogg.NAMESPACE_OR_ID))).setHeader("User-Agent", "github.com/aratakileo/" + Emogg.NAMESPACE_OR_ID + '/' + Emogg.getVersion() + " (aratakileo@gmail.com)").build();
 
             try {
                 final var response = client.send(request, HttpResponse.BodyHandlers.ofString());

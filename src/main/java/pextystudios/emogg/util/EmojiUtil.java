@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 import pextystudios.emogg.resource.Emoji;
 
@@ -64,5 +65,23 @@ public final class EmojiUtil {
                 true,
                 compositeState
         );
+    }
+
+    public static String normalizeNameOrCategory(String sourceValue) {
+        return StringUtils.strip(
+                sourceValue.toLowerCase()
+                        .replaceAll("-+| +|\\.+", "_")
+                        .replaceAll("[^a-z0-9_]", ""),
+                "_"
+        );
+    }
+
+    public static String getNameFromPath(ResourceLocation resourceLocation) {
+        return getNameFromPath(resourceLocation.toString());
+    }
+
+    public static String getNameFromPath(String path) {
+        return path.transform(name -> name.substring(name.lastIndexOf('/') + 1))
+                .transform(name -> name.substring(0, name.lastIndexOf('.')));
     }
 }

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.handler.EmojiHandler;
+import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.StringUtil;
 
 
@@ -62,7 +63,7 @@ public class Emoji {
     }
 
     public static @Nullable Emoji from(String name, ResourceLocation resourceLocation) {
-        name = normalizeNameOrCategory(name);
+        name = EmojiUtil.normalizeNameOrCategory(name);
 
         var category = resourceLocation.getPath().substring(EmojiHandler.EMOJIS_PATH_PREFIX.length() + 1);
         if (category.contains("/")) {
@@ -72,7 +73,7 @@ public class Emoji {
         } else
             category = EmojiHandler.CATEGORY_DEFAULT;
 
-        category = normalizeNameOrCategory(category);
+        category = EmojiUtil.normalizeNameOrCategory(category);
 
         final var emoji = resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION) ?
                 new AnimatedEmoji(name, resourceLocation, category) : new Emoji(name, resourceLocation, category);
@@ -81,23 +82,5 @@ public class Emoji {
             return emoji;
 
         return null;
-    }
-
-    public static String normalizeNameOrCategory(String sourceValue) {
-        return StringUtils.strip(
-                sourceValue.toLowerCase()
-                        .replaceAll("-+| +|\\.+", "_")
-                        .replaceAll("[^a-z0-9_]", ""),
-                "_"
-        );
-    }
-
-    public static String getNameFromPath(ResourceLocation resourceLocation) {
-        return getNameFromPath(resourceLocation.toString());
-    }
-
-    public static String getNameFromPath(String path) {
-        return path.transform(name -> name.substring(name.lastIndexOf('/') + 1))
-                .transform(name -> name.substring(0, name.lastIndexOf('.')));
     }
 }

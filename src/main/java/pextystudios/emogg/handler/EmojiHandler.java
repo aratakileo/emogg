@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import pextystudios.emogg.Emogg;
 import pextystudios.emogg.EmoggConfig;
 import pextystudios.emogg.resource.Emoji;
+import pextystudios.emogg.util.EmojiUtil;
 import pextystudios.emogg.util.StringUtil;
 
 import java.util.*;
@@ -50,7 +51,7 @@ public class EmojiHandler {
             new SimpleSynchronousResourceReloadListener() {
                 @Override
                 public ResourceLocation getFabricId() {
-                    return new ResourceLocation(Emogg.NAMESPACE, EMOJIS_PATH_PREFIX);
+                    return new ResourceLocation(Emogg.NAMESPACE_OR_ID, EMOJIS_PATH_PREFIX);
                 }
 
                 @Override
@@ -113,7 +114,7 @@ public class EmojiHandler {
     }
 
     public void regEmoji(ResourceLocation resourceLocation) {
-        var emojiName = Emoji.normalizeNameOrCategory(Emoji.getNameFromPath(resourceLocation));
+        var emojiName = EmojiUtil.normalizeNameOrCategory(EmojiUtil.getNameFromPath(resourceLocation));
         emojiName = getUniqueName(resourceLocation, emojiName);
 
         if (emojiName == null) {
@@ -183,19 +184,21 @@ public class EmojiHandler {
         final var startsLoadingAt = System.currentTimeMillis();
 
         if (EmoggConfig.instance.isDebugModeEnabled)
-            Emogg.LOGGER.info("Updating emoji lists...");
+            Emogg.LOGGER.info("[emogg] Updating emoji lists...");
 
         emojiCategories.clear();
         allEmojis.clear();
 
         resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION).keySet().parallelStream().forEach(this::regEmoji);
 
-        if (EmoggConfig.instance.isDebugModeEnabled)
+        if (!allEmojis.isEmpty())
             Emogg.LOGGER.info(String.format(
-                    "Updating the lists is complete. %s emojis have been defined in %ss!",
+                    "[emogg] Updating the lists is complete. %s emojis have been defined and loaded in %ss!",
                     allEmojis.size(),
                     (System.currentTimeMillis() - startsLoadingAt) / 1000d
             ));
+        else
+            Emogg.LOGGER.info("[emogg] Updating the lists is complete. No emojis has been defined!");
 
         FrequentlyUsedEmojiController.removeAllNonExistentEmojisFromList();
     }
