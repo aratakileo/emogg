@@ -23,7 +23,7 @@ public class EmoggConfig {
     public static void load() {
         if (file.exists())
             try {
-                var fileReader = new FileReader(file);
+                final var fileReader = new FileReader(file);
                 instance = gson.fromJson(fileReader, EmoggConfig.class);
                 fileReader.close();
             } catch (Exception e) {
@@ -33,13 +33,13 @@ public class EmoggConfig {
     }
 
     public static void save() {
-        File parentFile;
+        final File parentFile;
 
         if (!(parentFile = file.getParentFile()).exists())
             parentFile.mkdir();
 
         try {
-            var fileWriter = new FileWriter(file);
+            final var fileWriter = new FileWriter(file);
             fileWriter.write(gson.toJson(instance));
             fileWriter.close();
         } catch (Exception e) {
