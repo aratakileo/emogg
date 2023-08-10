@@ -8,11 +8,19 @@ import pextystudios.emogg.util.EmojiUtil;
 
 import java.util.regex.Pattern;
 
-public record EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
+public class EmojiLiteral {
     public final static Pattern EMOJI_CODE_PATTERN = Pattern.compile("(:([_A-Za-z0-9]+):)"),
             EMOJI_LITERAL_PATTERN = Pattern.compile("(\\\\?)" + EMOJI_CODE_PATTERN.pattern());
 
     public final static int EMOJI_DEFAULT_RENDER_SIZE = 8;
+
+    private final @NotNull Emoji emoji;
+    private final boolean isEscaped;
+
+    public EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
+        this.emoji = emoji;
+        this.isEscaped = isEscaped;
+    }
 
     public float render(
             float x,
@@ -56,5 +64,13 @@ public record EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
                 .endVertex();
 
         return EMOJI_DEFAULT_RENDER_SIZE;
+    }
+
+    public @NotNull Emoji getEmoji() {
+        return emoji;
+    }
+
+    public boolean isEscaped() {
+        return isEscaped;
     }
 }

@@ -73,11 +73,17 @@ public class EmojiHandler {
         return allEmojis.get(name);
     }
 
-    public ConcurrentHashMap.KeySetView<String, List<String>> getCategories() {return emojiCategories.keySet();}
+    public ConcurrentHashMap.KeySetView<String, List<String>> getCategories() {
+        return emojiCategories.keySet();
+    }
 
     public List<Emoji> getEmojisByCategory(String category) {
         if (category.equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED))
-            return EmoggConfig.instance.frequentlyUsedEmojis.stream().map(segment -> allEmojis.get(segment.emojiName)).toList();
+            return EmoggConfig.instance.frequentlyUsedEmojis
+                    .stream()
+                    .filter(emojiStatistic -> allEmojis.containsKey(emojiStatistic.emojiName))
+                    .map(emojiStatistic -> allEmojis.get(emojiStatistic.emojiName))
+                    .toList();
 
         if (!emojiCategories.containsKey(category)) return null;
 

@@ -119,7 +119,7 @@ public class EmojiStringSlitter extends StringSplitter {
                     processedText = processedText.substring(0, emojiStart) + '\\' + processedText.substring(emojiStart);
                     localOffset += 1;
                 } else {
-                    final var currentEmojiString = currentEmojiLiteral.emoji().getCode();
+                    final var currentEmojiString = currentEmojiLiteral.getEmoji().getCode();
                     processedText = processedText.substring(0, emojiStart) + currentEmojiString + processedText.substring(emojiStart + 1);
                     localOffset += currentEmojiString.length() - 1;
                 }

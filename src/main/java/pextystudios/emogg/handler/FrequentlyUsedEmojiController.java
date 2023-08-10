@@ -20,7 +20,12 @@ public class FrequentlyUsedEmojiController {
     }
 
     public static void removeAllNonExistentEmojisFromList() {
-        EmoggConfig.instance.frequentlyUsedEmojis.removeIf(emojiStatistic -> !EmojiHandler.getInstance().hasEmoji(emojiStatistic.emojiName));
+        EmoggConfig.instance.frequentlyUsedEmojis.removeIf(emojiStatistic -> {
+            final var itExists = EmojiHandler.getInstance().hasEmoji(emojiStatistic.emojiName);
+
+            return !emojiStatistic.isUnderRemoveProtection(itExists) && !itExists;
+        });
+
         EmoggConfig.save();
     }
 
@@ -30,12 +35,12 @@ public class FrequentlyUsedEmojiController {
         final List<String> emojisInText = Lists.newArrayList();
 
         for (var emojiLiteral: EmojiTextProcessor.from(text).getEmojiLiterals()) {
-            final var emojiName = emojiLiteral.emoji().getName();
+            final var emojiName = emojiLiteral.getEmoji().getName();
 
             if (emojisInText.contains(emojiName)) continue;
 
             emojisInText.add(emojiName);
-            markEmojiUse(emojiLiteral.emoji());
+            markEmojiUse(emojiLiteral.getEmoji());
         }
         
         if (emojisInText.isEmpty())
@@ -100,6 +105,7 @@ public class FrequentlyUsedEmojiController {
     public static class EmojiStatistic {
         public final String emojiName;
         public int usePoints = INITIAL_POINTS;
+        private boolean isUnderRemoveProtection = true;
 
         public EmojiStatistic(String emojiName) {
             this.emojiName = emojiName;
@@ -107,6 +113,14 @@ public class FrequentlyUsedEmojiController {
 
         public String getEmojiName() {
             return emojiName;
+        }
+
+        public boolean isUnderRemoveProtection(boolean enableRemoveProtection) {
+            final var isUnderRemoveProtectionOld = isUnderRemoveProtection;
+
+            isUnderRemoveProtection = enableRemoveProtection;
+
+            return isUnderRemoveProtectionOld;
         }
     }
 }
