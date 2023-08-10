@@ -1,0 +1,5 @@
+- added mod interface translation for Traditional and Simplified Chinese [#16](https://github.com/aratakileo/emogg/pull/16)
+- new gif decoding engine (STBImage library):
+  - emojis load 10x faster
+  - emogg no longer crashes the game on macOS [#13](https://github.com/aratakileo/emogg/issues/13)
+  - now almost all emojis are decoded correctly, compared to the previous implementation, and you probably won't see graphic artifacts in them anymore
