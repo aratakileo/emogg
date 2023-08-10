@@ -1,0 +1,21 @@
+{
+  "emogg.settings.title": "Налаштування Emogg",
+  "emogg.settings.option.is_debug_mode_enabled.title": "Режим налагодження: %s",
+  "emogg.settings.option.is_debug_mode_enabled.description": "Якщо цей режим включений, то при користуванні мода, надаватиметься додаткова інформація, як всередині графічного інтерфейсу, так і в консоль. Цей режим може призвести до зниження продуктивності, тому включення цього режиму повинно здійснюватись у разі, якщо це дійсно необхідно",
+  "emogg.settings.save_and_quit": "Зберегти та вийти",
+  "emogg.gui.state.enabled": "Увімкнено",
+  "emogg.gui.state.disabled": "Вимкнено",
+  "emogg.category.$frequently_used": "Часто вживані",
+  "emogg.category.food": "Їжа",
+  "emogg.category.other": "Інше",
+  "emogg.category.people": "Люди",
+  "emogg.category.flags": "Прапори",
+  "emogg.category.nature": "Природа",
+  "emogg.category.objects": "Речі",
+  "emogg.category.symbols": "Символи",
+  "emogg.category.travel": "Подорожі",
+  "emogg.category.anime": "Аніме",
+  "emogg.category.activities": "Дії",
+  "emogg.resourcepack.builtin.name": "Вбудовані емодзі",
+  "emogg.message.new_version_is_available": "Доступна нова версія! Її можна завантажити на Modrinth"
+}

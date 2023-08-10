@@ -1,0 +1,21 @@
+{
+  "emogg.settings.title": "Настройки Emogg",
+  "emogg.settings.option.is_debug_mode_enabled.title": "Режим отладки: %s",
+  "emogg.settings.option.is_debug_mode_enabled.description": "Если этот режим включен, то при пользовании мода, будет предоставляться дополнительная информация, как внутри графического пользовательсткого интерфейса, так и в консоль. Этот режим может привести к снижению производительности, поэтому включение этого режима должно осуществляться в случае, если это действительно необходимо",
+  "emogg.settings.save_and_quit": "Сохранить и выйти",
+  "emogg.gui.state.enabled": "Включено",
+  "emogg.gui.state.disabled": "Выключено",
+  "emogg.category.$frequently_used": "Часто используемые",
+  "emogg.category.food": "Еда и напитки",
+  "emogg.category.other": "Другое",
+  "emogg.category.people": "Люди",
+  "emogg.category.flags": "Флаги",
+  "emogg.category.nature": "Природа",
+  "emogg.category.objects": "Объекты",
+  "emogg.category.symbols": "Символы",
+  "emogg.category.travel": "Путешествия",
+  "emogg.category.anime": "Аниме",
+  "emogg.category.activities": "Активности",
+  "emogg.resourcepack.builtin.name": "Встроенные эмодзи",
+  "emogg.message.new_version_is_available": "Доступна новая версия! Её можно скачать на Modrinth"
+}

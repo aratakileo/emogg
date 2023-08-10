@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "pextystudios.emogg.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "ChatScreenMixin",
+    "CommandSuggestionsMixin",
+    "InBedChatScreenMixin",
+    "MinecraftMixin",
+    "SuggestionsListMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
