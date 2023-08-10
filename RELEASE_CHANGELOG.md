@@ -1,6 +1,7 @@
 - added mod interface translation for Traditional and Simplified Chinese [#16](https://github.com/aratakileo/emogg/pull/16)
 - new gif decoding engine (STBImage library):
-  - now emojis load 10x faster
+  - now animated emojis load 10x faster
   - emogg no longer crashes the game on macOS [#13](https://github.com/aratakileo/emogg/issues/13)
   - now almost all emojis are decoded correctly, compared to the previous implementation, and you probably won't see graphic artifacts in them anymore
 - new built-in emojis
+- now if you disable the resource pack with emojis that are in the frequently used emojis section, then these emojis will remain in this section, but will not be displayed for you. However, this will be the case until the next resources change (re-entering the game, changing the resource packs used, changing the language), after that the emojis will be removed from the frequently used emojis section, if along with this resource change, the resource pack with these emojis will not be enabled again. This can be useful if for some reason Minecraft has disabled all resource packs, for example due to the crash of the game
