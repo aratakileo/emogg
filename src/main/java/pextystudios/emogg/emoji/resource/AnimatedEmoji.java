@@ -64,9 +64,9 @@ public class AnimatedEmoji extends Emoji {
             width = nativeGifImage.getWidth();
             height = nativeGifImage.getHeight();
             framesData = new ConcurrentHashMap<>();
+            totalDelayTime = 0;
 
             var i = 0;
-            var totalDelayTime = 0;
 
             for (var frame: nativeGifImage.getFrames()) {
                 final var framePath = "emoji/" + sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_frame_" + i + ".png";
@@ -79,13 +79,6 @@ public class AnimatedEmoji extends Emoji {
                 totalDelayTime += frame.delay();
                 i++;
             }
-
-//            var imageData = EmojiUtil.splitGif(resourceLocation);
-//
-//            width = imageData.getA().getA();
-//            height = imageData.getA().getB();
-//            totalDelayTime = imageData.getB();
-//            framesData = imageData.getC();
         } catch (Exception e) {
             Emogg.LOGGER.error("Failed to load: " + StringUtil.repr(resourceLocation), e);
         }
