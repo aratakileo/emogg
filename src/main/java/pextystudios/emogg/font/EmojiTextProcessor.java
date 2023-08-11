@@ -51,6 +51,10 @@ public class EmojiTextProcessor {
         return emojiRenderIndexes.containsKey(renderCharPosition);
     }
 
+    public int emojisCount() {
+        return emojiRenderIndexes.size();
+    }
+
     public String getProcessedText() {
         return processedText;
     }
@@ -101,7 +105,7 @@ public class EmojiTextProcessor {
                     processedText,
                     emojiCodeStart - lengthDifference,
                     matcher.end(EMOJI_CODE_PATTERN_GROUP) - lengthDifference,
-                    '\u2603'
+                    EmojiLiteral.DUMMY_CHAR
             );
 
             emojiRenderIndexes.put(

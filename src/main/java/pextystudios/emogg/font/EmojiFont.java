@@ -245,8 +245,13 @@ public class EmojiFont extends Font {
     }
 
     public int width(String text, boolean emojiSupport) {
-        if (emojiSupport)
-            return super.width(EmojiTextProcessor.processText(text));
+        if (emojiSupport) {
+            final var emojiTextProcessor = EmojiTextProcessor.from(text);
+
+            return super.width(emojiTextProcessor.getProcessedText()) + (
+                    EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE - super.width(String.valueOf(EmojiLiteral.DUMMY_CHAR))
+            ) * emojiTextProcessor.emojisCount();
+        }
 
         return super.width(text);
     }
