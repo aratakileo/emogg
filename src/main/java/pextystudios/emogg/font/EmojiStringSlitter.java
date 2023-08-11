@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 public class EmojiStringSlitter extends StringSplitter {
@@ -102,7 +101,7 @@ public class EmojiStringSlitter extends StringSplitter {
 
     private static class StyledContentConsumer {
         private final EmojiTextProcessor emojiTextProcessor;
-        private AtomicReference<FormattedText> processedFormattedText = new AtomicReference<>(FormattedText.EMPTY);
+        private FormattedText processedFormattedText = FormattedText.EMPTY;
         private int offset = 0;
 
         public StyledContentConsumer(@NotNull FormattedText sourceFormattedText) {
@@ -129,18 +128,18 @@ public class EmojiStringSlitter extends StringSplitter {
             }
 
             offset += string.length();
-            processedFormattedText.set(FormattedText.composite(
-                    processedFormattedText.get(),
+            processedFormattedText = FormattedText.composite(
+                    processedFormattedText,
                     FormattedText.of(stringBuilder.toString(), style)
-            ));
+            );
 
             return Optional.empty();
         }
 
         public FormattedText getProcessedFormattedTextAndReset() {
-            final var processedFormattedTextOld = processedFormattedText.get();
+            final var processedFormattedTextOld = processedFormattedText;
 
-            processedFormattedText = new AtomicReference<>(FormattedText.EMPTY);
+            processedFormattedText = FormattedText.EMPTY;
 
             return processedFormattedTextOld;
         }
