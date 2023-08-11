@@ -12,7 +12,7 @@ public class EmojiLiteral {
     public final static Pattern EMOJI_CODE_PATTERN = Pattern.compile("(:([_A-Za-z0-9]+):)"),
             EMOJI_LITERAL_PATTERN = Pattern.compile("(\\\\?)" + EMOJI_CODE_PATTERN.pattern());
 
-    public final static int EMOJI_DEFAULT_RENDER_SIZE = 10;
+    public final static int EMOJI_DEFAULT_RENDER_SIZE = 8;
 
     public final static char DUMMY_CHAR = '\u2603';
 

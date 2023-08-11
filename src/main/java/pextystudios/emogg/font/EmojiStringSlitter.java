@@ -5,9 +5,12 @@ import net.minecraft.client.StringSplitter;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.StringDecomposer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 public class EmojiStringSlitter extends StringSplitter {
@@ -22,7 +25,7 @@ public class EmojiStringSlitter extends StringSplitter {
             Style style,
             BiConsumer<FormattedText, Boolean> biConsumer
     ) {
-        final var textOriginalizer = new TextOriginalizer(formattedText, biConsumer);
+        final var styledContentConsumer = new StyledContentConsumer(formattedText);
         final List<LineComponent> list = Lists.newArrayList();
 
         formattedText.visit((_style, string) -> {
@@ -57,18 +60,21 @@ public class EmojiStringSlitter extends StringSplitter {
 
                     penultimateContentsHaveNewlineChar = hasNewlineChar;
 
-                    final var preprocessedFormattedText = flatComponents.splitAt(
+                    final var notProcessedFormattedText = flatComponents.splitAt(
                             splitPosition,
                             hasNewlineOrSpaceChar ? 1 : 0,
                             splitStyle
                     );
-                    textOriginalizer.originalizeAndAccept(
-                            preprocessedFormattedText,
-                            splitStyle,
+
+                    notProcessedFormattedText.visit(styledContentConsumer::accept, style);
+
+                    if (hasNewlineOrSpaceChar)
+                        styledContentConsumer.increaseOffset();
+
+                    biConsumer.accept(
+                            styledContentConsumer.getProcessedFormattedTextAndReset(),
                             prevContentsWereWithoutNewline
                     );
-
-                    if (hasNewlineOrSpaceChar) textOriginalizer.increaseRenderPositionOffset();
 
                     prevContentsWereWithoutNewline = !hasNewlineChar;
                     needToCheck = true;
@@ -80,74 +86,68 @@ public class EmojiStringSlitter extends StringSplitter {
             }
         }
 
-        final var finalFormattedText = flatComponents.getRemainder();
+        var notProcessedFormattedText = flatComponents.getRemainder();
 
-        if (finalFormattedText == null && penultimateContentsHaveNewlineChar) {
-            biConsumer.accept(FormattedText.EMPTY, false);
+        if (notProcessedFormattedText != null) {
+            notProcessedFormattedText.visit(styledContentConsumer::accept, style);
+            biConsumer.accept(
+                    styledContentConsumer.getProcessedFormattedTextAndReset(),
+                    prevContentsWereWithoutNewline
+            );
             return;
         }
 
-        textOriginalizer.originalizeAndAccept(finalFormattedText, style, prevContentsWereWithoutNewline);
+        if (penultimateContentsHaveNewlineChar)
+            biConsumer.accept(FormattedText.EMPTY, false);
     }
 
-    private static class TextOriginalizer {
+    private static class StyledContentConsumer {
+        private final AtomicInteger offset = new AtomicInteger(0);
         private final EmojiTextProcessor emojiTextProcessor;
-        private final BiConsumer<FormattedText, Boolean> biConsumer;
-        private final String sourceText;
+        private AtomicReference<FormattedText> processedFormattedText = new AtomicReference<>(FormattedText.EMPTY);
 
-        private int renderPositionOffset = 0;
-
-        public TextOriginalizer(FormattedText sourceFormattedText, BiConsumer<FormattedText, Boolean> biConsumer) {
-            this.sourceText = sourceFormattedText.getString();
-            this.emojiTextProcessor = EmojiTextProcessor.from(sourceText);
-            this.biConsumer = biConsumer;
+        public StyledContentConsumer(@NotNull FormattedText sourceFormattedText) {
+            emojiTextProcessor = EmojiTextProcessor.from(sourceFormattedText.getString());
         }
 
-        public void increaseRenderPositionOffset() {
-            renderPositionOffset++;
-        }
+        public Optional<Integer> accept(Style style, String string) {
+            final var stringBuilder = new StringBuilder();
+            var i = -1;
 
-        public void originalizeAndAccept(
-                FormattedText formattedtext,
-                Style style,
-                boolean prevContentsWereWithoutNewline
-        ) {
-            if (formattedtext == null) {
-                biConsumer.accept(FormattedText.EMPTY, false);
-                return;
-            }
+            for (var _ch: string.toCharArray()) {
+                i++;
 
-            final var preprocessedText = formattedtext.getString();
+                final var offsetedI = offset.get() + i;
 
-            if (preprocessedText.equals(sourceText)) {
-                biConsumer.accept(FormattedText.of(sourceText, style), prevContentsWereWithoutNewline);
-                return;
-            }
+                if (emojiTextProcessor.hasEmojiFor(offsetedI)) {
+                    final var emojiLiteral = emojiTextProcessor.getEmojiLiteralFor(offsetedI);
 
-            var processedText = preprocessedText;
-            var localOffset = 0;
-
-            for (var i = 0; i < preprocessedText.length(); i++) {
-                if (!emojiTextProcessor.hasEmojiFor(renderPositionOffset + i)) continue;
-
-                final var currentEmojiLiteral = emojiTextProcessor
-                        .getEmojiLiteralFor(renderPositionOffset + i);
-                final var emojiStart = localOffset + i;
-
-                if (currentEmojiLiteral.isEscaped()) {
-                    processedText = processedText.substring(0, emojiStart) + '\\' + processedText.substring(emojiStart);
-                    localOffset += 1;
-                } else {
-                    final var currentEmojiString = currentEmojiLiteral.getEmoji().getCode();
-                    processedText = processedText.substring(0, emojiStart)
-                            + currentEmojiString
-                            + processedText.substring(emojiStart + 1);
-                    localOffset += currentEmojiString.length() - 1;
+                    stringBuilder.append(emojiLiteral.isEscaped() ? "\\:" : emojiLiteral.getEmoji().getCode());
+                    continue;
                 }
+
+                stringBuilder.append(_ch);
             }
 
-            biConsumer.accept(FormattedText.of(processedText, style), prevContentsWereWithoutNewline);
-            renderPositionOffset += preprocessedText.length();
+            offset.getAndAdd(string.length());
+            processedFormattedText.set(FormattedText.composite(
+                    processedFormattedText.get(),
+                    FormattedText.of(stringBuilder.toString(), style)
+            ));
+
+            return Optional.empty();
+        }
+
+        public FormattedText getProcessedFormattedTextAndReset() {
+            final var processedFormattedTextOld = processedFormattedText.get();
+
+            processedFormattedText = new AtomicReference<>(FormattedText.EMPTY);
+
+            return processedFormattedTextOld;
+        }
+
+        public void increaseOffset() {
+            offset.getAndIncrement();
         }
     }
 }
