@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
@@ -102,9 +101,9 @@ public class EmojiStringSlitter extends StringSplitter {
     }
 
     private static class StyledContentConsumer {
-        private final AtomicInteger offset = new AtomicInteger(0);
         private final EmojiTextProcessor emojiTextProcessor;
         private AtomicReference<FormattedText> processedFormattedText = new AtomicReference<>(FormattedText.EMPTY);
+        private int offset = 0;
 
         public StyledContentConsumer(@NotNull FormattedText sourceFormattedText) {
             emojiTextProcessor = EmojiTextProcessor.from(sourceFormattedText.getString());
@@ -117,7 +116,7 @@ public class EmojiStringSlitter extends StringSplitter {
             for (var _ch: string.toCharArray()) {
                 i++;
 
-                final var offsetedI = offset.get() + i;
+                final var offsetedI = offset + i;
 
                 if (emojiTextProcessor.hasEmojiFor(offsetedI)) {
                     final var emojiLiteral = emojiTextProcessor.getEmojiLiteralFor(offsetedI);
@@ -129,7 +128,7 @@ public class EmojiStringSlitter extends StringSplitter {
                 stringBuilder.append(_ch);
             }
 
-            offset.getAndAdd(string.length());
+            offset += string.length();
             processedFormattedText.set(FormattedText.composite(
                     processedFormattedText.get(),
                     FormattedText.of(stringBuilder.toString(), style)
@@ -147,7 +146,7 @@ public class EmojiStringSlitter extends StringSplitter {
         }
 
         public void increaseOffset() {
-            offset.getAndIncrement();
+            offset++;
         }
     }
 }
