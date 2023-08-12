@@ -33,10 +33,6 @@ public class VerticalScrollbar extends AbstractWidget {
         return scrollingThumbTopToTouchOffset >= 0;
     }
 
-    public int getNumberOfScrollingPositions() {
-        return numberOfScrollingPositions;
-    }
-
     public int getScrollProgress() {
         return scrollProgress;
     }
