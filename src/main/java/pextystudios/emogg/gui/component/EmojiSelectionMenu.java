@@ -29,7 +29,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
     private final float emojiSize;
     private final Font font;
-    private final int headerHeight;
     private final RenderUtil.Rect2i settingsButtonRect;
     private final LinkedHashMap<Integer, Segment> segments = new LinkedHashMap<>();
     private final boolean isSinglePage;
