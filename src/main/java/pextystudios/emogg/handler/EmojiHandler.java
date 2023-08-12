@@ -193,6 +193,8 @@ public class EmojiHandler {
                 .parallelStream()
                 .forEach(this::regEmoji);
 
+        emojiCategories.values().parallelStream().forEach(Collections::sort);
+
         if (!allEmojis.isEmpty())
             Emogg.LOGGER.info(String.format(
                     "[emogg] Updating the lists is complete. %s emojis have been defined and loaded in %ss!",
