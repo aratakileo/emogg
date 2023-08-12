@@ -1,0 +1,58 @@
+[
+  "",
+  {
+    "text": "[",
+    "color": "gray"
+  },
+  {
+    "text": "emogg",
+    "color": "red"
+  },
+  {
+    "text": "]",
+    "color": "gray"
+  },
+  {
+    "text": " "
+  },
+  {
+    "text": "{left}"
+  },
+  {
+    "text": "[",
+    "clickEvent": {
+      "action": "open_url",
+      "value": "{link}"
+    },
+    "hoverEvent": {
+      "action": "show_text",
+      "contents": "{tooltip}"
+    }
+  },
+  {
+    "text": "{button}",
+    "color": "green",
+    "clickEvent": {
+      "action": "open_url",
+      "value": "{link}"
+    },
+    "hoverEvent": {
+      "action": "show_text",
+      "contents": "{tooltip}"
+    }
+  },
+  {
+    "text": "]",
+    "clickEvent": {
+      "action": "open_url",
+      "value": "{link}"
+    },
+    "hoverEvent": {
+      "action": "show_text",
+      "contents": "{tooltip}"
+    }
+  },
+  {
+    "text": "{right}"
+  }
+]

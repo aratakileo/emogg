@@ -17,5 +17,5 @@
   "emogg.category.anime": "动漫",
   "emogg.category.activities": "活动",
   "emogg.resourcepack.builtin.name": "固有的表情符号",
-  "emogg.message.new_version_is_available": "新版本上线了！在 Modrinth 下载"
+  "emogg.message.new_version_is_available": "新版本上线了！在 %s 下载"
 }

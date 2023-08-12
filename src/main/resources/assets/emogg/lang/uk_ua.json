@@ -17,5 +17,5 @@
   "emogg.category.anime": "Аніме",
   "emogg.category.activities": "Дії",
   "emogg.resourcepack.builtin.name": "Вбудовані емодзі",
-  "emogg.message.new_version_is_available": "Доступна нова версія! Її можна завантажити на Modrinth"
+  "emogg.message.new_version_is_available": "Доступна нова версія! Її можна завантажити на %s"
 }

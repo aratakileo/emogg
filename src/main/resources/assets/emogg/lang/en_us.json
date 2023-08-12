@@ -18,5 +18,5 @@
   "emogg.category.activities": "Activities",
   "emogg.resourcepack.builtin.name": "Built-in emojis",
   "emogg.resourcepack.twemogg.name": "Twemogg",
-  "emogg.message.new_version_is_available": "New version is available! Download it at Modrinth"
+  "emogg.message.new_version_is_available": "New version is available! Download it at %s"
 }
