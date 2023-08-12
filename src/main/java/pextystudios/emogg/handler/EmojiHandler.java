@@ -33,6 +33,7 @@ public class EmojiHandler {
     public final static String EMOJIS_PATH_PREFIX = "emoji";
     public final static String CATEGORY_DEFAULT = "other",
             CATEGORY_ANIME = "anime",
+            CATEGORY_MEMES = "memes",
             CATEGORY_PEOPLE = "people",
             CATEGORY_NATURE = "nature",
             CATEGORY_FOOD = "food",

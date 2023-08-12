@@ -71,6 +71,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         // Reordering categories
         moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_ANIME);
+        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_MEMES);
         moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_PEOPLE);
         moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_NATURE);
         moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_FOOD);
