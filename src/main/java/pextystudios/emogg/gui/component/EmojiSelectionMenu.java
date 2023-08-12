@@ -64,7 +64,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.visible = false;
         this.emojiSize = emojiSize;
         this.font = Minecraft.getInstance().font;
-        this.headerHeight = headerHeight;
 
         final var emojiHandler = EmojiHandler.getInstance();
         final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategories().stream().toList());
