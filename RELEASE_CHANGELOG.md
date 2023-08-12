@@ -6,6 +6,6 @@
 - fixed a problem with broken text formatting [#15](https://github.com/aratakileo/emogg/issues/15) [#18](https://github.com/aratakileo/emogg/pull/18)
 - now the thumb does not go beyond the scrollbar of the emoji selection menu when scrolling with the mouse wheel [#20](https://github.com/aratakileo/emogg/issues/20) [#22](https://github.com/aratakileo/emogg/pull/22)
 - starting from this version, emojis in all categories will be displayed in alphabetical order [#21](https://github.com/aratakileo/emogg/issues/21) [#23](https://github.com/aratakileo/emogg/pull/23)
-- new category `memes`
+- new built-in category `memes`
 - new built-in emojis
 - now if you disable the resource pack with emojis that are in the frequently used emojis section, then these emojis will remain in this section, but will not be displayed for you. However, this will be the case until the next resources change (re-entering the game, changing the resource packs used, changing the language), after that the emojis will be removed from the frequently used emojis section, if along with this resource change, the resource pack with these emojis will not be enabled again. This can be useful if for some reason Minecraft has disabled all resource packs, for example due to the crash of the game
