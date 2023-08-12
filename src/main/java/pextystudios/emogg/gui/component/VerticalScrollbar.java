@@ -62,7 +62,8 @@ public class VerticalScrollbar extends AbstractWidget {
     public void setScrollProgress(int scrollProgress) {
         this.scrollProgress = Math.min(numberOfScrollingPositions, Math.max(scrollProgress, 0));
         this.thumbRect.setY((int) (
-                (height - padding * 2) * ((double) this.scrollProgress / (double) this.numberOfScrollingPositions)
+                (height - thumbRect.height - padding * 2)
+                        * ((double) this.scrollProgress / (double) this.numberOfScrollingPositions)
         ));
     }
 
