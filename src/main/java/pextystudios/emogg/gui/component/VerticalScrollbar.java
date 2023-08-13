@@ -41,6 +41,10 @@ public class VerticalScrollbar extends AbstractWidget {
         return thumbRect.move(x + padding, y + padding);
     }
 
+    public int getNumberOfScrollingPositions() {
+        return numberOfScrollingPositions;
+    }
+
     public void setNumberOfScrollingPositions(int numberOfScrollingPositions) {
         setNumberOfScrollingPositions(numberOfScrollingPositions, scrollSegmentSize);
     }
@@ -48,11 +52,13 @@ public class VerticalScrollbar extends AbstractWidget {
     public void setNumberOfScrollingPositions(int numberOfScrollingPositions, int scrollSegmentSize) {
         this.numberOfScrollingPositions = numberOfScrollingPositions;
         this.scrollSegmentSize = scrollSegmentSize;
-        this.thumbRect.setHeight(Math.min(
+
+        thumbRect.setHeight(Math.min(
                 height - 10 - padding * 2,
                 Math.max(8, height - padding * 2 - numberOfScrollingPositions / scrollSegmentSize)
         ));
-        this.thumbRect.setBottom(Math.min(width - padding * 2, thumbRect.getBottom()));
+
+        setThumbY(padding + thumbRect.getY());
     }
 
     public void setScrollProgress(int scrollProgress) {
@@ -65,9 +71,17 @@ public class VerticalScrollbar extends AbstractWidget {
 
     public void setScrollProgressByThumbY(int localY) {
         final var maxThumbTop = height - padding * 2 - thumbRect.height;
-        thumbRect.setY(Math.min(Math.max(localY - padding, 0), maxThumbTop));
-
+        setThumbY(localY, maxThumbTop);
         scrollProgress = (int) (numberOfScrollingPositions * (double)thumbRect.getY() / (double)(maxThumbTop));
+    }
+
+    private void setThumbY(int localY) {
+        final var maxThumbTop = height - padding * 2 - thumbRect.height;
+        setThumbY(localY, maxThumbTop);
+    }
+
+    private void setThumbY(int localY, int maxThumbTop) {
+        thumbRect.setY(Math.min(Math.max(localY - padding, 0), maxThumbTop));
     }
 
     @Override
