@@ -2,13 +2,16 @@ package pextystudios.emogg.api;
 
 import com.google.gson.JsonParser;
 import net.minecraft.SharedConstants;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import oshi.util.tuples.Pair;
 import pextystudios.emogg.Emogg;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 
 public class ModrinthApi {
     private final static String REQUEST_URL = "https://api.modrinth.com/v2/project/{identifier}/version?" +
@@ -64,16 +67,41 @@ public class ModrinthApi {
     private static boolean isVersionGreaterThanCurrent(@Nullable String version) {
         if (version == null) return false;
 
-        final var currentVersionComparisonPart = Emogg.getVersion().split("-")[1];
-        final var comparisonPart = version.split("-")[1];
+        final var currentVerMetadata = getVersionMetadata(Emogg.getVersion());
+        final var otherVerMetadata = getVersionMetadata(version);
+        final var currentVerSecondDigit = currentVerMetadata.getB();
+        final var otherVerSecondDigit = otherVerMetadata.getB();
 
-        return Integer.parseInt(comparisonPart.replaceAll(
-                "\\D+",
-                ""
-        )) > Integer.parseInt(currentVersionComparisonPart.replaceAll(
-                "\\D+",
-                ""
-        ));
+        if (currentVerSecondDigit != -1)
+            return otherVerSecondDigit == -1 || otherVerSecondDigit > currentVerSecondDigit;
+
+        final var currentVerFirstMetadata = Arrays.stream(currentVerMetadata.getA()).map(Integer::parseInt).toList();
+        final var otherVerFirstMetadata = Arrays.stream(otherVerMetadata.getA()).map(Integer::parseInt).toList();
+
+        for (var i = 0; i < 3; i++)
+            if (currentVerFirstMetadata.get(i) < otherVerFirstMetadata.get(i))
+                return true;
+
+        return false;
+    }
+
+    /*
+    *
+    * Supports version format that starts with: `x.x-BETA.x` or `x.x.x`, where x is digit or number
+    *
+    */
+    private static Pair<String[], Integer> getVersionMetadata(@NotNull String version) {
+        final var basicVersionSegments = version.split("-");
+
+        var metadataSecondDigit = -1;
+
+        if (basicVersionSegments.length == 2 && basicVersionSegments[1].startsWith("BETA"))
+            metadataSecondDigit = Integer.parseInt(basicVersionSegments[1].split("\\.")[1]);
+
+        if (basicVersionSegments.length == 3 && basicVersionSegments[2].startsWith("BETA"))
+            metadataSecondDigit = Integer.parseInt(basicVersionSegments[2].split("\\.")[1]);
+
+        return new Pair<>(basicVersionSegments[0].split("\\."), metadataSecondDigit);
     }
 
     private static String getRequestUrl() {
