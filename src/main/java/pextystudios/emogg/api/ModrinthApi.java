@@ -95,11 +95,8 @@ public class ModrinthApi {
 
         var metadataSecondDigit = -1;
 
-        if (basicVersionSegments.length == 2 && basicVersionSegments[1].startsWith("BETA"))
+        if (basicVersionSegments.length >= 2 && basicVersionSegments[1].startsWith("BETA"))
             metadataSecondDigit = Integer.parseInt(basicVersionSegments[1].split("\\.")[1]);
-
-        if (basicVersionSegments.length == 3 && basicVersionSegments[2].startsWith("BETA"))
-            metadataSecondDigit = Integer.parseInt(basicVersionSegments[2].split("\\.")[1]);
 
         return new Pair<>(basicVersionSegments[0].split("\\."), metadataSecondDigit);
     }
