@@ -36,6 +36,7 @@ The same rules apply to the names of the categories in which your emojis will be
 
 By default, the following category names are already registered in the mod:
 - `anime`
+- `memes`
 - `people`
 - `nature`
 - `food`
