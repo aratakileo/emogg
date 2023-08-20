@@ -17,10 +17,10 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "pextystudios.emogg.Emogg"
+      "io.github.aratakileo.emogg.Emogg"
     ],
     "modmenu": [
-      "pextystudios.emogg.api.ModMenuApiImpl"
+      "io.github.aratakileo.emogg.api.ModMenuApiImpl"
     ]
   },
   "mixins": [
