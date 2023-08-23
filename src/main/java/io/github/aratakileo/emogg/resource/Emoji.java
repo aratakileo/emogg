@@ -1,14 +1,14 @@
 package io.github.aratakileo.emogg.resource;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import io.github.aratakileo.emogg.Emogg;
+import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.StringUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import io.github.aratakileo.emogg.Emogg;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
 
 
 public class Emoji {

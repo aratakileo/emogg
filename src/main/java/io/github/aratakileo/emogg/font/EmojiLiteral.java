@@ -1,10 +1,10 @@
 package io.github.aratakileo.emogg.font;
 
+import com.mojang.math.Matrix4f;
 import io.github.aratakileo.emogg.resource.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 
 import java.util.regex.Pattern;
 

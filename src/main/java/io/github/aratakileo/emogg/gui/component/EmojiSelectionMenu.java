@@ -1,5 +1,6 @@
 package io.github.aratakileo.emogg.gui.component;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.gui.screen.SettingsScreen;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
@@ -9,7 +10,6 @@ import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -113,8 +113,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 1,
                 font.lineHeight
         );
-
-        setHintPositioner(MOUSE_HINT_POSITIONER);
     }
 
     public EmojiSelectionMenu(float emojiSize) {
@@ -136,7 +134,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
         disableHint();
 
         final var renderableSettingsButtonRect = settingsButtonRect.move(x, y);
@@ -145,7 +143,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
         * Start of header processing & rendering
         */
         RenderUtil.drawRect(x, y, width, (int) emojiSize, 0xaa000000);
-        renderString(guiGraphics, "Emogg", 2, 2, 0x6c757d);
+        renderString(poseStack, "Emogg", 2, 2, 0x6c757d);
 
         if (!verticalScrollbar.isScrolling() && renderableSettingsButtonRect.contains(mouseX, mouseY)) {
             RenderUtil.drawRect(renderableSettingsButtonRect.expand(2, 2), 0x77ffffff);
@@ -153,7 +151,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
         }
 
         RenderUtil.renderTexture(
-                guiGraphics,
+                poseStack,
                 SETTINGS_ICON,
                 renderableSettingsButtonRect.move(1, 1)
         );
@@ -193,7 +191,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
                 if (iline >= 0)
                     renderString(
-                            guiGraphics,
+                            poseStack,
                             EmojiHandler.getDisplayableCategoryName(currentCategoryContent.getName()),
                             2,
                             lineLocalY + categoryNameOffsetY,
@@ -218,7 +216,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                         RenderUtil.drawRect(emojiX, emojiY, (int) emojiSize, (int) emojiSize, 0x77ffffff);
                     }
 
-                    EmojiUtil.render(emoji, guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
+                    EmojiUtil.render(emoji, poseStack, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
                 }
 
                 icolumn++;
@@ -238,7 +236,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
         */
         if (isSinglePage) return;
 
-        verticalScrollbar.render(guiGraphics, mouseX, mouseY, dt);
+        verticalScrollbar.render(poseStack, mouseX, mouseY, dt);
     }
 
     @Override

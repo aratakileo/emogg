@@ -1,9 +1,9 @@
 package io.github.aratakileo.emogg.gui.component;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.aratakileo.emogg.util.RenderUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class Button extends AbstractWidget {
     private int padding = 0;
@@ -35,13 +35,13 @@ public class Button extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
         RenderUtil.drawRect(x, y, width, height, 0xaa222222, 1, 0xaa000000);
 
         if (isHovered)
             RenderUtil.drawRectStroke(x, y, width, height, 1, 0xffffffff);
 
-        renderString(guiGraphics);
+        renderString(poseStack);
     }
 
     public void setMessage(Component text, boolean isHorizontalCentered) {

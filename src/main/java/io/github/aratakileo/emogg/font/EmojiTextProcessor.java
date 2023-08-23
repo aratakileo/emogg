@@ -3,11 +3,11 @@ package io.github.aratakileo.emogg.font;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import io.github.aratakileo.emogg.handler.EmojiHandler;
+import io.github.aratakileo.emogg.util.StringUtil;
 import joptsimple.internal.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.util.StringUtil;
 
 import java.util.Collection;
 import java.util.HashMap;

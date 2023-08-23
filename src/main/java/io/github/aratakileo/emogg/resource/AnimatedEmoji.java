@@ -1,10 +1,10 @@
 package io.github.aratakileo.emogg.resource;
 
+import io.github.aratakileo.emogg.Emogg;
+import io.github.aratakileo.emogg.NativeGifImage;
 import io.github.aratakileo.emogg.util.StringUtil;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import io.github.aratakileo.emogg.Emogg;
-import io.github.aratakileo.emogg.NativeGifImage;
 
 public class AnimatedEmoji extends Emoji {
     private AsyncResourceSlider asyncResourceSlider = null;

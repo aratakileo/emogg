@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import io.github.aratakileo.emogg.handler.EmojiHandler;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -15,7 +16,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
@@ -52,18 +52,14 @@ public abstract class CommandSuggestionsMixin {
         if (this.commandsOnly || hasSlash) return;
 
         final var textUptoCursor = contentText.substring(0, cursorPosition);
-        final var semicolonStart = Math.max(getLastMatchedEnd(COLON_PATTERN) - 1, 0);
-        final var whitespaceEnd = getLastMatchedEnd(WHITESPACE_PATTERN);
+        final var start = Math.max(getLastPattern(COLON_PATTERN) - 1, 0);
+        final var whitespace = getLastPattern(WHITESPACE_PATTERN);
 
-        if (
-                semicolonStart >= textUptoCursor.length()
-                        || semicolonStart < whitespaceEnd
-                        || textUptoCursor.charAt(semicolonStart) != ':'
-        ) return;
+        if(start >= textUptoCursor.length() || start < whitespace || textUptoCursor.charAt(start) != ':') return;
 
         this.pendingSuggestions = SharedSuggestionProvider.suggest(
                 EmojiHandler.getInstance().getEmojiKeys(),
-                new SuggestionsBuilder(textUptoCursor, semicolonStart)
+                new SuggestionsBuilder(textUptoCursor, start)
         );
 
         this.pendingSuggestions.thenRun(() -> {
@@ -75,16 +71,18 @@ public abstract class CommandSuggestionsMixin {
     }
 
     @Unique
-    private int getLastMatchedEnd(Pattern pattern){
+    private int getLastPattern(Pattern pattern){
         if (Strings.isNullOrEmpty(input.getValue())) {
             return 0;
         }
 
+        var i = 0;
         final var matcher = pattern.matcher(input.getValue());
-        var end = 0;
 
-        while (matcher.find()) end = matcher.end();
+        while (matcher.find()) {
+            i = matcher.end();
+        }
 
-        return end;
+        return i;
     }
 }

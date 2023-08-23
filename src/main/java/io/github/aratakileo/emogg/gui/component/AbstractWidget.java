@@ -1,26 +1,20 @@
 package io.github.aratakileo.emogg.gui.component;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.aratakileo.emogg.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector2i;
-import org.joml.Vector2ic;
 
 import java.util.function.Consumer;
 
 public abstract class AbstractWidget extends AbstractButton {
-    public final static MouseHintPositioner MOUSE_HINT_POSITIONER = new MouseHintPositioner();
-
-    protected ClientTooltipPositioner hintPositioner = new MenuTooltipPositioner(this);
     protected Consumer<AbstractWidget> onClicked = null;
+    protected Component hint = null;
 
     public AbstractWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
@@ -49,9 +43,31 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float dt) {
+        if (!visible) return;
+
+        isHovered = collidePoint(mouseX, mouseY);
+
+        renderButton(poseStack, mouseX, mouseY, dt);
+        renderToolTip(poseStack, mouseX, mouseY);
+    }
+
+    @Override
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
         RenderUtil.drawRect(x, y, width, height, 0xaa222222, 1, 0xaa000000);
-        renderString(guiGraphics);
+        renderString(poseStack);
+    }
+
+    @Override
+    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
+        var currentScreen = Minecraft.getInstance().screen;
+
+        if (hint == null || currentScreen == null) return;
+
+        if (isHovered)
+            currentScreen.renderTooltip(poseStack, hint, mouseX, mouseY);
+        else if (isFocused())
+            currentScreen.renderTooltip(poseStack, hint, x, y);
     }
 
     @Override
@@ -68,16 +84,18 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
         defaultButtonNarrationText(narrationElementOutput);
+
+        if (hint != null) narrationElementOutput.add(NarratedElementType.HINT, hint);
     }
 
-    @Override
-    protected @NotNull ClientTooltipPositioner createTooltipPositioner() {
-        return this.isHovered
-                && this.isFocused()
-                && Minecraft.getInstance().getLastInputType().isKeyboard()
-                ? super.createTooltipPositioner() : hintPositioner;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public void setLeftTop(int left, int top) {
@@ -98,20 +116,33 @@ public abstract class AbstractWidget extends AbstractButton {
         return y + height;
     }
 
-    public void renderString(GuiGraphics guiGraphics) {
-        renderString(guiGraphics, 0xffffff);
+    public void renderString(PoseStack poseStack) {
+        renderString(poseStack, 0xffffff);
     }
 
-    public void renderString(GuiGraphics guiGraphics, int color) {
-        renderString(guiGraphics, Minecraft.getInstance().font, color | Mth.ceil(this.alpha * 255.0F) << 24);
+    public void renderString(PoseStack poseStack, int color) {
+        drawCenteredString(
+                poseStack,
+                Minecraft.getInstance().font,
+                getMessage(),
+                x + width / 2,
+                y + (height - 8) / 2,
+                color | Mth.ceil(this.alpha * 255.0F) << 24
+        );
     }
 
-    public void renderString(GuiGraphics guiGraphics, String text, int localX, int localY, int color) {
-        guiGraphics.drawString(Minecraft.getInstance().font, text, x + localX, y + localY, color, false);
+    public void renderString(PoseStack poseStack, String text, int localX, int localY, int color) {
+        drawString(poseStack, Minecraft.getInstance().font, text, x + localX, y + localY, color);
     }
 
     public void playClickSound() {
         playDownSound(Minecraft.getInstance().getSoundManager());
+    }
+
+    public boolean collidePoint(int x, int y) {
+        if (!visible) return false;
+
+        return x >= this.x && y >= this.y && x < this.x + width && y < this.y + height;
     }
 
     public void setOnClicked(Consumer<AbstractWidget> onClicked) {
@@ -123,28 +154,10 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     public void setHint(@NotNull Component hint) {
-        setTooltip(Tooltip.create(hint));
+        this.hint = hint;
     }
 
     public void disableHint() {
-        setTooltip(null);
-    }
-
-    public void setHintPositioner(ClientTooltipPositioner hintPositioner) {
-        this.hintPositioner = hintPositioner;
-    }
-
-    private static class MouseHintPositioner implements ClientTooltipPositioner {
-        @Override
-        public @NotNull Vector2ic positionTooltip(
-                int guiWidth,
-                int guiHeight,
-                int mouseX,
-                int mouseY,
-                int tooltipWidth,
-                int tooltipHeight
-        ) {
-            return new Vector2i(mouseX - tooltipWidth - 7, mouseY - tooltipHeight - 7);
-        }
+        this.hint = null;
     }
 }

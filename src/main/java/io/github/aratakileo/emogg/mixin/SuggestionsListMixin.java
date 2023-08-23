@@ -1,5 +1,6 @@
 package io.github.aratakileo.emogg.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.suggestion.Suggestion;
 import io.github.aratakileo.emogg.font.EmojiFont;
 import io.github.aratakileo.emogg.font.EmojiLiteral;
@@ -8,7 +9,6 @@ import io.github.aratakileo.emogg.resource.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.renderer.Rect2i;
 import org.spongepowered.asm.mixin.Final;
@@ -59,14 +59,14 @@ public class SuggestionsListMixin {
         }
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;III)I"))
-    private int updateCommandInfo(GuiGraphics instance, Font font, String string, int x, int y, int color){
-        if (!emojis.containsKey(string)) return instance.drawString(font, string, x, y, color);
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Font;drawShadow(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/lang/String;FFI)I"))
+    private int updateCommandInfo(Font instance, PoseStack poseStack, String string, float x, float y, int color){
+        if (!emojis.containsKey(string)) return instance.drawShadow(poseStack, string, x, y, color);
 
-        EmojiUtil.render(emojis.get(string), instance, x + 1, y, EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE);
+        EmojiUtil.render(emojis.get(string), poseStack, (int) x + 1, (int) y, EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE);
 
-        return instance.drawString(
-                font,
+        return instance.drawShadow(
+                poseStack,
                 '\\' + string,
                 x + EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE + 3,
                 y,

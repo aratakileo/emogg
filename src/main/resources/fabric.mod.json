@@ -9,7 +9,8 @@
   ],
   "contributors": [
     "Abbie5",
-    "Spurkus"
+    "Spurkus",
+    "Katherine"
   ],
   "contact": {
     "sources": "https://github.com/aratakileo/emogg",
@@ -31,7 +32,7 @@
     "emogg.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": "*",
     "fabric": "*",
     "minecraft": ">=${minecraft_version}"
   },

@@ -1,9 +1,9 @@
 package io.github.aratakileo.emogg.gui.component;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.emogg.resource.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
-import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 
 public class EmojiButton extends Button {
@@ -30,19 +30,19 @@ public class EmojiButton extends Button {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float dt) {
         if (!visible) return;
 
         var hasBeenHovered = isHovered;
 
-        super.render(guiGraphics, mouseX, mouseY, dt);
+        super.render(poseStack, mouseX, mouseY, dt);
 
         if (!hasBeenHovered && isHovered)
             changeDisplayableEmoji();
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float dt) {
         if (displayableEmoji == null) {
             disableHint();
             return;
@@ -58,7 +58,7 @@ public class EmojiButton extends Button {
             renderSize += 2;
         }
 
-        EmojiUtil.render(displayableEmoji, guiGraphics, renderX, renderY, renderSize);
+        EmojiUtil.render(displayableEmoji, poseStack, renderX, renderY, renderSize);
     }
 
     protected void changeDisplayableEmoji() {

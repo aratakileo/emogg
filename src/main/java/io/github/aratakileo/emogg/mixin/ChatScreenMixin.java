@@ -1,7 +1,13 @@
 package io.github.aratakileo.emogg.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.aratakileo.emogg.gui.component.EmojiButton;
+import io.github.aratakileo.emogg.gui.component.EmojiSelectionMenu;
+import io.github.aratakileo.emogg.handler.EmojiHandler;
+import io.github.aratakileo.emogg.handler.FrequentlyUsedEmojiController;
+import io.github.aratakileo.emogg.resource.Emoji;
+import io.github.aratakileo.emogg.util.KeyboardUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,12 +18,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import oshi.util.tuples.Pair;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.handler.FrequentlyUsedEmojiController;
-import io.github.aratakileo.emogg.resource.Emoji;
-import io.github.aratakileo.emogg.gui.component.EmojiSelectionMenu;
-import io.github.aratakileo.emogg.gui.component.EmojiButton;
-import io.github.aratakileo.emogg.util.KeyboardUtil;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
@@ -79,7 +79,7 @@ public class ChatScreenMixin {
     }
 
     @Inject(method = "render", at = @At("HEAD"))
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt, CallbackInfo ci) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float dt, CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
 
         if (emojiSelectionMenu.isMouseOver(mouseX, mouseY)) {

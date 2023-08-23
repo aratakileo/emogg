@@ -1,10 +1,10 @@
 package io.github.aratakileo.emogg.resource;
 
+import io.github.aratakileo.emogg.NativeGifImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import io.github.aratakileo.emogg.NativeGifImage;
 
 import java.util.HashMap;
 

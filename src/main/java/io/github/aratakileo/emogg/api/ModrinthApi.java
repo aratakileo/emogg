@@ -92,10 +92,10 @@ public class ModrinthApi {
     }
 
     /*
-     *
-     * Supports version format that starts with: `x.x-BETA.x` or `x.x.x`, where x is digit or number
-     *
-     */
+    *
+    * Supports version format that starts with: `x.x-BETA.x` or `x.x.x`, where x is digit or number
+    *
+    */
     private static Pair<String[], Integer> getVersionMetadata(@NotNull String version) {
         if (version.contains("+"))
             version = version.split("\\+")[0];

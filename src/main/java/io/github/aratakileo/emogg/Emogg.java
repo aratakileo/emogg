@@ -7,11 +7,10 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
-import net.minecraft.network.chat.Component;
+import net.minecraft.locale.Language;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class Emogg implements ClientModInitializer {
     public static Logger LOGGER = LoggerFactory.getLogger(Emogg.class);
@@ -58,7 +57,7 @@ public class Emogg implements ClientModInitializer {
         ResourceManagerHelper.registerBuiltinResourcePack(
                 new ResourceLocation(NAMESPACE_OR_ID, resourcepackName),
                 FabricLoader.getInstance().getModContainer(NAMESPACE_OR_ID).orElseThrow(),
-                Component.translatable(String.format("emogg.resourcepack.%s.name", resourcepackName)),
+                Language.getInstance().getOrDefault(String.format("emogg.resourcepack.%s.name", resourcepackName)),
                 ResourcePackActivationType.DEFAULT_ENABLED
         );
     }

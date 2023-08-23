@@ -2,10 +2,11 @@ package io.github.aratakileo.emogg.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -79,9 +80,9 @@ public final class RenderUtil {
         return Minecraft.getInstance().getWindow().getGuiScale();
     }
 
-    public static void renderTexture(GuiGraphics guiGraphics, ResourceLocation resourceLocation, Rect2i rect2i) {
+    public static void renderTexture(PoseStack poseStack, ResourceLocation resourceLocation, Rect2i rect2i) {
         renderTexture(
-                guiGraphics,
+                poseStack,
                 resourceLocation,
                 rect2i.getX(),
                 rect2i.getY(),
@@ -91,16 +92,17 @@ public final class RenderUtil {
     }
 
     public static void renderTexture(
-            GuiGraphics guiGraphics,
+            PoseStack poseStack,
             ResourceLocation resourceLocation,
             int x,
             int y,
             int width,
             int height
     ) {
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.setShaderTexture(0, resourceLocation);
         RenderSystem.enableBlend();
-
-        guiGraphics.blit(resourceLocation, x, y, 0f, 0f, width, height, width, height);
+        GuiComponent.blit(poseStack, x, y, 0f, 0f, width, height, width, height);
         RenderSystem.disableBlend();
     }
 
@@ -215,11 +217,13 @@ public final class RenderUtil {
 
     public static void setupFillMode() {
         RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
     }
 
     public static void disassembleFillMode() {
         RenderSystem.disableBlend();
+        RenderSystem.enableTexture();
     }
 }

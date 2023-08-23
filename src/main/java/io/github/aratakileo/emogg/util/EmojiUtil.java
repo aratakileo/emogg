@@ -3,21 +3,21 @@ package io.github.aratakileo.emogg.util;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.gui.GuiGraphics;
+import io.github.aratakileo.emogg.resource.Emoji;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
-import io.github.aratakileo.emogg.resource.Emoji;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 
 public final class EmojiUtil {
-    public static void render(Emoji emoji, GuiGraphics guiGraphics, int x, int y, int size) {
+    public static void render(Emoji emoji, PoseStack poseStack, int x, int y, int size) {
         var width = size;
         var height = size;
 
@@ -30,7 +30,7 @@ public final class EmojiUtil {
             y += (size - height) / 2;
         }
 
-        RenderUtil.renderTexture(guiGraphics, emoji.getRenderResourceLocation(), x, y, width, height);
+        RenderUtil.renderTexture(poseStack, emoji.getRenderResourceLocation(), x, y, width, height);
     }
 
     public static RenderType getRenderType(ResourceLocation resourceLocation) {

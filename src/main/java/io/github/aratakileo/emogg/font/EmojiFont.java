@@ -2,6 +2,7 @@ package io.github.aratakileo.emogg.font;
 
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
@@ -12,7 +13,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class EmojiFont extends Font {
             boolean shadow,
             Matrix4f matrix4f,
             MultiBufferSource multiBufferSource,
-            DisplayMode displayMode,
+            boolean isTransparent,
             int underlineColor,
             int light
     ) {
@@ -54,7 +54,7 @@ public class EmojiFont extends Font {
                 color,
                 shadow,
                 matrix4f,
-                displayMode,
+                isTransparent ? DisplayMode.SEE_THROUGH : DisplayMode.NORMAL,
                 light
         );
 
@@ -74,7 +74,7 @@ public class EmojiFont extends Font {
             boolean shadow,
             Matrix4f matrix4f,
             MultiBufferSource multiBufferSource,
-            DisplayMode displayMode,
+            boolean isTransparent,
             int backgroundColor,
             int light
     ) {
@@ -126,7 +126,7 @@ public class EmojiFont extends Font {
                     color,
                     true,
                     matrix4f,
-                    displayMode,
+                    isTransparent ? DisplayMode.SEE_THROUGH : DisplayMode.NORMAL,
                     light
             );
             FormattedCharSequence.fromList(formattedCharSequences).accept(emojiCharSink);
@@ -142,7 +142,7 @@ public class EmojiFont extends Font {
                 color,
                 false,
                 frontMatrix,
-                displayMode,
+                isTransparent ? DisplayMode.SEE_THROUGH : DisplayMode.NORMAL,
                 light
         );
         FormattedCharSequence.fromList(formattedCharSequences).accept(emojiCharSink);
@@ -225,18 +225,11 @@ public class EmojiFont extends Font {
             }
         }
 
-        drawInBatch(
-                formattedCharSequence,
-                x,
-                y,
-                color,
-                false,
-                matrix4f,
-                multiBufferSource,
-                DisplayMode.POLYGON_OFFSET,
-                0,
-                light
+        Font.StringRenderOutput stringRenderOutput = new Font.StringRenderOutput(
+                multiBufferSource, x, y, adjustColor(color), false, matrix4f, Font.DisplayMode.POLYGON_OFFSET, light
         );
+        formattedCharSequence.accept(stringRenderOutput);
+        stringRenderOutput.finish(0, x);
     }
 
     @Override

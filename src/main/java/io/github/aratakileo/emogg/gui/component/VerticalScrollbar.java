@@ -1,7 +1,7 @@
 package io.github.aratakileo.emogg.gui.component;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.aratakileo.emogg.util.RenderUtil;
-import net.minecraft.client.gui.GuiGraphics;
 
 public class VerticalScrollbar extends AbstractWidget {
     private final RenderUtil.Rect2i thumbRect;
@@ -85,7 +85,7 @@ public class VerticalScrollbar extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float dt) {
         RenderUtil.drawRect(
                 x,
                 y,
