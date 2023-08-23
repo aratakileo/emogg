@@ -52,14 +52,18 @@ public abstract class CommandSuggestionsMixin {
         if (this.commandsOnly || hasSlash) return;
 
         final var textUptoCursor = contentText.substring(0, cursorPosition);
-        final var start = Math.max(getLastPattern(COLON_PATTERN) - 1, 0);
-        final var whitespace = getLastPattern(WHITESPACE_PATTERN);
+        final var semicolonStart = Math.max(getLastMatchedEnd(COLON_PATTERN) - 1, 0);
+        final var whitespaceEnd = getLastMatchedEnd(WHITESPACE_PATTERN);
 
-        if(start >= textUptoCursor.length() || start < whitespace || textUptoCursor.charAt(start) != ':') return;
+        if (
+                semicolonStart >= textUptoCursor.length()
+                        || semicolonStart < whitespaceEnd
+                        || textUptoCursor.charAt(semicolonStart) != ':'
+        ) return;
 
         this.pendingSuggestions = SharedSuggestionProvider.suggest(
                 EmojiHandler.getInstance().getEmojiKeys(),
-                new SuggestionsBuilder(textUptoCursor, start)
+                new SuggestionsBuilder(textUptoCursor, semicolonStart)
         );
 
         this.pendingSuggestions.thenRun(() -> {
@@ -71,18 +75,16 @@ public abstract class CommandSuggestionsMixin {
     }
 
     @Unique
-    private int getLastPattern(Pattern pattern){
+    private int getLastMatchedEnd(Pattern pattern){
         if (Strings.isNullOrEmpty(input.getValue())) {
             return 0;
         }
 
-        var i = 0;
         final var matcher = pattern.matcher(input.getValue());
+        var end = 0;
 
-        while (matcher.find()) {
-            i = matcher.end();
-        }
+        while (matcher.find()) end = matcher.end();
 
-        return i;
+        return end;
     }
 }
