@@ -41,10 +41,10 @@ public abstract class CommandSuggestionsMixin {
 
     @Inject(method = "updateCommandInfo", at = @At("TAIL"), cancellable = true)
     private void updateCommandInfo(CallbackInfo ci){
-        final var contentText = this.input.getValue();
+        final var contentText = input.getValue();
         final var stringReader = new StringReader(contentText);
         final var hasSlash = stringReader.canRead() && stringReader.peek() == '/';
-        final var cursorPosition = this.input.getCursorPosition();
+        final var cursorPosition = input.getCursorPosition();
 
         if (hasSlash)
             stringReader.skip();
@@ -61,14 +61,14 @@ public abstract class CommandSuggestionsMixin {
                         || textUptoCursor.charAt(semicolonStart) != ':'
         ) return;
 
-        this.pendingSuggestions = SharedSuggestionProvider.suggest(
-                EmojiHandler.getInstance().getEmojiKeys(),
+        pendingSuggestions = SharedSuggestionProvider.suggest(
+                EmojiHandler.getInstance().getEmojiCodes(),
                 new SuggestionsBuilder(textUptoCursor, semicolonStart)
         );
 
-        this.pendingSuggestions.thenRun(() -> {
-            if (!this.pendingSuggestions.isDone()) return;
-            this.showSuggestions(false);
+        pendingSuggestions.thenRun(() -> {
+            if (pendingSuggestions.isDone()) return;
+            showSuggestions(false);
         });
 
         ci.cancel();

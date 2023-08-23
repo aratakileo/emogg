@@ -82,17 +82,11 @@ public class EmojiHandler {
     public Optional<Emoji> getRandomEmoji() {
         return allEmojis.values()
                 .stream()
-                .skip(
-                        (int) (
-                                (
-                                        allEmojis.size()
-                                ) * Math.random()
-                        )
-                )
+                .skip((int) ((allEmojis.size()) * Math.random()))
                 .findFirst();
     }
 
-    public Collection<String> getEmojiKeys() {
+    public Collection<String> getEmojiCodes() {
         return Lists.newArrayList(this.allEmojis.values())
                 .stream()
                 .map(Emoji::getCode)

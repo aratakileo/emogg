@@ -65,17 +65,17 @@ public class Emoji {
         name = EmojiUtil.normalizeNameOrCategory(name);
 
         var category = resourceLocation.getPath().substring(EmojiHandler.EMOJIS_PATH_PREFIX.length() + 1);
+
         if (category.contains("/")) {
             var splitPath = category.split("/");
 
             category = splitPath[splitPath.length - 2];
-        } else
-            category = EmojiHandler.CATEGORY_DEFAULT;
+        } else category = EmojiHandler.CATEGORY_DEFAULT;
 
         category = EmojiUtil.normalizeNameOrCategory(category);
 
-        final var emoji = resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION) ?
-                new AnimatedEmoji(name, resourceLocation, category) : new Emoji(name, resourceLocation, category);
+        final var emoji = resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION)
+                ? new AnimatedEmoji(name, resourceLocation, category) : new Emoji(name, resourceLocation, category);
 
         if (emoji.load())
             return emoji;
