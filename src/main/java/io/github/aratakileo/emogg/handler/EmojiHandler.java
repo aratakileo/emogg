@@ -46,22 +46,8 @@ public class EmojiHandler {
     private final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, List<String>> emojiCategories = new ConcurrentHashMap<>();
 
-    public EmojiHandler() {
-        INSTANCE = this;
-
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(
-            new SimpleSynchronousResourceReloadListener() {
-                @Override
-                public ResourceLocation getFabricId() {
-                    return new ResourceLocation(Emogg.NAMESPACE_OR_ID, EMOJIS_PATH_PREFIX);
-                }
-
-                @Override
-                public void onResourceManagerReload(ResourceManager resourceManager) {
-                    load(resourceManager);
-                }
-            }
-        );
+    private EmojiHandler() {
+        // All login in `init()`
     }
 
     public boolean isEmpty() {
@@ -206,6 +192,24 @@ public class EmojiHandler {
             Emogg.LOGGER.info("[emogg] Updating the lists is complete. No emojis has been defined!");
 
         FrequentlyUsedEmojiController.removeAllNonExistentEmojisFromList();
+    }
+
+    public static void init() {
+        INSTANCE = new EmojiHandler();
+
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(
+                new SimpleSynchronousResourceReloadListener() {
+                    @Override
+                    public ResourceLocation getFabricId() {
+                        return new ResourceLocation(Emogg.NAMESPACE_OR_ID, EMOJIS_PATH_PREFIX);
+                    }
+
+                    @Override
+                    public void onResourceManagerReload(ResourceManager resourceManager) {
+                        INSTANCE.load(resourceManager);
+                    }
+                }
+        );
     }
 
     public static EmojiHandler getInstance() {

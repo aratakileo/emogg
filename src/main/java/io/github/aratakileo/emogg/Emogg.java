@@ -30,8 +30,7 @@ public class Emogg implements ClientModInitializer {
                 ModrinthApi.needsToBeUpdated() ? "needs to be updated": "not needs to be updated"
         ));
 
-        new EmojiHandler();
-
+        EmojiHandler.init();
         EmoggConfig.load();
 
         registerBuiltinResourcePack("builtin");
