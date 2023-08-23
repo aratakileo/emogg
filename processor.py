@@ -41,7 +41,7 @@ def execute_apply_mod_to_mods_dir():
 
     CURRENT_VERSION_FILE_NAME = f'{data["archives_base_name"]}-{data["mod_version"]}' \
                                 f'+{data["support_minecraft_version"]}.jar'
-    
+
     MODS_DIR = getenv('APPDATA') + '/.minecraft/mods/'
     BUILD_DIR = 'build/libs/'
 
