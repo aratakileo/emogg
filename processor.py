@@ -10,6 +10,11 @@ def main():
     data['prev_mod_version'] = get_build_properties_value('prev_mod_version')
     data['mod_version'] = get_build_properties_value('mod_version')
 
+    try:
+        data['support_minecraft_version'] = get_build_properties_value('support_minecraft_version')
+    except Exception:
+        data['support_minecraft_version'] = get_build_properties_value('minecraft_version')
+
     execute_root_cmd()
 
 
@@ -30,8 +35,8 @@ def execute_root_cmd():
 
 
 def execute_apply_mod_to_mods_dir():
-    OLD_VERSION_FILE_NAME = 'emogg-' + data['prev_mod_version'] + '.jar'
-    CURRENT_VERSION_FILE_NAME = 'emogg-' + data['mod_version'] + '.jar'
+    OLD_VERSION_FILE_NAME = f'emogg-{data["prev_mod_version"]}+{data["support_minecraft_version"]}.jar'
+    CURRENT_VERSION_FILE_NAME = f'emogg-{data["mod_version"]}+{data["support_minecraft_version"]}.jar'
     MODS_DIR = getenv('APPDATA') + '/.minecraft/mods/'
     BUILD_DIR = 'build/libs/'
 

@@ -91,6 +91,9 @@ public class ModrinthApi {
     *
     */
     private static Pair<String[], Integer> getVersionMetadata(@NotNull String version) {
+        if (version.contains("+"))
+            version = version.split("\\+")[0];
+
         final var basicVersionSegments = version.split("-");
 
         var metadataSecondDigit = -1;
