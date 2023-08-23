@@ -12,8 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
 
 public class Emogg implements ClientModInitializer {
     public static Logger LOGGER = LoggerFactory.getLogger(Emogg.class);
