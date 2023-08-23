@@ -3,7 +3,8 @@ plugins {
     id 'maven-publish'
 }
 
-final var supportMinecraftVersion = project.hasProperty("support_minecraft_version") ? project.support_minecraft_version : project.minecraft_version
+final var supportMinecraftVersion = project.hasProperty("support_minecraft_version")
+        ? project.support_minecraft_version : project.minecraft_version
 
 version = "${project.mod_version}+${supportMinecraftVersion}"
 group = project.maven_group
