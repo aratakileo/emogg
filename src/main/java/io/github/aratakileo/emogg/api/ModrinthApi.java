@@ -1,11 +1,11 @@
 package io.github.aratakileo.emogg.api;
 
 import com.google.gson.JsonParser;
+import io.github.aratakileo.emogg.Emogg;
 import net.minecraft.SharedConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
-import io.github.aratakileo.emogg.Emogg;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,14 +17,11 @@ public class ModrinthApi {
     private final static String REQUEST_URL = "https://api.modrinth.com/v2/project/{identifier}/version?" +
             "game_versions=%5B%22{minecraft_version}%22%5D";
     private final static HttpClient client = HttpClient.newHttpClient();
-    private static boolean needsToBeUpdated = false;
-    private static boolean isRequested = false;
+    private static ResponseCode responseCode = ResponseCode.NO_RESPONSE;
     private static String updateVersion;
 
-    public static boolean needsToBeUpdated() {
-        checkUpdates();
-
-        return needsToBeUpdated;
+    public static ResponseCode getResponseCode() {
+        return responseCode;
     }
 
     public static @Nullable String getUpdateVersion() {
@@ -33,8 +30,8 @@ public class ModrinthApi {
         return updateVersion;
     }
 
-    private static void checkUpdates() {
-        if (isRequested) return;
+    public static void checkUpdates() {
+        if (responseCode != ResponseCode.NO_RESPONSE) return;
 
         final var request = HttpRequest.newBuilder(URI.create(getRequestUrl()))
                 .setHeader(
@@ -48,20 +45,29 @@ public class ModrinthApi {
 
         try {
             final var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            updateVersion = JsonParser
+            final var versionMetadatas = JsonParser
                     .parseString(response.body())
-                    .getAsJsonArray()
-                    .get(0)
-                    .getAsJsonObject()
-                    .get("version_number")
-                    .getAsString();
+                    .getAsJsonArray();
 
-            needsToBeUpdated = isVersionGreaterThanCurrent(updateVersion);
-            isRequested = true;
+            if (versionMetadatas.isEmpty()) responseCode = ResponseCode.DOES_NOT_EXIST_AT_MODRINTH;
+            else {
+                updateVersion = versionMetadatas.get(0)
+                        .getAsJsonObject()
+                        .get("version_number")
+                        .getAsString();
+
+                responseCode = isVersionGreaterThanCurrent(
+                        updateVersion
+                ) ? ResponseCode.NEEDS_TO_BE_UPDATED : ResponseCode.SUCCESSFUL;
+            }
         } catch (Exception e) {
+            responseCode = ResponseCode.FAILED;
             Emogg.LOGGER.error("Failed to check updates: ", e);
         }
+    }
+
+    public static String getLinkForUpdate() {
+        return "https://modrinth.com/mod/emogg/versions?g=" + SharedConstants.getCurrentVersion().getName();
     }
 
     private static boolean isVersionGreaterThanCurrent(@Nullable String version) {
@@ -86,10 +92,10 @@ public class ModrinthApi {
     }
 
     /*
-    *
-    * Supports version format that starts with: `x.x-BETA.x` or `x.x.x`, where x is digit or number
-    *
-    */
+     *
+     * Supports version format that starts with: `x.x-BETA.x` or `x.x.x`, where x is digit or number
+     *
+     */
     private static Pair<String[], Integer> getVersionMetadata(@NotNull String version) {
         if (version.contains("+"))
             version = version.split("\\+")[0];
@@ -107,5 +113,13 @@ public class ModrinthApi {
     private static String getRequestUrl() {
         return REQUEST_URL.replace("{identifier}", Emogg.NAMESPACE_OR_ID)
                 .replace("{minecraft_version}", SharedConstants.getCurrentVersion().getName());
+    }
+
+    public enum ResponseCode {
+        NO_RESPONSE,
+        SUCCESSFUL,
+        NEEDS_TO_BE_UPDATED,
+        FAILED,
+        DOES_NOT_EXIST_AT_MODRINTH
     }
 }

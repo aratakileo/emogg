@@ -6,6 +6,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -23,12 +24,30 @@ public class Emogg implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ModrinthApi.checkUpdates();
+
         LOGGER.info(String.format(
-                "[emogg] installed v%s, available to download (from modrinth.com) v%s - %s",
+                "[emogg] Installed v%s; %s to download (from modrinth.com)%s",
                 getVersion(),
-                Objects.requireNonNullElse(ModrinthApi.getUpdateVersion(), "-unknown"),
-                ModrinthApi.needsToBeUpdated() ? "needs to be updated": "not needs to be updated"
+                switch (ModrinthApi.getResponseCode()) {
+                    case SUCCESSFUL, NEEDS_TO_BE_UPDATED -> "available";
+                    default -> "not available";
+                },
+                switch (ModrinthApi.getResponseCode()) {
+                    case DOES_NOT_EXIST_AT_MODRINTH -> ", because does not exist for Minecraft v"
+                            + SharedConstants.getCurrentVersion().getName();
+                    case SUCCESSFUL, NEEDS_TO_BE_UPDATED -> String.format(
+                            " v%s - %s",
+                            ModrinthApi.getUpdateVersion(),
+                            ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.NEEDS_TO_BE_UPDATED
+                                    ? "needs to be updated" : "not needs to be updated"
+                    );
+                    default -> ", because something went wrong";
+                }
         ));
+
+        if (ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.DOES_NOT_EXIST_AT_MODRINTH)
+            LOGGER.warn("[emogg] It looks like you are using an unofficial version port!");
 
         EmojiHandler.init();
         EmoggConfig.load();

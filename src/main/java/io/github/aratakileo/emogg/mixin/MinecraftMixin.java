@@ -56,7 +56,7 @@ public class MinecraftMixin {
                 screen == null
                         && level != null
                         && !Emogg.hasMessageAboutUpdateBeenShown
-                        && ModrinthApi.needsToBeUpdated()
+                        && ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.NEEDS_TO_BE_UPDATED
         ) {
             try {
                 final var lang = Language.getInstance();
@@ -69,11 +69,8 @@ public class MinecraftMixin {
                                 .get()
                                 .open(),
                                 Charset.defaultCharset()
-                ).replaceAll(
-                        "\\{link}",
-                                "https://modrinth.com/mod/emogg/versions?g="
-                                        + SharedConstants.getCurrentVersion().getName()
-                        ).replaceAll("\\{tooltip}", lang.getOrDefault("chat.link.open"))
+                ).replaceAll("\\{link}", ModrinthApi.getLinkForUpdate())
+                        .replaceAll("\\{tooltip}", lang.getOrDefault("chat.link.open"))
                         .replace("{left}", rightMessageParts[0])
                         .replace("{right}", rightMessageParts.length > 1 ? rightMessageParts[1] : "")
                         .replace("{button}", "Modrinth");
