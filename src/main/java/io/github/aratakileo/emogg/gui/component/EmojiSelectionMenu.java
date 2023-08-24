@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -67,6 +68,9 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         final var emojiHandler = EmojiHandler.getInstance();
         final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategoryNames().stream().toList());
+
+        Collections.sort(categoryNames);
+
         var totalLinesAmount = 0;
 
         // Reordering categories

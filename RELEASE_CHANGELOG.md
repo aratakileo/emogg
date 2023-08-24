@@ -1,0 +1,1 @@
+- now non-embedded categories will be displayed in the emoji selection menu in alphabetical order
