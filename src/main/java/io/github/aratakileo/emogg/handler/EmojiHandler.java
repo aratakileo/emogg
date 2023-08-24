@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class EmojiHandler {
-    private static EmojiHandler INSTANCE;
+    private static EmojiHandler instance;
 
     public final static Predicate<String> HAS_EMOJIS_EXTENSION = path -> path.endsWith(EmojiUtil.PNG_EXTENSION)
             || path.endsWith(NativeGifImage.GIF_EXTENSION);
@@ -184,7 +184,7 @@ public class EmojiHandler {
     }
 
     public static void init() {
-        INSTANCE = new EmojiHandler();
+        instance = new EmojiHandler();
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(
                 new SimpleSynchronousResourceReloadListener() {
@@ -195,14 +195,14 @@ public class EmojiHandler {
 
                     @Override
                     public void onResourceManagerReload(ResourceManager resourceManager) {
-                        INSTANCE.load(resourceManager);
+                        instance.load(resourceManager);
                     }
                 }
         );
     }
 
     public static EmojiHandler getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     public static String getDisplayableCategoryName(String category) {
