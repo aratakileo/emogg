@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private final float emojiSize;
     private final Font font;
     private final RenderUtil.Rect2i settingsButtonRect;
-    private final LinkedHashMap<Integer, CategoryContent> categoryContents = new LinkedHashMap<>();
+    private final ArrayList<CategoryContent> categoryContents = new ArrayList<>();
     private final boolean isSinglePage;
 
     private Consumer<Emoji> onEmojiSelected = null;
@@ -87,12 +88,12 @@ public class EmojiSelectionMenu extends AbstractWidget {
         moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_DEFAULT);
         moveCategoryTo(categoryNames, FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED, false);
 
-        for (var categoryName: categoryNames) {
+        for (final var categoryName: categoryNames) {
             final var categoryContent = new CategoryContent(categoryName);
 
             if (categoryContent.isEmpty()) continue;
 
-            categoryContents.put(totalLinesAmount, categoryContent);
+            categoryContents.add(categoryContent);
 
             totalLinesAmount += categoryContent.getNumberOfLines();
         }
@@ -177,42 +178,41 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         final var mouseColumn = (int) ((mouseX - x) / (emojiSize + 1));
         final var mouseLine = (int) ((mouseY - y) / (emojiSize + 1)) - 1;
-        final var categoryNameOffsetY = (int) ((emojiSize - font.lineHeight) / 2);
+        final var categoryTitleOffsetY = (int) ((emojiSize - font.lineHeight) / 2);
 
         var iline = 0;
 
         hoveredEmoji = null;
 
-        for (var categoryContentStartIndex: categoryContents.keySet()) {
-            final var currentCategoryContent = categoryContents.get(categoryContentStartIndex);
-            final var indexDifference = verticalScrollbar.getScrollProgress() - categoryContentStartIndex;
-            final var lineLocalY = (int) Math.ceil(emojiSize + iline * (emojiSize + 1) + 1) + 1;
+        for (final var categoryContent: categoryContents) {
+            if (
+                    iline < verticalScrollbar.getScrollProgress()
+                            && iline + categoryContent.getNumberOfLines() <= verticalScrollbar.getScrollProgress()
+            ) {
+                iline += categoryContent.getNumberOfLines();
+                continue;
+            }
 
-            if (indexDifference > 0) {
-                if (indexDifference > currentCategoryContent.getNumberOfLines()) continue;
+            if (iline == verticalScrollbar.getScrollProgress()) {
+                final var categoryTitleLocalY = (int) Math.ceil(emojiSize + iline * (emojiSize + 1) + 1) + 1;
 
-                iline = -indexDifference;
-            } else {
-                if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
-
-                if (iline >= 0)
-                    renderString(
-                            guiGraphics,
-                            EmojiHandler.getDisplayableCategoryName(currentCategoryContent.getName()),
-                            2,
-                            lineLocalY + categoryNameOffsetY,
-                            0x6c757d
-                    );
+                renderString(
+                        guiGraphics,
+                        EmojiHandler.getDisplayableCategoryName(categoryContent.getName()),
+                        2,
+                        categoryTitleLocalY + categoryTitleOffsetY,
+                        0x6c757d
+                );
 
                 iline++;
-
-                if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
             }
+
+            if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
 
             var icolumn = 0;
 
-            for (var emoji: currentCategoryContent.getEmojis()) {
-                if (iline >= 0) {
+            for (final var emoji: categoryContent.getEmojis()) {
+                if (iline == verticalScrollbar.getScrollProgress()) {
                     final var emojiX = (int) (x + icolumn * (emojiSize + 1) + 1);
                     final var emojiY = (int) (y + emojiSize + iline * (emojiSize + 1) + 1);
 
@@ -230,11 +230,13 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 if (icolumn > MAX_NUMBER_OF_EMOJIS_IN_LINE - 1) {
                     icolumn = 0;
                     iline++;
+
                     if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
                 }
             }
 
-            if (currentCategoryContent.getEmojis().size() % MAX_NUMBER_OF_EMOJIS_IN_LINE != 0) iline++;
+            if (categoryContent.getEmojis().size() % MAX_NUMBER_OF_EMOJIS_IN_LINE != 0) iline++;
+            if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
         }
 
         /*
@@ -296,36 +298,37 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         if (frequentlyUsedEmojis.isEmpty() || categoryContents.isEmpty()) return;
 
-        if (categoryContents.get(0).getName().equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED)) {
-            categoryContents.get(0).refreshEmojis();
+        CategoryContent frequentlyUsedCategoryContent;
+
+        if (
+                (frequentlyUsedCategoryContent = categoryContents.get(0))
+                        .getName()
+                        .equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED)
+        ) {
+            final var oldFrequentlyUsedEmojiCount = frequentlyUsedCategoryContent.getEmojis().size();
+
+            frequentlyUsedCategoryContent.refreshEmojis();
+
+            final var countDifference = frequentlyUsedCategoryContent.getEmojis().size() - oldFrequentlyUsedEmojiCount;
+
+            if (countDifference != 0)
+                verticalScrollbar.setNumberOfScrollingPositions(
+                        verticalScrollbar.getNumberOfScrollingPositions() + countDifference
+                );
         } else {
-            final var frequentlyUsedCategoryContent = new CategoryContent(
+            frequentlyUsedCategoryContent = new CategoryContent(
                     FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED
             );
 
             if (!frequentlyUsedCategoryContent.isEmpty()) {
-                final var newCategoryContents = new LinkedHashMap<Integer, CategoryContent>();
-                final var indexOffset = frequentlyUsedCategoryContent.getNumberOfLines();
-
-                newCategoryContents.put(0, frequentlyUsedCategoryContent);
-
-                for (var index : categoryContents.keySet())
-                    newCategoryContents.put(index + indexOffset, categoryContents.get(index));
-
-                categoryContents.clear();
-                categoryContents.putAll(newCategoryContents);
+                categoryContents.add(0, frequentlyUsedCategoryContent);
+                verticalScrollbar.setNumberOfScrollingPositions(
+                        verticalScrollbar.getNumberOfScrollingPositions()
+                                + frequentlyUsedCategoryContent.getEmojis().size()
+                );
             }
         }
 
-        final var lastCategoryContentEntry = categoryContents.entrySet()
-                .stream()
-                .toList()
-                .get(categoryContents.size() - 1);
-
-        verticalScrollbar.setNumberOfScrollingPositions(
-                (lastCategoryContentEntry.getKey() + lastCategoryContentEntry.getValue().numberOfLines - 1)
-                        - MAX_NUMBER_OF_LINES_ON_PAGE
-        );
         verticalScrollbar.setScrollProgress(0);
     }
 
