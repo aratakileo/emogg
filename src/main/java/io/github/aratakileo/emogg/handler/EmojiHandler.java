@@ -17,7 +17,7 @@ import io.github.aratakileo.emogg.Emogg;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EmojiHandler {
     private static EmojiHandler INSTANCE;
@@ -79,18 +79,15 @@ public class EmojiHandler {
         return emojiCategories.get(category).stream().map(allEmojis::get).toList();
     }
 
+    public Stream<Emoji> getEmojisStream() {
+        return Lists.newArrayList(allEmojis.values()).stream();
+    }
+
     public Optional<Emoji> getRandomEmoji() {
         return allEmojis.values()
                 .stream()
-                .skip((int) ((allEmojis.size()) * Math.random()))
+                .skip((int) (allEmojis.size() * Math.random()))
                 .findFirst();
-    }
-
-    public Collection<String> getEmojiCodes() {
-        return Lists.newArrayList(this.allEmojis.values())
-                .stream()
-                .map(Emoji::getCode)
-                .collect(Collectors.toList());
     }
 
     public void regEmoji(ResourceLocation resourceLocation) {

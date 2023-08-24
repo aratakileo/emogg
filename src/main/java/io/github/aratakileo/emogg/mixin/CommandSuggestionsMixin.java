@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import io.github.aratakileo.emogg.resource.Emoji;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -62,12 +63,12 @@ public abstract class CommandSuggestionsMixin {
         ) return;
 
         pendingSuggestions = SharedSuggestionProvider.suggest(
-                EmojiHandler.getInstance().getEmojiCodes(),
+                EmojiHandler.getInstance().getEmojisStream().map(Emoji::getCode),
                 new SuggestionsBuilder(textUptoCursor, semicolonStart)
         );
 
         pendingSuggestions.thenRun(() -> {
-            if (pendingSuggestions.isDone()) return;
+            if (!pendingSuggestions.isDone()) return;
             showSuggestions(false);
         });
 
