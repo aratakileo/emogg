@@ -2,6 +2,7 @@ package io.github.aratakileo.emogg.handler;
 
 import com.google.common.collect.Lists;
 import io.github.aratakileo.emogg.EmoggConfig;
+import io.github.aratakileo.emogg.NativeGifImage;
 import io.github.aratakileo.emogg.resource.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.StringUtil;
@@ -22,15 +23,12 @@ import java.util.stream.Stream;
 public class EmojiHandler {
     private static EmojiHandler INSTANCE;
 
-    public final static String STATIC_EMOJI_EXTENSION = ".png";
-    public final static String ANIMATED_EMOJI_EXTENSION = ".gif";
-    public final static Predicate<String> HAS_EMOJIS_EXTENSION = path -> {
-        return path.endsWith(STATIC_EMOJI_EXTENSION) || path.endsWith(ANIMATED_EMOJI_EXTENSION);
-    };
+    public final static Predicate<String> HAS_EMOJIS_EXTENSION = path -> path.endsWith(EmojiUtil.PNG_EXTENSION)
+            || path.endsWith(NativeGifImage.GIF_EXTENSION);
     public final static Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(
             resourceLocation.getPath()
     );
-    public final static String EMOJIS_PATH_PREFIX = "emoji";
+
     public final static String CATEGORY_DEFAULT = "other",
             CATEGORY_ANIME = "anime",
             CATEGORY_MEMES = "memes",
@@ -62,21 +60,21 @@ public class EmojiHandler {
         return allEmojis.get(name);
     }
 
-    public ConcurrentHashMap.KeySetView<String, List<String>> getCategories() {
+    public ConcurrentHashMap.KeySetView<String, List<String>> getCategoryNames() {
         return emojiCategories.keySet();
     }
 
-    public List<Emoji> getEmojisByCategory(String category) {
-        if (category.equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED))
+    public List<Emoji> getEmojisByCategory(String name) {
+        if (name.equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED))
             return EmoggConfig.instance.frequentlyUsedEmojis
                     .stream()
                     .filter(emojiStatistic -> allEmojis.containsKey(emojiStatistic.emojiName))
                     .map(emojiStatistic -> allEmojis.get(emojiStatistic.emojiName))
                     .toList();
 
-        if (!emojiCategories.containsKey(category)) return null;
+        if (!emojiCategories.containsKey(name)) return null;
 
-        return emojiCategories.get(category).stream().map(allEmojis::get).toList();
+        return emojiCategories.get(name).stream().map(allEmojis::get).toList();
     }
 
     public Stream<Emoji> getEmojisStream() {
@@ -166,7 +164,7 @@ public class EmojiHandler {
         emojiCategories.clear();
         allEmojis.clear();
 
-        resourceManager.listResources(EMOJIS_PATH_PREFIX, IS_EMOJI_LOCATION)
+        resourceManager.listResources(EmojiUtil.EMOJI_FOLDER_NAME, IS_EMOJI_LOCATION)
                 .keySet()
                 .parallelStream()
                 .forEach(this::regEmoji);
@@ -192,7 +190,7 @@ public class EmojiHandler {
                 new SimpleSynchronousResourceReloadListener() {
                     @Override
                     public ResourceLocation getFabricId() {
-                        return new ResourceLocation(Emogg.NAMESPACE_OR_ID, EMOJIS_PATH_PREFIX);
+                        return new ResourceLocation(Emogg.NAMESPACE_OR_ID, EmojiUtil.EMOJI_FOLDER_NAME);
                     }
 
                     @Override

@@ -66,7 +66,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.font = Minecraft.getInstance().font;
 
         final var emojiHandler = EmojiHandler.getInstance();
-        final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategories().stream().toList());
+        final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategoryNames().stream().toList());
         var totalLinesAmount = 0;
 
         // Reordering categories

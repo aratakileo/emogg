@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class NativeGifImage {
+    public final static String GIF_EXTENSION = ".gif";
+    
     private final int width;
     private final int height;
     private final int frames;

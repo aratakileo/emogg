@@ -17,6 +17,9 @@ import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 
 public final class EmojiUtil {
+    public final static String PNG_EXTENSION = ".png",
+            EMOJI_FOLDER_NAME = "emoji";
+
     public static void render(Emoji emoji, GuiGraphics guiGraphics, int x, int y, int size) {
         var width = size;
         var height = size;

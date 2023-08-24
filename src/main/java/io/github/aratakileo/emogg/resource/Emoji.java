@@ -1,6 +1,7 @@
 package io.github.aratakileo.emogg.resource;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import io.github.aratakileo.emogg.NativeGifImage;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.StringUtil;
 import net.minecraft.client.Minecraft;
@@ -64,7 +65,7 @@ public class Emoji {
     public static @Nullable Emoji from(String name, ResourceLocation resourceLocation) {
         name = EmojiUtil.normalizeNameOrCategory(name);
 
-        var category = resourceLocation.getPath().substring(EmojiHandler.EMOJIS_PATH_PREFIX.length() + 1);
+        var category = resourceLocation.getPath().substring(EmojiUtil.EMOJI_FOLDER_NAME.length() + 1);
 
         if (category.contains("/")) {
             var splitPath = category.split("/");
@@ -74,7 +75,7 @@ public class Emoji {
 
         category = EmojiUtil.normalizeNameOrCategory(category);
 
-        final var emoji = resourceLocation.getPath().endsWith(EmojiHandler.ANIMATED_EMOJI_EXTENSION)
+        final var emoji = resourceLocation.getPath().endsWith(NativeGifImage.GIF_EXTENSION)
                 ? new AnimatedEmoji(name, resourceLocation, category) : new Emoji(name, resourceLocation, category);
 
         if (emoji.load())
