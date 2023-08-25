@@ -1,5 +1,6 @@
 package io.github.aratakileo.emogg.handler;
 
+import io.github.aratakileo.emogg.Emogg;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -37,15 +38,22 @@ public class AsyncResourceSlider {
         final var sourceFileName = sourceFilePath.substring(sourceFilePath.lastIndexOf('/') + 1);
 
         final var totalDelay = nativeGifImage.processFrames((index, delayAmountBefore, frame) -> {
-            final var framePath = "emoji/" + sourceFileName.substring(
-                    0,
-                    sourceFileName.lastIndexOf('.')
-            ) + "_frame_" + index + ".png";
+            final var frameResourceLocation = new ResourceLocation(
+                    Emogg.NAMESPACE_OR_ID,
+                    "emoji/"
+                            + sourceFileName.substring(0, sourceFileName.lastIndexOf('.'))
+                            + "_frame_"
+                            + index
+                            + ".png"
+            );
 
-            final var frameDynamicTexture = new DynamicTexture(frame.nativeImage());
+            Minecraft.getInstance().getTextureManager().register(
+                    frameResourceLocation,
+                    new DynamicTexture(frame.nativeImage())
+            );
 
             slides.put(delayAmountBefore, new SlideFrame(
-                    Minecraft.getInstance().getTextureManager().register(framePath, frameDynamicTexture),
+                    frameResourceLocation,
                     frame.delay()
             ));
         });
