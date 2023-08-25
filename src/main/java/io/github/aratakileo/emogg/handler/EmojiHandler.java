@@ -60,7 +60,7 @@ public class EmojiHandler {
     }
 
     public List<Emoji> getEmojisByCategory(String name) {
-        if (name.equals(FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED))
+        if (name.equals(FueController.CATEGORY_FREQUENTLY_USED))
             return EmoggConfig.instance.frequentlyUsedEmojis
                     .stream()
                     .filter(emojiStatistic -> allEmojis.containsKey(emojiStatistic.emojiName))
@@ -175,7 +175,7 @@ public class EmojiHandler {
         else
             Emogg.LOGGER.info("[emogg] Updating the lists is complete. No emojis has been defined!");
 
-        FrequentlyUsedEmojiController.removeAllNonExistentEmojisFromList();
+        FueController.removeAllNonExistentFue();
     }
 
     public static void init() {

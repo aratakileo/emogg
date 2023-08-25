@@ -1,6 +1,6 @@
 package io.github.aratakileo.emogg.gui.component;
 
-import net.minecraft.client.Minecraft;
+import io.github.aratakileo.emogg.gui.EmojiFont;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import io.github.aratakileo.emogg.util.RenderUtil;
@@ -20,8 +20,8 @@ public class Button extends AbstractWidget {
         super(
                 x,
                 y,
-                Minecraft.getInstance().font.width(text.getString()) + padding * 2,
-                Minecraft.getInstance().font.lineHeight + padding * 2,
+                EmojiFont.getInstance().width(text.getString()) + padding * 2,
+                EmojiFont.getInstance().lineHeight + padding * 2,
                 text
         );
 
@@ -48,7 +48,7 @@ public class Button extends AbstractWidget {
         super.setMessage(text);
 
         final var prevWidth = width;
-        width = Minecraft.getInstance().font.width(text.getString()) + padding * 2;
+        width = EmojiFont.getInstance().width(text.getString()) + padding * 2;
 
         if (isHorizontalCentered && width != prevWidth)
             x -= (width - prevWidth) / 2;

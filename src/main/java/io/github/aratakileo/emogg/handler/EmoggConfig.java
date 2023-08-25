@@ -18,7 +18,7 @@ public class EmoggConfig {
 
     // JSON values
     public boolean isDebugModeEnabled = false;
-    public List<FrequentlyUsedEmojiController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
+    public List<FueController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
 
     public static void load() {
         if (file.exists())

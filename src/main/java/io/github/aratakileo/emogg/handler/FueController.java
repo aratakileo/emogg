@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class FrequentlyUsedEmojiController {
+public class FueController { // Fue = FUE = Frequently Used Emojis
     public final static String CATEGORY_FREQUENTLY_USED = "$frequently_used";
 
     private final static int MAX_NUMBER_OF_RECENTLY_USED_EMOJIS = 45,
@@ -17,7 +17,7 @@ public class FrequentlyUsedEmojiController {
         return EmojiHandler.getInstance().getEmojisByCategory(CATEGORY_FREQUENTLY_USED);
     }
 
-    public static void removeAllNonExistentEmojisFromList() {
+    public static void removeAllNonExistentFue() { // Fue = FUE = Frequently Used Emojis
         EmoggConfig.instance.frequentlyUsedEmojis.removeIf(emojiStatistic -> {
             final var itExists = EmojiHandler.getInstance().hasEmoji(emojiStatistic.emojiName);
 

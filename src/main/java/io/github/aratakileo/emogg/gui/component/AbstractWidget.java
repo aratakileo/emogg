@@ -107,7 +107,11 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     public void renderString(GuiGraphics guiGraphics, String text, int localX, int localY, int color) {
-        guiGraphics.drawString(Minecraft.getInstance().font, text, x + localX, y + localY, color, false);
+        renderString(guiGraphics, text, localX, localY, color, false);
+    }
+
+    public void renderString(GuiGraphics guiGraphics, String text, int localX, int localY, int color, boolean shadow) {
+        guiGraphics.drawString(Minecraft.getInstance().font, text, x + localX, y + localY, color, shadow);
     }
 
     public void playClickSound() {
