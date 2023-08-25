@@ -12,6 +12,7 @@ import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -224,7 +225,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
                             (int) emojiSize,
                             0x77ffffff
                     );
-                    setHint((categoryContent.isExpanded() ? "Hide" : "Expand") + " " + categoryContent.getDisplayableName().toLowerCase() + " emojis");
+                    setHint(
+                            Language.getInstance()
+                                    .getOrDefault(
+                                            "emogg.gui.category.action."
+                                                    + (categoryContent.isExpanded() ? "hide" : "expand")
+                                    ).replace("{default}", categoryContent.getDisplayableName())
+                                    .replace("{lower}", categoryContent.getDisplayableName().toLowerCase())
+                    );
                 }
 
                 renderString(
