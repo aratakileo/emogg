@@ -102,11 +102,20 @@ public class ChatScreenMixin {
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionMenu.visible || keyCode != KeyboardUtil.K_ESC) return;
+        if (emojiSelectionMenu.visible && keyCode == KeyboardUtil.K_ESC) {
+            emojiSelectionMenu.visible = false;
+            cir.setReturnValue(true);
+            return;
+        }
 
-        emojiSelectionMenu.visible = false;
-
-        cir.setReturnValue(true);
+        if (
+                !emojiSelectionMenu.visible
+                        && keyCode == KeyboardUtil.K_ENTER
+                        && !input.getMessage().getString().isEmpty()
+        ) {
+            emojiSelectionMenu.visible = true;
+            cir.setReturnValue(true);
+        }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
