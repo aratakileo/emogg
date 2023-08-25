@@ -6,9 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 public class VerticalScrollbar extends AbstractWidget {
     private final RenderUtil.Rect2i thumbRect;
 
-    private int numberOfScrollingPositions,
-            scrollSegmentSize,
-            scrollProgress = 0,
+    private int maxProgress,
+            segmentSize,
+            progress = 0,
             scrollingThumbTopToTouchOffset = -1,
             padding;
 
@@ -17,8 +17,8 @@ public class VerticalScrollbar extends AbstractWidget {
             int y,
             int width,
             int height,
-            int numberOfScrollingPositions,
-            int scrollSegmentSize,
+            int maxProgress,
+            int segmentSize,
             int padding
     ) {
         super(x, y, width, height);
@@ -26,53 +26,57 @@ public class VerticalScrollbar extends AbstractWidget {
         this.padding = padding;
         this.thumbRect = new RenderUtil.Rect2i(0, 0, width - padding * 2, 0);
 
-        setNumberOfScrollingPositions(numberOfScrollingPositions, scrollSegmentSize);
+        setMaxProgress(maxProgress, segmentSize);
     }
 
     public boolean isScrolling() {
         return scrollingThumbTopToTouchOffset >= 0;
     }
 
-    public int getScrollProgress() {
-        return scrollProgress;
+    public int getProgress() {
+        return progress;
     }
 
     public RenderUtil.Rect2i getRenderableThumbRect() {
         return thumbRect.move(x + padding, y + padding);
     }
 
-    public int getNumberOfScrollingPositions() {
-        return numberOfScrollingPositions;
+    public int getMaxProgress() {
+        return maxProgress;
     }
 
-    public void setNumberOfScrollingPositions(int numberOfScrollingPositions) {
-        setNumberOfScrollingPositions(numberOfScrollingPositions, scrollSegmentSize);
+    public void setMaxProgress(int maxProgress) {
+        setMaxProgress(maxProgress, segmentSize);
     }
 
-    public void setNumberOfScrollingPositions(int numberOfScrollingPositions, int scrollSegmentSize) {
-        this.numberOfScrollingPositions = numberOfScrollingPositions;
-        this.scrollSegmentSize = scrollSegmentSize;
+    public void increaseMaxProgress(int increaseValue) {
+        setMaxProgress(maxProgress + increaseValue);
+    }
+
+    public void setMaxProgress(int maxProgress, int segmentSize) {
+        this.maxProgress = maxProgress;
+        this.segmentSize = segmentSize;
 
         thumbRect.setHeight(Math.min(
                 height - 10 - padding * 2,
-                Math.max(8, height - padding * 2 - numberOfScrollingPositions / scrollSegmentSize)
+                Math.max(8, height - padding * 2 - maxProgress / segmentSize)
         ));
 
         setThumbY(padding + thumbRect.getY());
     }
 
-    public void setScrollProgress(int scrollProgress) {
-        this.scrollProgress = Math.min(numberOfScrollingPositions, Math.max(scrollProgress, 0));
+    public void setProgress(int progress) {
+        this.progress = Math.min(maxProgress, Math.max(progress, 0));
         this.thumbRect.setY((int) (
                 (height - thumbRect.height - padding * 2)
-                        * ((double) this.scrollProgress / (double) this.numberOfScrollingPositions)
+                        * ((double) this.progress / (double) this.maxProgress)
         ));
     }
 
     public void setScrollProgressByThumbY(int localY) {
         final var maxThumbTop = height - padding * 2 - thumbRect.height;
         setThumbY(localY, maxThumbTop);
-        scrollProgress = (int) (numberOfScrollingPositions * (double)thumbRect.getY() / (double)(maxThumbTop));
+        progress = (int) (maxProgress * (double)thumbRect.getY() / (double)(maxThumbTop));
     }
 
     private void setThumbY(int localY) {
@@ -116,7 +120,7 @@ public class VerticalScrollbar extends AbstractWidget {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-        setScrollProgress((int) (scrollProgress - scrollDelta));
+        setProgress((int) (progress - scrollDelta));
 
         scrollingThumbTopToTouchOffset = -1;
 

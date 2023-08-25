@@ -8,11 +8,9 @@ import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.StringUtil;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.locale.Language;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.apache.commons.lang3.StringUtils;
 import io.github.aratakileo.emogg.Emogg;
 
 import java.util.*;
@@ -203,15 +201,5 @@ public class EmojiHandler {
 
     public static EmojiHandler getInstance() {
         return instance;
-    }
-
-    public static String getDisplayableCategoryName(String category) {
-        final var categoryLangKey = "emogg.category." + category;
-        final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
-
-        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(category)
-                .replaceAll("_", " ");
-
-        return displayableName;
     }
 }

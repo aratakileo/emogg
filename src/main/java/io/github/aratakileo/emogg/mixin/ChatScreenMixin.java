@@ -64,7 +64,7 @@ public class ChatScreenMixin {
     @Inject(method = "resize", at = @At("HEAD"))
     public void resizeHead(Minecraft minecraft, int x, int y, CallbackInfo ci) {
         emojiSelectionMenuState = new Pair<>(
-                emojiSelectionMenu.verticalScrollbar.getScrollProgress(),
+                emojiSelectionMenu.verticalScrollbar.getProgress(),
                 emojiSelectionMenu.visible
         );
         emojiButtonDisplayableEmojiState = emojiButton.getDisplayableEmoji();
@@ -73,7 +73,7 @@ public class ChatScreenMixin {
     @Inject(method = "resize", at = @At("TAIL"))
     public void resizeTail(Minecraft minecraft, int x, int y, CallbackInfo ci) {
         emojiSelectionMenu.refreshFrequentlyUsedEmojis();
-        emojiSelectionMenu.verticalScrollbar.setScrollProgress(emojiSelectionMenuState.getA());
+        emojiSelectionMenu.verticalScrollbar.setProgress(emojiSelectionMenuState.getA());
         emojiSelectionMenu.visible = emojiSelectionMenuState.getB();
         emojiButton.setDisplayableEmoji(emojiButtonDisplayableEmojiState);
     }

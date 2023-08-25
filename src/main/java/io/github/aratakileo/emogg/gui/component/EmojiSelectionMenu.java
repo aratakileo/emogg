@@ -1,6 +1,8 @@
 package io.github.aratakileo.emogg.gui.component;
 
 import io.github.aratakileo.emogg.Emogg;
+import io.github.aratakileo.emogg.EmoggConfig;
+import io.github.aratakileo.emogg.font.EmojiFont;
 import io.github.aratakileo.emogg.gui.screen.SettingsScreen;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.emogg.handler.FrequentlyUsedEmojiController;
@@ -10,12 +12,14 @@ import io.github.aratakileo.emogg.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -29,14 +33,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
             "gui/icon/settings_icon.png"
     );
 
-    private final float emojiSize;
+    private final float emojiSize, contentWidth;
     private final Font font;
     private final RenderUtil.Rect2i settingsButtonRect;
     private final ArrayList<CategoryContent> categoryContents = new ArrayList<>();
     private final boolean isSinglePage;
 
     private Consumer<Emoji> onEmojiSelected = null;
-    private Emoji hoveredEmoji = null;
+    private EmojiOrCategoryContent hoveredEmojiOrCategoryContent = null;
 
     public final VerticalScrollbar verticalScrollbar;
 
@@ -55,16 +59,17 @@ public class EmojiSelectionMenu extends AbstractWidget {
         }
     }
 
-    protected EmojiSelectionMenu(float emojiSize, int headerHeight) {
+    protected EmojiSelectionMenu(float emojiSize, int headerHeight, float contentWidth) {
         super(
                 0,
                 0,
-                (int) ((emojiSize + 1) * MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1 + SCROLLBAR_WIDTH,
+                (int) contentWidth + 1 + SCROLLBAR_WIDTH,
                 (int) ((emojiSize + 1) * MAX_NUMBER_OF_LINES_ON_PAGE) + 1 + headerHeight
         );
 
         this.visible = false;
         this.emojiSize = emojiSize;
+        this.contentWidth = contentWidth;
         this.font = Minecraft.getInstance().font;
 
         final var emojiHandler = EmojiHandler.getInstance();
@@ -95,7 +100,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
             categoryContents.add(categoryContent);
 
-            totalLinesAmount += categoryContent.getNumberOfLines();
+            totalLinesAmount += categoryContent.getRenderLineCount();
         }
 
         totalLinesAmount--;
@@ -123,7 +128,11 @@ public class EmojiSelectionMenu extends AbstractWidget {
     }
 
     public EmojiSelectionMenu(float emojiSize) {
-        this(emojiSize, Minecraft.getInstance().font.lineHeight + 3);
+        this(
+                emojiSize,
+                Minecraft.getInstance().font.lineHeight + 3,
+                (emojiSize + 1) * MAX_NUMBER_OF_EMOJIS_IN_LINE
+        );
     }
 
     @Override
@@ -150,7 +159,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
         * Start of header processing & rendering
         */
         RenderUtil.drawRect(x, y, width, (int) emojiSize, 0xaa000000);
-        renderString(guiGraphics, "Emogg", 2, 2, 0x6c757d);
+        renderString(guiGraphics, Emogg.NAMESPACE_OR_ID, 2, 2, 0xffffff);
 
         if (!verticalScrollbar.isScrolling() && renderableSettingsButtonRect.contains(mouseX, mouseY)) {
             RenderUtil.drawRect(renderableSettingsButtonRect.expand(2, 2), 0x77ffffff);
@@ -180,49 +189,102 @@ public class EmojiSelectionMenu extends AbstractWidget {
         final var mouseLine = (int) ((mouseY - y) / (emojiSize + 1)) - 1;
         final var categoryTitleOffsetY = (int) ((emojiSize - font.lineHeight) / 2);
 
+        var renderLineIndex = 0;
         var iline = 0;
 
-        hoveredEmoji = null;
+        hoveredEmojiOrCategoryContent = null;
 
         for (final var categoryContent: categoryContents) {
             if (
-                    iline < verticalScrollbar.getScrollProgress()
-                            && iline + categoryContent.getNumberOfLines() <= verticalScrollbar.getScrollProgress()
+                    iline < verticalScrollbar.getProgress()
+                            && iline + categoryContent.getRenderLineCount() - 1 <= verticalScrollbar.getProgress()
             ) {
-                iline += categoryContent.getNumberOfLines();
+                iline += categoryContent.getRenderLineCount() + 1;
                 continue;
             }
 
-            if (iline == verticalScrollbar.getScrollProgress()) {
-                final var categoryTitleLocalY = (int) Math.ceil(emojiSize + iline * (emojiSize + 1) + 1) + 1;
+            if (iline >= verticalScrollbar.getProgress()) {
+                final var categoryTitleLocalY = (int) Math.ceil(
+                        emojiSize + renderLineIndex * (emojiSize + 1) + 1
+                ) + 1 + categoryTitleOffsetY;
+
+                var isHovered = false;
+
+                if (
+                        !verticalScrollbar.isScrolling()
+                                && mouseColumn >= 0
+                                && mouseColumn < MAX_NUMBER_OF_EMOJIS_IN_LINE
+                                && mouseLine == renderLineIndex
+                ) {
+                    isHovered = true;
+                    hoveredEmojiOrCategoryContent = new EmojiOrCategoryContent(categoryContent);
+
+                    RenderUtil.drawRect(
+                            x + 1,
+                            y + categoryTitleLocalY - 2,
+                            (int) contentWidth,
+                            (int) emojiSize,
+                            0x77ffffff
+                    );
+                    setHint((categoryContent.isExpanded() ? "Hide" : "Expand") + " " + categoryContent.getDisplayableName().toLowerCase() + " emojis");
+                }
 
                 renderString(
                         guiGraphics,
-                        EmojiHandler.getDisplayableCategoryName(categoryContent.getName()),
+                        categoryContent.getDisplayableName(),
                         2,
-                        categoryTitleLocalY + categoryTitleOffsetY,
-                        0x6c757d
+                        categoryTitleLocalY,
+                        isHovered ? 0xffffff : 0x6c757d
                 );
 
-                iline++;
+                if (EmoggConfig.instance.isDebugModeEnabled) {
+                    final var debugString = String.valueOf(iline);
+                    renderString(
+                            guiGraphics,
+                            debugString,
+                            -((EmojiFont) font).width(debugString, false) - 2,
+                            categoryTitleLocalY,
+                            0xffffff
+                    );
+                }
+
+                renderLineIndex++;
             }
 
-            if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
+            iline++;
 
+            if (renderLineIndex > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
+
+            if (!categoryContent.isExpanded()) continue;
+
+            var renderLine = false;
             var icolumn = 0;
 
             for (final var emoji: categoryContent.getEmojis()) {
-                if (iline == verticalScrollbar.getScrollProgress()) {
-                    final var emojiX = (int) (x + icolumn * (emojiSize + 1) + 1);
-                    final var emojiY = (int) (y + emojiSize + iline * (emojiSize + 1) + 1);
+                renderLine = iline >= verticalScrollbar.getProgress();
 
-                    if (!verticalScrollbar.isScrolling() && mouseColumn == icolumn && mouseLine == iline) {
-                        hoveredEmoji = emoji;
+                if (renderLine) {
+                    final var emojiX = (int) (x + icolumn * (emojiSize + 1) + 1);
+                    final var emojiY = (int) (y + emojiSize + renderLineIndex * (emojiSize + 1) + 1);
+
+                    if (!verticalScrollbar.isScrolling() && mouseColumn == icolumn && mouseLine == renderLineIndex) {
+                        hoveredEmojiOrCategoryContent = new EmojiOrCategoryContent(emoji);
                         setHint(emoji.getEscapedCode());
                         RenderUtil.drawRect(emojiX, emojiY, (int) emojiSize, (int) emojiSize, 0x77ffffff);
                     }
 
                     EmojiUtil.render(emoji, guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
+
+                    if (EmoggConfig.instance.isDebugModeEnabled && icolumn == 0) {
+                        final var debugString = String.valueOf(iline);
+                        renderString(
+                                guiGraphics,
+                                debugString,
+                                -((EmojiFont)font).width(debugString, false) - 2,
+                                emojiY - y + 2,
+                                0xffffff
+                        );
+                    }
                 }
 
                 icolumn++;
@@ -231,12 +293,17 @@ public class EmojiSelectionMenu extends AbstractWidget {
                     icolumn = 0;
                     iline++;
 
-                    if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
+                    if (renderLine) renderLineIndex++;
+                    if (renderLineIndex > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
                 }
             }
 
-            if (categoryContent.getEmojis().size() % MAX_NUMBER_OF_EMOJIS_IN_LINE != 0) iline++;
-            if (iline > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
+            if (categoryContent.getEmojis().size() % MAX_NUMBER_OF_EMOJIS_IN_LINE != 0) {
+                iline++;
+
+                if (renderLine) renderLineIndex++;
+            }
+            if (renderLineIndex > MAX_NUMBER_OF_LINES_ON_PAGE - 1) break;
         }
 
         /*
@@ -280,10 +347,23 @@ public class EmojiSelectionMenu extends AbstractWidget {
     public void onPress() {
         super.onPress();
 
-        if (onEmojiSelected != null && hoveredEmoji != null) {
+        if (hoveredEmojiOrCategoryContent == null) return;
+
+        if (hoveredEmojiOrCategoryContent.isEmoji() && onEmojiSelected != null) {
             playClickSound();
-            onEmojiSelected.accept(hoveredEmoji);
+            onEmojiSelected.accept(hoveredEmojiOrCategoryContent.getEmoji());
+            return;
         }
+
+        if (!hoveredEmojiOrCategoryContent.isCategoryContent()) return;
+
+        final var categoryContent = hoveredEmojiOrCategoryContent.getCategoryContent();
+        categoryContent.setExpanded(!categoryContent.isExpanded());
+
+        playClickSound();
+        verticalScrollbar.increaseMaxProgress(
+                (categoryContent.isExpanded() ? 1 : -1) * (categoryContent.getLineCount() - 1)
+        );
     }
 
     @Override
@@ -294,7 +374,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     public void refreshFrequentlyUsedEmojis() {
         final var frequentlyUsedEmojis = FrequentlyUsedEmojiController.getEmojis();
 
-        verticalScrollbar.setScrollProgress(0);
+        verticalScrollbar.setProgress(0);
 
         if (frequentlyUsedEmojis.isEmpty() || categoryContents.isEmpty()) return;
 
@@ -311,10 +391,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
             final var countDifference = frequentlyUsedCategoryContent.getEmojis().size() - oldFrequentlyUsedEmojiCount;
 
-            if (countDifference != 0)
-                verticalScrollbar.setNumberOfScrollingPositions(
-                        verticalScrollbar.getNumberOfScrollingPositions() + countDifference
-                );
+            if (countDifference != 0) verticalScrollbar.increaseMaxProgress(countDifference);
         } else {
             frequentlyUsedCategoryContent = new CategoryContent(
                     FrequentlyUsedEmojiController.CATEGORY_FREQUENTLY_USED
@@ -322,14 +399,11 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
             if (!frequentlyUsedCategoryContent.isEmpty()) {
                 categoryContents.add(0, frequentlyUsedCategoryContent);
-                verticalScrollbar.setNumberOfScrollingPositions(
-                        verticalScrollbar.getNumberOfScrollingPositions()
-                                + frequentlyUsedCategoryContent.getEmojis().size()
-                );
+                verticalScrollbar.increaseMaxProgress(frequentlyUsedCategoryContent.getEmojis().size());
             }
         }
 
-        verticalScrollbar.setScrollProgress(0);
+        verticalScrollbar.setProgress(0);
     }
 
     public void setOnEmojiSelected(Consumer<Emoji> onEmojiSelected) {
@@ -338,8 +412,10 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
     private static class CategoryContent {
         private final String name;
+
         private List<Emoji> emojis;
-        private int numberOfLines;
+        private int lineCount;
+        private boolean isExpanded = true;
 
         public CategoryContent(String name) {
             this.name = name;
@@ -351,21 +427,77 @@ public class EmojiSelectionMenu extends AbstractWidget {
             return emojis == null || emojis.isEmpty();
         }
 
+        public boolean isExpanded() {
+            return isExpanded;
+        }
+
+        public void setExpanded(boolean expanded) {
+            isExpanded = expanded;
+        }
+
         public String getName() {
             return name;
+        }
+
+        public String getDisplayableName() {
+            final var categoryLangKey = "emogg.category." + name;
+            final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
+
+            if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(name)
+                    .replaceAll("_", " ");
+
+            return displayableName;
         }
 
         public List<Emoji> getEmojis() {
             return emojis;
         }
 
-        public int getNumberOfLines() {
-            return numberOfLines;
+        public int getLineCount() {
+            return lineCount;
+        }
+
+        public int getRenderLineCount() {
+            return isExpanded ? lineCount : 1;
         }
 
         public void refreshEmojis() {
             emojis = EmojiHandler.getInstance().getEmojisByCategory(name);
-            numberOfLines = (int) (Math.ceil((double)emojis.size() / (double) MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1);
+            lineCount = (int) (Math.ceil((double)emojis.size() / (double) MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1);
+        }
+    }
+
+    private static class EmojiOrCategoryContent {
+        private final Emoji emoji;
+        private final CategoryContent categoryContent;
+
+        private EmojiOrCategoryContent(Emoji emoji, CategoryContent categoryContent) {
+            this.emoji = emoji;
+            this.categoryContent = categoryContent;
+        }
+
+        public EmojiOrCategoryContent(@NotNull Emoji emoji) {
+            this(emoji, null);
+        }
+
+        public EmojiOrCategoryContent(@NotNull CategoryContent categoryContent) {
+            this(null, categoryContent);
+        }
+
+        public boolean isEmoji() {
+            return emoji != null;
+        }
+
+        public Emoji getEmoji() {
+            return emoji;
+        }
+
+        public boolean isCategoryContent() {
+            return categoryContent != null;
+        }
+
+        public CategoryContent getCategoryContent() {
+            return categoryContent;
         }
     }
 }
