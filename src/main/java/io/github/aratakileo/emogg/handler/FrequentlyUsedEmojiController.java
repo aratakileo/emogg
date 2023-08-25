@@ -1,9 +1,7 @@
 package io.github.aratakileo.emogg.handler;
 
 import com.google.common.collect.Lists;
-import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.font.EmojiTextProcessor;
-import io.github.aratakileo.emogg.resource.Emoji;
+import io.github.aratakileo.emogg.gui.EmojiTextProcessor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

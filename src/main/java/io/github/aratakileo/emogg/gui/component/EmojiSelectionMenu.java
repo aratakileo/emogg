@@ -1,16 +1,15 @@
 package io.github.aratakileo.emogg.gui.component;
 
 import io.github.aratakileo.emogg.Emogg;
-import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.font.EmojiFont;
+import io.github.aratakileo.emogg.handler.EmoggConfig;
+import io.github.aratakileo.emogg.gui.EmojiFont;
 import io.github.aratakileo.emogg.gui.screen.SettingsScreen;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.emogg.handler.FrequentlyUsedEmojiController;
-import io.github.aratakileo.emogg.resource.Emoji;
+import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -34,7 +33,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     );
 
     private final float emojiSize, contentWidth;
-    private final Font font;
+    private final EmojiFont font;
     private final RenderUtil.Rect2i settingsButtonRect;
     private final ArrayList<CategoryContent> categoryContents = new ArrayList<>();
     private final boolean isSinglePage;
@@ -70,7 +69,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.visible = false;
         this.emojiSize = emojiSize;
         this.contentWidth = contentWidth;
-        this.font = Minecraft.getInstance().font;
+        this.font = EmojiFont.getInstance();
 
         final var emojiHandler = EmojiHandler.getInstance();
         final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategoryNames().stream().toList());
@@ -242,7 +241,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                     renderString(
                             guiGraphics,
                             debugString,
-                            -((EmojiFont) font).width(debugString, false) - 2,
+                            -font.width(debugString, false) - 2,
                             categoryTitleLocalY,
                             0xffffff
                     );
@@ -280,7 +279,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                         renderString(
                                 guiGraphics,
                                 debugString,
-                                -((EmojiFont)font).width(debugString, false) - 2,
+                                -font.width(debugString, false) - 2,
                                 emojiY - y + 2,
                                 0xffffff
                         );

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import oshi.util.tuples.Pair;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.emogg.handler.FrequentlyUsedEmojiController;
-import io.github.aratakileo.emogg.resource.Emoji;
+import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.gui.component.EmojiSelectionMenu;
 import io.github.aratakileo.emogg.gui.component.EmojiButton;
 import io.github.aratakileo.emogg.util.KeyboardUtil;

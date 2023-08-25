@@ -1,6 +1,6 @@
-package io.github.aratakileo.emogg.font;
+package io.github.aratakileo.emogg.gui;
 
-import io.github.aratakileo.emogg.resource.Emoji;
+import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ public class EmojiLiteral {
     public final static Pattern EMOJI_CODE_PATTERN = Pattern.compile("(:([_A-Za-z0-9]+):)"),
             EMOJI_LITERAL_PATTERN = Pattern.compile("(\\\\?)" + EMOJI_CODE_PATTERN.pattern());
 
-    public final static int EMOJI_DEFAULT_RENDER_SIZE = 8;
+    public final static int DEFAULT_RENDER_SIZE = 8;
 
     public final static char DUMMY_CHAR = '\u2603';
 
@@ -32,14 +32,14 @@ public class EmojiLiteral {
             int light
     ) {
         float textureSize = 16, textureX = 0, textureY = 0, textureOffset = 16 / textureSize, offsetY = 1, offsetX = 0,
-                width = EMOJI_DEFAULT_RENDER_SIZE, height = EMOJI_DEFAULT_RENDER_SIZE;
+                width = DEFAULT_RENDER_SIZE, height = DEFAULT_RENDER_SIZE;
         if (emoji.getWidth() < emoji.getHeight()) {
             width *= ((float) emoji.getWidth() / emoji.getHeight());
-            x += (EMOJI_DEFAULT_RENDER_SIZE - width) / 2;
+            x += (DEFAULT_RENDER_SIZE - width) / 2;
         }
         else if (emoji.getHeight() < emoji.getWidth()) {
             height *= ((float) emoji.getHeight() / emoji.getWidth());
-            y += (EMOJI_DEFAULT_RENDER_SIZE - height) / 2;
+            y += (DEFAULT_RENDER_SIZE - height) / 2;
         }
 
         var buffer = multiBufferSource.getBuffer(EmojiUtil.getRenderType(emoji.getRenderResourceLocation()));
@@ -65,7 +65,7 @@ public class EmojiLiteral {
                 .uv2(light)
                 .endVertex();
 
-        return EMOJI_DEFAULT_RENDER_SIZE;
+        return DEFAULT_RENDER_SIZE;
     }
 
     public @NotNull Emoji getEmoji() {

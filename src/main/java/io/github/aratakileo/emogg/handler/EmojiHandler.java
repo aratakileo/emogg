@@ -1,9 +1,6 @@
 package io.github.aratakileo.emogg.handler;
 
 import com.google.common.collect.Lists;
-import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.NativeGifImage;
-import io.github.aratakileo.emogg.resource.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.StringUtil;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;

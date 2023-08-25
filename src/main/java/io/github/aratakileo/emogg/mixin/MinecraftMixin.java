@@ -2,9 +2,8 @@ package io.github.aratakileo.emogg.mixin;
 
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.api.ModrinthApi;
-import io.github.aratakileo.emogg.font.EmojiFont;
+import io.github.aratakileo.emogg.gui.EmojiFont;
 import net.minecraft.ChatFormatting;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;

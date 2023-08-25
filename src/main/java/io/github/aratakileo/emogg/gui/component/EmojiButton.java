@@ -1,7 +1,7 @@
 package io.github.aratakileo.emogg.gui.component;
 
 import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.resource.Emoji;
+import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;

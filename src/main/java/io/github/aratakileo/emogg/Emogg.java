@@ -1,6 +1,7 @@
 package io.github.aratakileo.emogg;
 
 import io.github.aratakileo.emogg.api.ModrinthApi;
+import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;

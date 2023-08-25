@@ -1,7 +1,7 @@
-package io.github.aratakileo.emogg;
+package io.github.aratakileo.emogg.handler;
 
 import com.google.gson.Gson;
-import io.github.aratakileo.emogg.handler.FrequentlyUsedEmojiController;
+import io.github.aratakileo.emogg.Emogg;
 
 import java.io.File;
 import java.io.FileReader;

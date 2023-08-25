@@ -1,7 +1,5 @@
 accessWidener v1 named
 
-accessible field net/minecraft/client/Minecraft font Lnet/minecraft/client/gui/Font;
-accessible field net/minecraft/client/Minecraft fontFilterFishy Lnet/minecraft/client/gui/Font;
 accessible class net/minecraft/client/gui/Font
 accessible field net/minecraft/client/gui/Font fonts Ljava/util/function/Function;
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
@@ -39,8 +37,6 @@ accessible field net/minecraft/client/StringSplitter$FlatComponents parts Ljava/
 accessible field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/StringSplitter;
 accessible method com/mojang/blaze3d/platform/NativeImage$Format getStbFormat (I)Lcom/mojang/blaze3d/platform/NativeImage$Format;
 
-mutable field net/minecraft/client/Minecraft font Lnet/minecraft/client/gui/Font;
-mutable field net/minecraft/client/Minecraft fontFilterFishy Lnet/minecraft/client/gui/Font;
 mutable field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/StringSplitter;
 
 extendable method net/minecraft/client/gui/Font renderText (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)F

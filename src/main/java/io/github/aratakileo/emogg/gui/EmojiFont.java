@@ -1,7 +1,7 @@
-package io.github.aratakileo.emogg.font;
-
+package io.github.aratakileo.emogg.gui;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
@@ -21,12 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EmojiFont extends Font {
-
     public EmojiFont(Font font) {
         super(font.fonts, font.filterFishyGlyphs);
-        this.splitter = new EmojiStringSlitter((i, style) -> {
-            return this.getFontSet(style.getFont()).getGlyphInfo(i, this.filterFishyGlyphs).getAdvance(style.isBold());
-        });
+
+        splitter = new EmojiStringSlitter(
+                (i, style) -> getFontSet(style.getFont())
+                        .getGlyphInfo(i, this.filterFishyGlyphs)
+                        .getAdvance(style.isBold())
+        );
     }
 
     @Override
@@ -195,7 +197,7 @@ public class EmojiFont extends Font {
                                     renderCharIndex.getAndIncrement();
                                     return true;
                                 } else
-                                    offsettedX.updateAndGet(value -> value + EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE);
+                                    offsettedX.updateAndGet(value -> value + EmojiLiteral.DEFAULT_RENDER_SIZE);
 
                                 ignore.set(true);
 
@@ -258,6 +260,10 @@ public class EmojiFont extends Font {
     @Override
     public int width(FormattedText formattedText) {
         return this.width(formattedText.getString(), true);
+    }
+
+    public static EmojiFont getInstance() {
+        return (EmojiFont) Minecraft.getInstance().font;
     }
 
     class EmojiCharSink implements FormattedCharSink {

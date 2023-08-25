@@ -1,12 +1,11 @@
 package io.github.aratakileo.emogg.mixin;
 
 import com.mojang.brigadier.suggestion.Suggestion;
-import io.github.aratakileo.emogg.font.EmojiFont;
-import io.github.aratakileo.emogg.font.EmojiLiteral;
+import io.github.aratakileo.emogg.gui.EmojiFont;
+import io.github.aratakileo.emogg.gui.EmojiLiteral;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.resource.Emoji;
+import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.CommandSuggestions;
@@ -48,12 +47,11 @@ public class SuggestionsListMixin {
 
             if (matcher.find() && EmojiHandler.getInstance().hasEmoji(emojiName = matcher.group(2))) {
                 emojis.put(matcher.group(1), EmojiHandler.getInstance().getEmoji(emojiName));
+
                 rect.setWidth(Math.max(
                         rect.getWidth(),
-                        EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE + 6 + ((EmojiFont)Minecraft.getInstance().font).width(
-                                suggestionText,
-                                false
-                        )
+                        EmojiLiteral.DEFAULT_RENDER_SIZE + 6
+                                + EmojiFont.getInstance().width(suggestionText, false)
                 ));
             }
         }
@@ -63,12 +61,12 @@ public class SuggestionsListMixin {
     private int updateCommandInfo(GuiGraphics instance, Font font, String string, int x, int y, int color){
         if (!emojis.containsKey(string)) return instance.drawString(font, string, x, y, color);
 
-        EmojiUtil.render(emojis.get(string), instance, x + 1, y, EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE);
+        EmojiUtil.render(emojis.get(string), instance, x + 1, y, EmojiLiteral.DEFAULT_RENDER_SIZE);
 
         return instance.drawString(
                 font,
                 '\\' + string,
-                x + EmojiLiteral.EMOJI_DEFAULT_RENDER_SIZE + 3,
+                x + EmojiLiteral.DEFAULT_RENDER_SIZE + 3,
                 y,
                 color
         );

@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.font;
+package io.github.aratakileo.emogg.gui;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

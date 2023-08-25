@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg;
+package io.github.aratakileo.emogg.handler;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
