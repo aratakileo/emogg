@@ -1,1 +1,2 @@
+- now you can expand or hide emojis of any category
 - now non-embedded categories will be displayed in the emoji selection menu in alphabetical order
