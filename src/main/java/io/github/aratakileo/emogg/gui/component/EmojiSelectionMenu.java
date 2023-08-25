@@ -234,14 +234,8 @@ public class EmojiSelectionMenu extends AbstractWidget {
                             (int) emojiSize,
                             0x77ffffff
                     );
-                    setHint(
-                            Language.getInstance()
-                                    .getOrDefault(
-                                            "emogg.gui.category.action."
-                                                    + (categoryContent.isExpanded() ? "hide" : "expand")
-                                    ).replace("{default}", categoryContent.getDisplayableName())
-                                    .replace("{lower}", categoryContent.getDisplayableName().toLowerCase())
-                    );
+
+                    setHint(categoryContent.getDisplayableName());
                 }
 
                 final var expandIndicatorChar = categoryContent.isExpanded() ? '-' : '+';

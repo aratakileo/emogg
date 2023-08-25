@@ -5,8 +5,6 @@
   "emogg.settings.save_and_quit": "Зберегти та вийти",
   "emogg.gui.state.enabled": "Увімкнено",
   "emogg.gui.state.disabled": "Вимкнено",
-  "emogg.gui.category.action.expand": "Показати емодзі категорії \"{default}\"",
-  "emogg.gui.category.action.hide": "Приховати емодзі категорії \"{default}\"",
   "emogg.category.$frequently_used": "Часто вживані",
   "emogg.category.food": "Їжа",
   "emogg.category.other": "Інше",

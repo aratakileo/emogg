@@ -5,8 +5,6 @@
   "emogg.settings.save_and_quit": "Save & Quit",
   "emogg.gui.state.enabled": "Enabled",
   "emogg.gui.state.disabled": "Disabled",
-  "emogg.gui.category.action.expand": "Expand {lower} emojis",
-  "emogg.gui.category.action.hide": "Hide {lower} emojis",
   "emogg.category.$frequently_used": "Frequently used",
   "emogg.category.food": "Food",
   "emogg.category.other": "Other",

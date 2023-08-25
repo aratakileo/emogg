@@ -5,8 +5,6 @@
   "emogg.settings.save_and_quit": "Speichern und beenden",
   "emogg.gui.state.enabled": "Aktiviert",
   "emogg.gui.state.disabled": "Deaktiviert",
-  "emogg.gui.category.action.expand": "Emojis für {default} anzeigen",
-  "emogg.gui.category.action.hide": "Emojis für {default} ausblenden",
   "emogg.category.$frequently_used": "Häufig verwendet",
   "emogg.category.food": "Essen",
   "emogg.category.other": "Sonstige",
