@@ -106,6 +106,10 @@ public abstract class AbstractWidget extends AbstractButton {
         renderString(guiGraphics, Minecraft.getInstance().font, color | Mth.ceil(this.alpha * 255.0F) << 24);
     }
 
+    public void renderString(GuiGraphics guiGraphics, char ch, int localX, int localY, int color) {
+        renderString(guiGraphics, String.valueOf(ch), localX, localY, color, false);
+    }
+
     public void renderString(GuiGraphics guiGraphics, String text, int localX, int localY, int color) {
         renderString(guiGraphics, text, localX, localY, color, false);
     }

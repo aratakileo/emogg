@@ -59,10 +59,30 @@ public class CategoryContent {
         final var categoryLangKey = "emogg.category." + name;
         final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
 
-        if (displayableName.equals(categoryLangKey)) return StringUtils.capitalize(name)
-                .replaceAll("_", " ");
+        if (displayableName.equals(categoryLangKey))
+            return StringUtils.capitalize(name).replaceAll("_", " ");
 
         return displayableName;
+    }
+
+    public String getDisplayableName(int maxWidth) {
+        final var displayableName = getDisplayableName();
+        final var font = EmojiFont.getInstance();
+
+        if (font.width(displayableName, false) <= maxWidth) return displayableName;
+
+        final var stringBuilder = new StringBuilder(displayableName);
+
+        for (var i = displayableName.length() - 1; i >= 0; i--) {
+            stringBuilder.deleteCharAt(i);
+
+            if (font.width(stringBuilder + "...", false) <= maxWidth) {
+                stringBuilder.append("...");
+                break;
+            }
+        }
+
+        return stringBuilder.toString();
     }
 
     public List<Emoji> getEmojis() {

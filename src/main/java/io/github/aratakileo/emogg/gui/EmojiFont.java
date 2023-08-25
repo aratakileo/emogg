@@ -246,6 +246,10 @@ public class EmojiFont extends Font {
         return width(string, true);
     }
 
+    public int width(char ch) {
+        return width(String.valueOf(ch), false);
+    }
+
     public int width(String text, boolean emojiSupport) {
         if (emojiSupport) return super.width(EmojiTextProcessor.processText(text));
 

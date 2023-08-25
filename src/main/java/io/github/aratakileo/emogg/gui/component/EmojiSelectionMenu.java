@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -158,7 +159,15 @@ public class EmojiSelectionMenu extends AbstractWidget {
         * Start of header processing & rendering
         */
         RenderUtil.drawRect(x, y, width, (int) emojiSize, 0xaa000000);
-        renderString(guiGraphics, Emogg.NAMESPACE_OR_ID, 2, 1, 0xffffff, true);
+
+        renderString(
+                guiGraphics,
+                StringUtils.capitalize(Emogg.NAMESPACE_OR_ID),
+                2,
+                2,
+                0xffffff,
+                true
+        );
 
         if (!verticalScrollbar.isScrolling() && renderableSettingsButtonRect.contains(mouseX, mouseY)) {
             RenderUtil.drawRect(renderableSettingsButtonRect.expand(2, 2), 0x77ffffff);
@@ -235,12 +244,23 @@ public class EmojiSelectionMenu extends AbstractWidget {
                     );
                 }
 
+                final var expandIndicatorChar = categoryContent.isExpanded() ? '-' : '+';
+                final var expandIndicatorLocalX = (int) (contentWidth - font.width(expandIndicatorChar));
+
                 renderString(
                         guiGraphics,
-                        categoryContent.getDisplayableName(),
+                        categoryContent.getDisplayableName(expandIndicatorLocalX - 2),
                         2,
                         categoryTitleLocalY,
-                        isHovered ? 0xffffff : 0x6c757d
+                        isHovered ? 0xe7e7e7 : 0x6c757d
+                );
+
+                renderString(
+                        guiGraphics,
+                        expandIndicatorChar,
+                        expandIndicatorLocalX,
+                        categoryTitleLocalY,
+                        0xffffff
                 );
 
                 if (EmoggConfig.instance.isDebugModeEnabled) {
