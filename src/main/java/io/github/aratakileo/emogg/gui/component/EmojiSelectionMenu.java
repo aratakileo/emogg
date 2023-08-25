@@ -12,7 +12,6 @@ import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
