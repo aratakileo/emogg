@@ -1,24 +1,29 @@
 package io.github.aratakileo.emogg.handler;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.github.aratakileo.emogg.Emogg;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class EmoggConfig {
     // Non-JSON values
     private final static File file = new File("config/emogg.json");
-    private final static Gson gson = new Gson();
+    private final static Gson gson = new GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .setPrettyPrinting()
+            .create();
 
     public static EmoggConfig instance = new EmoggConfig();
 
     // JSON values
     public boolean isDebugModeEnabled = false;
-    public List<FueController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
+    public ArrayList<FueController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
+    public ArrayList<String> hiddenCategoryNames = new ArrayList<>();
 
     public static void load() {
         if (file.exists())
