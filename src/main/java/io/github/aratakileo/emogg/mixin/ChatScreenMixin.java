@@ -1,6 +1,5 @@
 package io.github.aratakileo.emogg.mixin;
 
-import io.github.aratakileo.emogg.Emogg;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
