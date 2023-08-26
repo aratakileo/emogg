@@ -1,5 +1,6 @@
 package io.github.aratakileo.emogg.mixin;
 
+import io.github.aratakileo.emogg.Emogg;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -102,17 +103,15 @@ public class ChatScreenMixin {
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (emojiSelectionMenu.visible && keyCode == KeyboardUtil.K_ESC) {
+        if (keyCode != KeyboardUtil.K_ESC) return;
+
+        if (emojiSelectionMenu.visible) {
             emojiSelectionMenu.visible = false;
             cir.setReturnValue(true);
             return;
         }
 
-        if (
-                !emojiSelectionMenu.visible
-                        && keyCode == KeyboardUtil.K_ENTER
-                        && !input.getMessage().getString().isEmpty()
-        ) {
+        if (modifiers == KeyboardUtil.KMOD_SHIFT) {
             emojiSelectionMenu.visible = true;
             cir.setReturnValue(true);
         }
@@ -120,8 +119,18 @@ public class ChatScreenMixin {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        if (!emojiSelectionMenu.visible && button == KeyboardUtil.BUTTON_MIDDLE) {
+            emojiSelectionMenu.visible = true;
+
+            cir.setReturnValue(true);
+
+            return;
+        }
+
         if (!emojiButton.isHovered) {
             if (!emojiSelectionMenu.isHovered) emojiSelectionMenu.visible = false;
+
+            cir.setReturnValue(true);
 
             return;
         }
