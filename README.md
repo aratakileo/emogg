@@ -6,7 +6,9 @@ Adds emoji support to the chat and to most of the Minecraft interface!
 
 ### Features
 - support for both static and animated emojis
-- ease of adding your own emojis. Just create a texture pack, add pictures there along the way `assets/emogg/emoji`, add a resource pack to the game - done!
+- ease of adding your own emojis by a resource pack! Use any of the below ways:
+    - just create a resource pack, add pictures there along the path `assets/emogg/emoji`
+    - convert the emoji from the discord server into a resource pack on [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)
 - you can use emojis in chat, on signs and in other places where there is text!
 - when you enter the emoji name, emoji suggestions appear above the input field (available only for chat)
 - you can choose the emoji you like in the emoji selection menu! (available only for chat)
@@ -20,6 +22,10 @@ If you play on the server or over the network, then in addition to the fact that
 If you don't want the emoji name to be transformed into an emoji, you can escape the emoji name by putting a backslash in front of it, thus: `\:emoji_name:`.
 
 ### How can I add my own emojis?
+You can easily convert emojis from any discord server into a resource pack on [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)!
+
+If you want to configure the emoji resource pack in more detail or study the structure of such resource packs, then in this case, information for more advanced users is provided below.
+
 Next, the `assets/emogg/emoji` directory of the resource pack will be designated as the main directory or the main folder of the resource pack.
 
 To add your emojis to the game, just add pictures in the format `.gif` or `.png` to the main directory inside your resource pack. Each picture added in this way will be automatically added to the game as an emoji.
