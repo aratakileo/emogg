@@ -5,6 +5,7 @@
   "emogg.settings.save_and_quit": "Зберегти та вийти",
   "emogg.gui.state.enabled": "Увімкнено",
   "emogg.gui.state.disabled": "Вимкнено",
+  "emogg.tooltip.action.add_emojis": "Додати емодзі",
   "emogg.category.$frequently_used": "Часто вживані",
   "emogg.category.food": "Їжа",
   "emogg.category.other": "Інше",

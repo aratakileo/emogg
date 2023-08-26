@@ -40,6 +40,27 @@ public final class RenderUtil {
             return returnable;
         }
 
+        public Rect2i moveBounds(int left, int top, int right, int bottom) {
+            final var returnable = new Rect2i(
+                    xPos + left,
+                    yPos + top,
+                    width - left + right,
+                    height - top + bottom
+            );
+
+            if (returnable.width < 0) {
+                returnable.xPos += returnable.width;
+                returnable.width = -returnable.width;
+            }
+
+            if (returnable.height < 0) {
+                returnable.yPos += returnable.height;
+                returnable.height = -returnable.height;
+            }
+
+            return returnable;
+        }
+
         public Rect2i expand(int horizontal, int vertical) {
             final var returnable = copy();
             returnable.setSize(width + horizontal, height + vertical);

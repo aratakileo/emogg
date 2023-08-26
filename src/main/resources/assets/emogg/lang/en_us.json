@@ -5,6 +5,7 @@
   "emogg.settings.save_and_quit": "Save & Quit",
   "emogg.gui.state.enabled": "Enabled",
   "emogg.gui.state.disabled": "Disabled",
+  "emogg.tooltip.action.add_emojis": "Add emoji",
   "emogg.category.$frequently_used": "Frequently used",
   "emogg.category.food": "Food",
   "emogg.category.other": "Other",

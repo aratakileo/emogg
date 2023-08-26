@@ -10,6 +10,7 @@ import io.github.aratakileo.emogg.handler.FueController;
 import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.RenderUtil;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -30,11 +31,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private final static ResourceLocation SETTINGS_ICON = new ResourceLocation(
             Emogg.NAMESPACE_OR_ID,
             "gui/icon/settings_icon.png"
+    ), PLUS_ICON = new ResourceLocation(
+            Emogg.NAMESPACE_OR_ID,
+            "gui/icon/plus_icon.png"
     );
 
     private final float emojiSize, contentWidth;
     private final EmojiFont font;
-    private final RenderUtil.Rect2i settingsButtonRect;
+    private final RenderUtil.Rect2i settingsButtonRect, plusButtonRect;
     private final ArrayList<CategoryContent> categoryContents = new ArrayList<>();
     private final boolean isSinglePage;
 
@@ -117,11 +121,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
         if (isSinglePage)
             width -= SCROLLBAR_WIDTH;
 
+        final var buttonSize = font.lineHeight + 2;
+
         this.settingsButtonRect = new RenderUtil.Rect2i(
                 width - font.lineHeight - 3,
                 1,
-                font.lineHeight
+                buttonSize
         );
+        this.plusButtonRect = settingsButtonRect.copy().moveX(-buttonSize - 1);
 
         setHintPositioner(MOUSE_HINT_POSITIONER);
     }
@@ -152,8 +159,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         disableHint();
 
-        final var renderableSettingsButtonRect = settingsButtonRect.move(x, y);
-
         /*
         * Start of header processing & rendering
         */
@@ -168,15 +173,31 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 true
         );
 
-        if (!verticalScrollbar.isScrolling() && renderableSettingsButtonRect.contains(mouseX, mouseY)) {
-            RenderUtil.drawRect(renderableSettingsButtonRect.expand(2, 2), 0x77ffffff);
-            setHint(Component.translatable("emogg.settings.title"));
+        final var settingsButtonRenderRect = settingsButtonRect.move(x, y);
+        final var plusButtonRenderRect = plusButtonRect.move(x, y);
+
+        if (!verticalScrollbar.isScrolling()) {
+            if (settingsButtonRenderRect.contains(mouseX, mouseY)) {
+                RenderUtil.drawRect(settingsButtonRenderRect, 0x77ffffff);
+                setHint(Component.translatable("emogg.settings.title"));
+            }
+
+            if (plusButtonRenderRect.contains(mouseX, mouseY)) {
+                RenderUtil.drawRect(plusButtonRenderRect, 0x77ffffff);
+                setHint(Component.translatable("emogg.tooltip.action.add_emojis"));
+            }
         }
 
         RenderUtil.renderTexture(
                 guiGraphics,
                 SETTINGS_ICON,
-                renderableSettingsButtonRect.move(1, 1)
+                settingsButtonRenderRect.moveBounds(1, 1, -1, -1)
+        );
+
+        RenderUtil.renderTexture(
+                guiGraphics,
+                PLUS_ICON,
+                plusButtonRenderRect.moveBounds(1, 1, -1, -1)
         );
 
         /*
@@ -353,6 +374,11 @@ public class EmojiSelectionMenu extends AbstractWidget {
         if (settingsButtonRect.move(x, y).contains((int) mouseX, (int) mouseY)) {
             playClickSound();
             Minecraft.getInstance().setScreen(new SettingsScreen());
+        }
+
+        if (plusButtonRect.move(x, y).contains((int) mouseX, (int) mouseY)) {
+            playClickSound();
+            Util.getPlatform().openUri("https://aratakileo.github.io/emogg-resourcepack-maker/");
         }
 
         super.onClick(mouseX, mouseY);

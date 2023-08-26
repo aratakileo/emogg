@@ -5,6 +5,7 @@
   "emogg.settings.save_and_quit": "完成",
   "emogg.gui.state.enabled": "啟用",
   "emogg.gui.state.disabled": "停用",
+  "emogg.tooltip.action.add_emojis": "添加表情符號",
   "emogg.category.$frequently_used": "常用",
   "emogg.category.food": "食物",
   "emogg.category.other": "其他",
