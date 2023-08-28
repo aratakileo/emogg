@@ -129,8 +129,6 @@ public class ChatScreenMixin {
         if (!emojiButton.isHovered) {
             if (!emojiSelectionMenu.isHovered) emojiSelectionMenu.visible = false;
 
-            cir.setReturnValue(true);
-
             return;
         }
 
