@@ -101,7 +101,7 @@ public final class RenderUtil {
     }
 
     public static void renderTexture(GuiGraphics guiGraphics, ResourceLocation resourceLocation, Rect2i rect2i) {
-        renderTexture(
+        io.github.aratakileo.suggestionsapi.util.RenderUtil.renderTexture(
                 guiGraphics,
                 resourceLocation,
                 rect2i.getX(),
@@ -109,20 +109,6 @@ public final class RenderUtil {
                 rect2i.getWidth(),
                 rect2i.getHeight()
         );
-    }
-
-    public static void renderTexture(
-            GuiGraphics guiGraphics,
-            ResourceLocation resourceLocation,
-            int x,
-            int y,
-            int width,
-            int height
-    ) {
-        RenderSystem.enableBlend();
-
-        guiGraphics.blit(resourceLocation, x, y, 0f, 0f, width, height, width, height);
-        RenderSystem.disableBlend();
     }
 
     public static void drawRect(Rect2i rect2i, int color, int strokeThickness, int strokeColor) {

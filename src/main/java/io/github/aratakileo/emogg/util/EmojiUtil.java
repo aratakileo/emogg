@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import io.github.aratakileo.suggestionsapi.util.RenderUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -21,19 +22,16 @@ public final class EmojiUtil {
             EMOJI_FOLDER_NAME = "emoji";
 
     public static void render(Emoji emoji, GuiGraphics guiGraphics, int x, int y, int size) {
-        var width = size;
-        var height = size;
-
-        if (emoji.getWidth() < emoji.getHeight()) {
-            width *= ((float) emoji.getWidth() / emoji.getHeight());
-            x += (size - width) / 2;
-        }
-        else if (emoji.getHeight() < emoji.getWidth()) {
-            height *= ((float) emoji.getHeight() / emoji.getWidth());
-            y += (size - height) / 2;
-        }
-
-        RenderUtil.renderTexture(guiGraphics, emoji.getRenderResourceLocation(), x, y, width, height);
+        RenderUtil.renderFittedCenterTexture(
+                guiGraphics,
+                emoji.getRenderResourceLocation(),
+                x,
+                y,
+                emoji.getWidth(),
+                emoji.getHeight(),
+                size,
+                size
+        );
     }
 
     public static RenderType getRenderType(ResourceLocation resourceLocation) {
