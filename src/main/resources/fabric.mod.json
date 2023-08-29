@@ -32,9 +32,10 @@
     "emogg.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=${minecraft_version}"
+    "minecraft": ">=${minecraft_version}",
+    "suggestions-api": ">=1.0.0"
   },
   "accessWidener" : "emogg.accesswidener"
 }

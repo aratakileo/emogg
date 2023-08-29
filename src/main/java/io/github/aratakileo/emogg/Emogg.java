@@ -1,8 +1,12 @@
 package io.github.aratakileo.emogg;
 
 import io.github.aratakileo.emogg.api.ModrinthApi;
+import io.github.aratakileo.emogg.gui.EmojiSuggestion;
 import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
+import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
+import io.github.aratakileo.suggestionsapi.suggestion.SimpleSuggestionsInjector;
+import io.github.aratakileo.suggestionsapi.suggestion.Suggestion;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -10,8 +14,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class Emogg implements ClientModInitializer {
@@ -24,6 +32,18 @@ public class Emogg implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModrinthApi.checkUpdates();
+
+        SuggestionsAPI.registerSuggestionsInjector(
+                new SimpleSuggestionsInjector(Pattern.compile(":[A-Za-z0-9_]*(:)?")) {
+                    @Override
+                    public <T extends Suggestion> List<T> getUncheckedSuggestions(@NotNull String currentExpression) {
+                        return (List<T>) EmojiHandler.getInstance()
+                                .getEmojisStream()
+                                .map(EmojiSuggestion::new)
+                                .toList();
+                    }
+                }
+        );
 
         LOGGER.info(String.format(
                 "[emogg] Installed v%s; %s to download (from modrinth.com)%s",
