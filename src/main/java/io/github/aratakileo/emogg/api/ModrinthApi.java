@@ -3,6 +3,7 @@ package io.github.aratakileo.emogg.api;
 import com.google.gson.JsonParser;
 import io.github.aratakileo.emogg.Emogg;
 import net.minecraft.SharedConstants;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
@@ -38,7 +39,7 @@ public class ModrinthApi {
                         "User-Agent",
                         "github.com/aratakileo/"
                                 + Emogg.NAMESPACE_OR_ID
-                                + '/' + Emogg.getVersion()
+                                + '@' + Emogg.getVersion()
                                 + " (aratakileo@gmail.com)"
                 )
                 .build();
@@ -84,7 +85,13 @@ public class ModrinthApi {
         final var currentVerFirstMetadata = Arrays.stream(currentVerMetadata.getA()).map(Integer::parseInt).toList();
         final var otherVerFirstMetadata = Arrays.stream(otherVerMetadata.getA()).map(Integer::parseInt).toList();
 
-        for (var i = 0; i < 3; i++)
+        if (currentVerFirstMetadata.size() < otherVerFirstMetadata.size())
+            return true;
+
+        if (currentVerFirstMetadata.size() > otherVerFirstMetadata.size())
+            return false;
+
+        for (var i = 0; i < currentVerFirstMetadata.size(); i++)
             if (currentVerFirstMetadata.get(i) < otherVerFirstMetadata.get(i))
                 return true;
 
