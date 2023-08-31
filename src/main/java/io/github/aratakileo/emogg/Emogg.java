@@ -5,7 +5,8 @@ import io.github.aratakileo.emogg.gui.EmojiSuggestion;
 import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
-import io.github.aratakileo.suggestionsapi.suggestion.SuggestionsInjector;
+import io.github.aratakileo.suggestionsapi.suggestion.Injector;
+import io.github.aratakileo.suggestionsapi.util.Cast;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -30,12 +31,14 @@ public class Emogg implements ClientModInitializer {
     public void onInitializeClient() {
         ModrinthApi.checkUpdates();
 
-        SuggestionsAPI.registerSuggestionsInjector(SuggestionsInjector.simple(
+        SuggestionsAPI.registerSuggestionsInjector(Injector.simple(
                 Pattern.compile(":[A-Za-z0-9_]*(:)?"),
-                currentExpression -> EmojiHandler.getInstance()
-                        .getEmojisStream()
-                        .map(EmojiSuggestion::new)
-                        .toList()
+                (currentExpression, startOffset) -> Cast.of(
+                        EmojiHandler.getInstance()
+                                .getEmojisStream()
+                                .map(EmojiSuggestion::new)
+                                .toList()
+                )
         ));
 
         LOGGER.info(String.format(
