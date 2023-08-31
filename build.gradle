@@ -23,6 +23,10 @@ repositories {
     }
 }
 
+configurations {
+    extraLibs
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -32,19 +36,22 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    modImplementation files("lib/suggestions-api-1.0.0+1.20.x.jar")
+    modImplementation files("lib/suggestions-api-${project.suggestions_api_version}.jar")
+    extraLibs files("lib/suggestions-api-${project.suggestions_api_version}.jar")
 }
 
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version
     inputs.property "loader_version", project.loader_version
+    inputs.property "suggestions_api_version", project.suggestions_api_version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
                 "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+                "loader_version": project.loader_version,
+                "suggestions_api_version": project.suggestions_api_version
     }
 }
 
@@ -75,6 +82,10 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
+    }
+
+    into("lib") {
+        from configurations.extraLibs
     }
 }
 

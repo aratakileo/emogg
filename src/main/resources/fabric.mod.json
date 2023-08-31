@@ -37,5 +37,10 @@
     "minecraft": ">=${minecraft_version}",
     "suggestions-api": ">=1.0.0"
   },
-  "accessWidener" : "emogg.accesswidener"
+  "accessWidener" : "emogg.accesswidener",
+  "jars": [
+    {
+      "file": "lib/suggestions-api-${suggestions_api_version}.jar"
+    }
+  ]
 }
