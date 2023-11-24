@@ -5,7 +5,7 @@ import io.github.aratakileo.emogg.gui.EmojiSuggestion;
 import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
-import io.github.aratakileo.suggestionsapi.suggestion.Injector;
+import io.github.aratakileo.suggestionsapi.injector.Injector;
 import io.github.aratakileo.suggestionsapi.util.Cast;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;

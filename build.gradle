@@ -21,6 +21,10 @@ repositories {
             includeGroup 'com.terraformersmc'
         }
     }
+
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 configurations {
@@ -36,8 +40,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    modImplementation files("lib/suggestions-api-${project.suggestions_api_version}.jar")
-    extraLibs files("lib/suggestions-api-${project.suggestions_api_version}.jar")
+    modImplementation "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
+    extraLibs "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
 }
 
 processResources {
