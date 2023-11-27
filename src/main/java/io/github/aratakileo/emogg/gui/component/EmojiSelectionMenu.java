@@ -106,14 +106,12 @@ public class EmojiSelectionMenu extends AbstractWidget {
             totalLinesAmount += categoryContent.getRenderLineCount();
         }
 
-        totalLinesAmount--;
-
         this.isSinglePage = totalLinesAmount < MAX_NUMBER_OF_LINES_ON_PAGE;
         this.verticalScrollbar = new VerticalScrollbar(
                 x + width - SCROLLBAR_WIDTH,
                 y + headerHeight, SCROLLBAR_WIDTH,
                 height - headerHeight,
-                totalLinesAmount - MAX_NUMBER_OF_LINES_ON_PAGE,
+                totalLinesAmount,
                 2,
                 1
         );
@@ -423,26 +421,26 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         if (frequentlyUsedEmojis.isEmpty() || categoryContents.isEmpty()) return;
 
-        CategoryContent frequentlyUsedCategoryContent;
+        CategoryContent feuCategoryContent;
 
         if (
-                (frequentlyUsedCategoryContent = categoryContents.get(0))
+                (feuCategoryContent = categoryContents.get(0))
                         .getName()
                         .equals(FueController.CATEGORY_FREQUENTLY_USED)
         ) {
-            final var oldFrequentlyUsedEmojiCount = frequentlyUsedCategoryContent.getEmojis().size();
+            final var oldFeuCategoryLineCount = feuCategoryContent.getLineCount();
 
-            frequentlyUsedCategoryContent.refreshEmojis();
+            feuCategoryContent.refreshEmojis();
 
-            final var countDifference = frequentlyUsedCategoryContent.getEmojis().size() - oldFrequentlyUsedEmojiCount;
-
-            if (countDifference != 0) verticalScrollbar.increaseMaxProgress(countDifference);
+            verticalScrollbar.increaseMaxProgress(
+                    feuCategoryContent.getLineCount() - oldFeuCategoryLineCount
+            );
         } else {
-            frequentlyUsedCategoryContent = new CategoryContent(FueController.CATEGORY_FREQUENTLY_USED);
+            feuCategoryContent = new CategoryContent(FueController.CATEGORY_FREQUENTLY_USED);
 
-            if (!frequentlyUsedCategoryContent.isEmpty()) {
-                categoryContents.add(0, frequentlyUsedCategoryContent);
-                verticalScrollbar.increaseMaxProgress(frequentlyUsedCategoryContent.getEmojis().size());
+            if (!feuCategoryContent.isEmpty()) {
+                categoryContents.add(0, feuCategoryContent);
+                verticalScrollbar.increaseMaxProgress(feuCategoryContent.getLineCount());
             }
         }
 

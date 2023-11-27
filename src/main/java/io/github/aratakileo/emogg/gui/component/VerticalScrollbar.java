@@ -50,6 +50,8 @@ public class VerticalScrollbar extends AbstractWidget {
     }
 
     public void increaseMaxProgress(int increaseValue) {
+        if (increaseValue == 0) return;
+
         setMaxProgress(maxProgress + increaseValue);
     }
 
