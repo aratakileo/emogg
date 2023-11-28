@@ -1,6 +1,6 @@
-package io.github.aratakileo.emogg.gui;
+package io.github.aratakileo.emogg.gui.component.esm;
 
-import io.github.aratakileo.emogg.gui.component.EmojiSelectionMenu;
+import io.github.aratakileo.emogg.gui.EmojiFont;
 import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.handler.EmojiHandler;

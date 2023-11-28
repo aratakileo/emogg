@@ -15,7 +15,7 @@ import oshi.util.tuples.Pair;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.emogg.handler.FueController;
 import io.github.aratakileo.emogg.handler.Emoji;
-import io.github.aratakileo.emogg.gui.component.EmojiSelectionMenu;
+import io.github.aratakileo.emogg.gui.component.esm.EmojiSelectionMenu;
 import io.github.aratakileo.emogg.gui.component.EmojiButton;
 import io.github.aratakileo.emogg.util.KeyboardUtil;
 

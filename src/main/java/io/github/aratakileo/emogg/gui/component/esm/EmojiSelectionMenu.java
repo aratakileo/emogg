@@ -1,7 +1,8 @@
-package io.github.aratakileo.emogg.gui.component;
+package io.github.aratakileo.emogg.gui.component.esm;
 
 import io.github.aratakileo.emogg.Emogg;
-import io.github.aratakileo.emogg.gui.CategoryContent;
+import io.github.aratakileo.emogg.gui.component.AbstractWidget;
+import io.github.aratakileo.emogg.gui.component.VerticalScrollbar;
 import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.gui.EmojiFont;
 import io.github.aratakileo.emogg.gui.screen.SettingsScreen;
@@ -16,7 +17,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -421,67 +421,31 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         if (frequentlyUsedEmojis.isEmpty() || categoryContents.isEmpty()) return;
 
-        CategoryContent feuCategoryContent;
+        CategoryContent fueCategoryContent;
 
         if (
-                (feuCategoryContent = categoryContents.get(0))
+                (fueCategoryContent = categoryContents.get(0))
                         .getName()
                         .equals(FueController.CATEGORY_FREQUENTLY_USED)
         ) {
-            final var oldFeuCategoryLineCount = feuCategoryContent.getLineCount();
+            final var oldFueCategoryLineCount = fueCategoryContent.getRenderLineCount();
 
-            feuCategoryContent.refreshEmojis();
+            fueCategoryContent.refreshEmojis();
 
             verticalScrollbar.increaseMaxProgress(
-                    feuCategoryContent.getLineCount() - oldFeuCategoryLineCount
+                    fueCategoryContent.getRenderLineCount() - oldFueCategoryLineCount
             );
         } else {
-            feuCategoryContent = new CategoryContent(FueController.CATEGORY_FREQUENTLY_USED);
+            fueCategoryContent = new CategoryContent(FueController.CATEGORY_FREQUENTLY_USED);
 
-            if (!feuCategoryContent.isEmpty()) {
-                categoryContents.add(0, feuCategoryContent);
-                verticalScrollbar.increaseMaxProgress(feuCategoryContent.getLineCount());
+            if (!fueCategoryContent.isEmpty()) {
+                categoryContents.add(0, fueCategoryContent);
+                verticalScrollbar.increaseMaxProgress(fueCategoryContent.getRenderLineCount());
             }
         }
-
-        verticalScrollbar.setProgress(0);
     }
 
     public void setOnEmojiSelected(Consumer<Emoji> onEmojiSelected) {
         this.onEmojiSelected = onEmojiSelected;
-    }
-
-    private static class EmojiOrCategoryContent {
-        private final Emoji emoji;
-        private final CategoryContent categoryContent;
-
-        private EmojiOrCategoryContent(Emoji emoji, CategoryContent categoryContent) {
-            this.emoji = emoji;
-            this.categoryContent = categoryContent;
-        }
-
-        public EmojiOrCategoryContent(@NotNull Emoji emoji) {
-            this(emoji, null);
-        }
-
-        public EmojiOrCategoryContent(@NotNull CategoryContent categoryContent) {
-            this(null, categoryContent);
-        }
-
-        public boolean isEmoji() {
-            return emoji != null;
-        }
-
-        public Emoji getEmoji() {
-            return emoji;
-        }
-
-        public boolean isCategoryContent() {
-            return categoryContent != null;
-        }
-
-        public CategoryContent getCategoryContent() {
-            return categoryContent;
-        }
     }
 }
