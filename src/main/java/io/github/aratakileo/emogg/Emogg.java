@@ -31,8 +31,8 @@ public class Emogg implements ClientModInitializer {
     public void onInitializeClient() {
         ModrinthApi.checkUpdates();
 
-        SuggestionsAPI.registerSuggestionsInjector(Injector.simple(
-                Pattern.compile(":[A-Za-z0-9_]*(:)?"),
+        SuggestionsAPI.registerInjector(Injector.simple(
+                Pattern.compile(":[A-Za-z0-9_]*(:)?$"),
                 (currentExpression, startOffset) -> Cast.of(
                         EmojiHandler.getInstance()
                                 .getEmojisStream()
