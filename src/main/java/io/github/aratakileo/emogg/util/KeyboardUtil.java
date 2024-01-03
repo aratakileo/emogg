@@ -4,6 +4,9 @@ public final class KeyboardUtil {
     public static final int K_SPACE = 32,
             K_ESC = 256,
             K_ENTER = 257,
+            K_TAB = 258,
+            K_DOWN = 264,
+            K_UP = 265,
             K_CTRL = 341,
             K_ALT = 342;
 
