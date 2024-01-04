@@ -109,9 +109,10 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.isSinglePage = totalLinesAmount < MAX_NUMBER_OF_LINES_ON_PAGE;
         this.verticalScrollbar = new VerticalScrollbar(
                 x + width - SCROLLBAR_WIDTH,
-                y + headerHeight, SCROLLBAR_WIDTH,
+                y + headerHeight,
+                SCROLLBAR_WIDTH,
                 height - headerHeight,
-                totalLinesAmount,
+                totalLinesAmount - MAX_NUMBER_OF_LINES_ON_PAGE,
                 2,
                 1
         );
@@ -223,9 +224,9 @@ public class EmojiSelectionMenu extends AbstractWidget {
         for (final var categoryContent: categoryContents) {
             if (
                     iline < verticalScrollbar.getProgress()
-                            && iline + categoryContent.getRenderLineCount() - 1 <= verticalScrollbar.getProgress()
+                            && iline + categoryContent.getRenderLineCount() < verticalScrollbar.getProgress()
             ) {
-                iline += categoryContent.getRenderLineCount() + 1;
+                iline += categoryContent.getRenderLineCount();
                 continue;
             }
 
