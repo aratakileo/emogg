@@ -215,10 +215,10 @@ public class EmojiSelectionMenu extends AbstractWidget {
         final var mouseLine = (int) ((mouseY - y) / (emojiSize + 1)) - 1;
         final var categoryTitleOffsetY = (int) ((emojiSize - font.lineHeight) / 2);
 
+        hoveredEmojiOrCategoryContent = null;
+
         var renderLineIndex = 0;
         var iline = 0;
-
-        hoveredEmojiOrCategoryContent = null;
 
         for (final var categoryContent: categoryContents) {
             if (
