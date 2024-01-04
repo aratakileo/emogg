@@ -64,8 +64,8 @@ public class Emogg implements ClientModInitializer {
         if (ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.DOES_NOT_EXIST_AT_MODRINTH)
             LOGGER.warn("[emogg] It looks like you are using an unofficial version port!");
 
-        EmojiHandler.init();
         EmoggConfig.load();
+        EmojiHandler.init();
 
         registerBuiltinResourcePack("builtin");
         registerBuiltinResourcePack("twemogg");
