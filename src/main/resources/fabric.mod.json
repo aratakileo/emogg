@@ -35,7 +35,7 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": ">=${minecraft_version}",
-    "suggestions-api": ">=1.0.0"
+    "suggestions-api": ">=1.0.3"
   },
   "accessWidener" : "emogg.accesswidener",
   "jars": [
