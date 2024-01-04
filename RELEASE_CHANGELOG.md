@@ -1,6 +1,0 @@
-- added mod interface translation for Japanese [#25](https://github.com/aratakileo/emogg/pull/25)
-- now you can expand or hide emojis of any category
-- now if the category name does not fit in the emoji selection menu, then the name of this category will be shortened with the addition of a colon at the end
-- added the ability to quickly open the emoji selection menu by pressing `Shift + Esc` shortcut or middle mouse button on the chat screen
-- fixed various problems with suggestions, including conflicts (for example with the [JIME](https://modrinth.com/mod/jime) mod) by switching to [Suggestions API](https://modrinth.com/mod/suggestions-api)
-- now non-embedded categories will be displayed in the emoji selection menu in alphabetical order
