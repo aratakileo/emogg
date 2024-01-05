@@ -24,7 +24,7 @@ public class ChatScreenMixin {
     @Unique
     protected EmojiButton emojiButton;
     @Unique
-    protected EmojiSelectionMenu emojiSelectionMenu = null;
+    protected EmojiSelectionMenu emojiSelectionMenu;
     @Unique
     protected Pair<Integer, Boolean> emojiSelectionMenuState;
     @Unique
@@ -136,9 +136,9 @@ public class ChatScreenMixin {
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
-    public void mouseScrolled(double mouseX, double mouseY, double scrollDelta, CallbackInfoReturnable<Boolean> cir) {
+    public void mouseScrolled(double mouseX, double mouseY, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
         if (!emojiSelectionMenu.isHovered) return;
 
-        cir.setReturnValue(emojiSelectionMenu.mouseScrolled(mouseX, mouseY, scrollDelta));
+        cir.setReturnValue(emojiSelectionMenu.mouseScrolled(mouseX, mouseY, 0, verticalAmount));
     }
 }

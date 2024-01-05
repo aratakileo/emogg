@@ -5,6 +5,7 @@ import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EmojiButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
@@ -20,7 +21,7 @@ public class EmojiButton extends Button {
         changeDisplayableEmoji();
     }
 
-    public Emoji getDisplayableEmoji() {
+    public @Nullable Emoji getDisplayableEmoji() {
         return displayableEmoji;
     }
 
@@ -30,10 +31,8 @@ public class EmojiButton extends Button {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
-        if (!visible) return;
-
-        var hasBeenHovered = isHovered;
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+        final var hasBeenHovered = isHovered;
 
         super.render(guiGraphics, mouseX, mouseY, dt);
 
@@ -42,13 +41,13 @@ public class EmojiButton extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         if (displayableEmoji == null) {
-            disableHint();
+            disableTooltip();
             return;
         }
 
-        setHint(displayableEmoji.getEscapedCode());
+        setTooltip(displayableEmoji.getEscapedCode());
 
         int renderX = x, renderY = y, renderSize = width;
 

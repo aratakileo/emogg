@@ -13,8 +13,12 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
             MAX_USES_POINTS = 20,
             INITIAL_POINTS = 10;
 
-    public static List<Emoji> getEmojis() {
-        return EmojiHandler.getInstance().getEmojisByCategory(CATEGORY_FREQUENTLY_USED);
+    public static @NotNull List<@NotNull Emoji> getEmojis() {
+        return EmoggConfig.instance.frequentlyUsedEmojis
+                .stream()
+                .filter(emojiStatistic -> EmojiHandler.getInstance().hasEmoji(emojiStatistic.emojiName))
+                .map(emojiStatistic -> EmojiHandler.getInstance().getEmoji(emojiStatistic.emojiName))
+                .toList();
     }
 
     public static void removeAllNonExistentFue() { // Fue = FUE = Frequently Used Emojis
@@ -96,7 +100,7 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
         frequentlyUsedEmojis.add(new EmojiStatistic(emojiName));
     }
 
-    private static List<String> getFrequentlyUsedEmojiNames() {
+    private static @NotNull List<@NotNull String> getFrequentlyUsedEmojiNames() {
         return EmoggConfig.instance.frequentlyUsedEmojis.stream().map(EmojiStatistic::getEmojiName).toList();
     }
 
@@ -105,11 +109,11 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
         public int usePoints = INITIAL_POINTS;
         private boolean isUnderRemoveProtection = true;
 
-        public EmojiStatistic(String emojiName) {
+        public EmojiStatistic(@NotNull String emojiName) {
             this.emojiName = emojiName;
         }
 
-        public String getEmojiName() {
+        public @NotNull String getEmojiName() {
             return emojiName;
         }
 

@@ -4,9 +4,12 @@ import io.github.aratakileo.emogg.util.StringUtil;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import io.github.aratakileo.emogg.Emogg;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class AnimatedEmoji extends Emoji {
-    private AsyncResourceSlider asyncResourceSlider = null;
+    private @Nullable AsyncResourceSlider asyncResourceSlider = null;
 
     protected AnimatedEmoji(
             @NotNull String name,
@@ -17,8 +20,8 @@ public class AnimatedEmoji extends Emoji {
     }
 
     @Override
-    public ResourceLocation getRenderResourceLocation() {
-        return asyncResourceSlider.getCurrentFrame();
+    public @Nullable ResourceLocation getRenderResourceLocation() {
+        return Objects.isNull(asyncResourceSlider) ? null : asyncResourceSlider.getCurrentFrame();
     }
 
     @Override

@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class EmojiTextProcessor {
     public final static EmojiTextProcessor EMPTY = new EmojiTextProcessor(null);
 
-    private static final LoadingCache<String, EmojiTextProcessor> EMOJI_TEXT_PROCESSORS_BUFFER = CacheBuilder
+    private static final LoadingCache<@NotNull String, @NotNull EmojiTextProcessor> EMOJI_TEXT_PROCESSORS_BUFFER
+            = CacheBuilder
             .newBuilder()
             .expireAfterAccess(60, TimeUnit.SECONDS)
             .build(new CacheLoader<>() {
@@ -32,10 +33,10 @@ public class EmojiTextProcessor {
             EMOJI_CODE_PATTERN_GROUP = 2,
             EMOJI_NAME_PATTERN_GROUP = 3;
 
-    private final HashMap<Integer, EmojiLiteral> emojiRenderIndexes = new LinkedHashMap<>();
+    private final HashMap<@NotNull Integer, @NotNull EmojiLiteral> emojiRenderIndexes = new LinkedHashMap<>();
     private final String processedText;
 
-    private EmojiTextProcessor(String sourceText) {
+    private EmojiTextProcessor(@Nullable String sourceText) {
         this.processedText = getSourceText(sourceText);
     }
 
@@ -43,7 +44,7 @@ public class EmojiTextProcessor {
         return emojiRenderIndexes.get(renderCharPosition);
     }
 
-    public Collection<EmojiLiteral> getEmojiLiterals() {
+    public @NotNull Collection<@NotNull EmojiLiteral> getEmojiLiterals() {
         return emojiRenderIndexes.values();
     }
 
@@ -55,7 +56,7 @@ public class EmojiTextProcessor {
         return emojiRenderIndexes.size();
     }
 
-    public String getProcessedText() {
+    public @NotNull String getProcessedText() {
         return processedText;
     }
 
@@ -63,7 +64,7 @@ public class EmojiTextProcessor {
         return processedText.isEmpty();
     }
 
-    private String getSourceText(String sourceText) {
+    private @NotNull String getSourceText(@Nullable String sourceText) {
         if (Strings.isNullOrEmpty(sourceText))
             return "";
 
@@ -119,7 +120,7 @@ public class EmojiTextProcessor {
         return processedText;
     }
 
-    public static EmojiTextProcessor from(String text) {
+    public static @NotNull EmojiTextProcessor from(@Nullable String text) {
         if (Strings.isNullOrEmpty(text)) return EmojiTextProcessor.EMPTY;
 
         try {
@@ -129,7 +130,7 @@ public class EmojiTextProcessor {
         }
     }
 
-    public static String processText(String text) {
+    public static @NotNull String processText(String text) {
         return from(text).processedText;
     }
 }

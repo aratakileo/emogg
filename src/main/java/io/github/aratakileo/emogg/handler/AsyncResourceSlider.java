@@ -9,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 public class AsyncResourceSlider {
-    private final HashMap<Integer, SlideFrame> slides;
+    private final HashMap<@NotNull Integer, @NotNull SlideFrame> slides;
     private final int totalDelay;
 
-    public AsyncResourceSlider(@NotNull HashMap<Integer, SlideFrame> slides, int totalDelay) {
+    public AsyncResourceSlider(@NotNull HashMap<@NotNull Integer, @NotNull SlideFrame> slides, int totalDelay) {
         this.slides = slides;
         this.totalDelay = totalDelay;
     }

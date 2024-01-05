@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import net.minecraft.util.StringDecomposer;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EmojiFont extends Font {
-    public EmojiFont(Font font) {
+    public EmojiFont(@NotNull Font font) {
         super(font.fonts, font.filterFishyGlyphs);
 
         splitter = new EmojiStringSlitter(
@@ -33,14 +34,14 @@ public class EmojiFont extends Font {
 
     @Override
     public float renderText(
-            String text,
+            @NotNull String text,
             float x,
             float y,
             int color,
             boolean shadow,
-            Matrix4f matrix4f,
-            MultiBufferSource multiBufferSource,
-            DisplayMode displayMode,
+            @NotNull Matrix4f matrix4f,
+            @NotNull MultiBufferSource multiBufferSource,
+            @NotNull DisplayMode displayMode,
             int underlineColor,
             int light
     ) {
@@ -69,14 +70,14 @@ public class EmojiFont extends Font {
 
     @Override
     public int drawInBatch(
-            FormattedCharSequence formattedCharSequence,
+            @NotNull FormattedCharSequence formattedCharSequence,
             float x,
             float y,
             int color,
             boolean shadow,
-            Matrix4f matrix4f,
-            MultiBufferSource multiBufferSource,
-            DisplayMode displayMode,
+            @NotNull Matrix4f matrix4f,
+            @NotNull MultiBufferSource multiBufferSource,
+            @NotNull DisplayMode displayMode,
             int backgroundColor,
             int light
     ) {
@@ -155,13 +156,13 @@ public class EmojiFont extends Font {
 
     @Override
     public void drawInBatch8xOutline(
-            FormattedCharSequence formattedCharSequence,
+            @NotNull FormattedCharSequence formattedCharSequence,
             float x,
             float y,
             int color,
             int strokeColor,
-            Matrix4f matrix4f,
-            MultiBufferSource multiBufferSource,
+            @NotNull Matrix4f matrix4f,
+            @NotNull MultiBufferSource multiBufferSource,
             int light
     ) {
         final var emojiTextProcessor = EmojiTextProcessor.from(asString(formattedCharSequence));
@@ -242,7 +243,7 @@ public class EmojiFont extends Font {
     }
 
     @Override
-    public int width(String string) {
+    public int width(@NotNull String string) {
         return width(string, true);
     }
 
@@ -250,23 +251,23 @@ public class EmojiFont extends Font {
         return width(String.valueOf(ch), false);
     }
 
-    public int width(String text, boolean emojiSupport) {
+    public int width(@NotNull String text, boolean emojiSupport) {
         if (emojiSupport) return super.width(EmojiTextProcessor.processText(text));
 
         return super.width(text);
     }
 
     @Override
-    public int width(FormattedCharSequence formattedCharSequence) {
+    public int width(@NotNull FormattedCharSequence formattedCharSequence) {
         return width(asString(formattedCharSequence), true);
     }
 
     @Override
-    public int width(FormattedText formattedText) {
+    public int width(@NotNull FormattedText formattedText) {
         return this.width(formattedText.getString(), true);
     }
 
-    public static EmojiFont getInstance() {
+    public static @NotNull EmojiFont getInstance() {
         return (EmojiFont) Minecraft.getInstance().font;
     }
 
@@ -284,14 +285,14 @@ public class EmojiFont extends Font {
         private final List<BakedGlyph.Effect> effects = new ArrayList<>();
 
         public EmojiCharSink(
-                EmojiTextProcessor emojiTextProcessor,
-                MultiBufferSource multiBufferSource,
+                @NotNull EmojiTextProcessor emojiTextProcessor,
+                @NotNull MultiBufferSource multiBufferSource,
                 float x,
                 float y,
                 int color,
                 boolean shadow,
-                Matrix4f matrix,
-                DisplayMode displayMode,
+                @NotNull Matrix4f matrix,
+                @NotNull DisplayMode displayMode,
                 int light
         ) {
             this.emojiTextProcessor = emojiTextProcessor;
@@ -336,7 +337,7 @@ public class EmojiFont extends Font {
         }
 
         @Override
-        public boolean accept(int index, Style style, int codePoint) {
+        public boolean accept(int index, @NotNull Style style, int codePoint) {
             final EmojiLiteral emojiLiteral;
 
             if (emojiTextProcessor.hasEmojiFor(index) && !(
@@ -414,7 +415,7 @@ public class EmojiFont extends Font {
         }
     }
 
-    public static String asString(FormattedCharSequence formattedCharSequence) {
+    public static @NotNull String asString(FormattedCharSequence formattedCharSequence) {
         StringBuilder stringBuilder = new StringBuilder();
         formattedCharSequence.accept((a, b, c) -> {
             stringBuilder.append((char)c);
@@ -423,9 +424,9 @@ public class EmojiFont extends Font {
         return stringBuilder.toString();
     }
 
-    record FormattedEmojiSequence(int index, Style style, int codePoint) implements FormattedCharSequence {
+    record FormattedEmojiSequence(int index, @NotNull Style style, int codePoint) implements FormattedCharSequence {
         @Override
-        public boolean accept(FormattedCharSink formattedCharSink) {
+        public boolean accept(@NotNull FormattedCharSink formattedCharSink) {
             return formattedCharSink.accept(index, style, codePoint);
         }
     }

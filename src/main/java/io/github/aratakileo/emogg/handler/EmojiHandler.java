@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import io.github.aratakileo.emogg.Emogg;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,13 +18,12 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class EmojiHandler {
-    private static EmojiHandler instance;
+    private static @Nullable EmojiHandler instance;
 
-    public final static Predicate<String> HAS_EMOJIS_EXTENSION = path -> path.endsWith(EmojiUtil.PNG_EXTENSION)
-            || path.endsWith(NativeGifImage.GIF_EXTENSION);
-    public final static Predicate<ResourceLocation> IS_EMOJI_LOCATION = resourceLocation -> HAS_EMOJIS_EXTENSION.test(
-            resourceLocation.getPath()
-    );
+    public final static Predicate<@NotNull String> HAS_EMOJIS_EXTENSION
+            = path -> path.endsWith(EmojiUtil.PNG_EXTENSION) || path.endsWith(NativeGifImage.GIF_EXTENSION);
+    public final static Predicate<@NotNull ResourceLocation> IS_EMOJI_LOCATION
+            = resourceLocation -> HAS_EMOJIS_EXTENSION.test(resourceLocation.getPath());
 
     public final static String CATEGORY_DEFAULT = "other",
             CATEGORY_ANIME = "anime",
@@ -36,8 +37,9 @@ public class EmojiHandler {
             CATEGORY_SYMBOLS = "symbols",
             CATEGORY_FLAGS = "flags";
 
-    private final ConcurrentHashMap<String, Emoji> allEmojis = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, List<String>> emojiCategories = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<@NotNull String, @NotNull Emoji> allEmojis = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<@NotNull String, @NotNull List<@NotNull String>> emojiCategories
+            = new ConcurrentHashMap<>();
 
     private EmojiHandler() {
         // All login in `init()`
@@ -51,39 +53,35 @@ public class EmojiHandler {
         return allEmojis.containsKey(name);
     }
 
-    public Emoji getEmoji(String name) {
+    public @Nullable Emoji getEmoji(String name) {
         return allEmojis.get(name);
     }
 
-    public ConcurrentHashMap.KeySetView<String, List<String>> getCategoryNames() {
+    public @NotNull ConcurrentHashMap.KeySetView<@NotNull String, @NotNull List<@NotNull String>> getCategoryNames() {
         return emojiCategories.keySet();
     }
 
-    public List<Emoji> getEmojisByCategory(String name) {
+    public @Nullable List<@NotNull Emoji> getEmojisByCategory(@NotNull String name) {
         if (name.equals(FueController.CATEGORY_FREQUENTLY_USED))
-            return EmoggConfig.instance.frequentlyUsedEmojis
-                    .stream()
-                    .filter(emojiStatistic -> allEmojis.containsKey(emojiStatistic.emojiName))
-                    .map(emojiStatistic -> allEmojis.get(emojiStatistic.emojiName))
-                    .toList();
+            return FueController.getEmojis();
 
         if (!emojiCategories.containsKey(name)) return null;
 
         return emojiCategories.get(name).stream().map(allEmojis::get).toList();
     }
 
-    public Stream<Emoji> getEmojisStream() {
+    public @NotNull Stream<@NotNull Emoji> getEmojisStream() {
         return Lists.newArrayList(allEmojis.values()).stream();
     }
 
-    public Optional<Emoji> getRandomEmoji() {
+    public @NotNull Optional<Emoji> getRandomEmoji() {
         return allEmojis.values()
                 .stream()
                 .skip((int) (allEmojis.size() * Math.random()))
                 .findFirst();
     }
 
-    public void regEmoji(ResourceLocation resourceLocation) {
+    public void regEmoji(@NotNull ResourceLocation resourceLocation) {
         var emojiName = EmojiUtil.normalizeNameOrCategory(EmojiUtil.getNameFromPath(resourceLocation));
         emojiName = getUniqueName(resourceLocation, emojiName);
 
@@ -119,7 +117,7 @@ public class EmojiHandler {
             ));
     }
 
-    private String getUniqueName(ResourceLocation resourceLocation, String emojiName) {
+    private @Nullable String getUniqueName(@NotNull ResourceLocation resourceLocation, @NotNull String emojiName) {
         if (allEmojis.containsKey(emojiName)) {
             if (allEmojis.get(emojiName).getResourceLocation().equals(resourceLocation))
                 return null;
@@ -138,7 +136,7 @@ public class EmojiHandler {
         return emojiName;
     }
 
-    private void regEmojiInItsCategory(Emoji emoji) {
+    private void regEmojiInItsCategory(@NotNull Emoji emoji) {
         if (!emojiCategories.containsKey(emoji.getCategory()))
             emojiCategories.put(emoji.getCategory(), new ArrayList<>());
 
@@ -150,7 +148,7 @@ public class EmojiHandler {
         emojiNamesInCategory.add(emoji.getName());
     }
 
-    private void load(ResourceManager resourceManager) {
+    private void load(@NotNull ResourceManager resourceManager) {
         final var startsLoadingAt = System.currentTimeMillis();
 
         if (EmoggConfig.instance.isDebugModeEnabled)
@@ -196,7 +194,7 @@ public class EmojiHandler {
         );
     }
 
-    public static EmojiHandler getInstance() {
+    public static @Nullable EmojiHandler getInstance() {
         return instance;
     }
 }

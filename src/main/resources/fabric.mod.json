@@ -32,15 +32,8 @@
     "emogg.mixins.json"
   ],
   "depends": {
-    "fabricloader": "*",
-    "fabric": "*",
-    "minecraft": ">=${minecraft_version}",
-    "suggestions-api": ">=1.0.3"
+    "fabric-api": "*",
+    "suggestions-api": ">=${suggestions_api_version}"
   },
-  "accessWidener" : "emogg.accesswidener",
-  "jars": [
-    {
-      "file": "lib/suggestions-api-${suggestions_api_version}.jar"
-    }
-  ]
+  "accessWidener" : "emogg.accesswidener"
 }

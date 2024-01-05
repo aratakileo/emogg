@@ -11,8 +11,11 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 import io.github.aratakileo.emogg.handler.Emoji;
+
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
@@ -21,7 +24,9 @@ public final class EmojiUtil {
     public final static String PNG_EXTENSION = ".png",
             EMOJI_FOLDER_NAME = "emoji";
 
-    public static void render(Emoji emoji, GuiGraphics guiGraphics, int x, int y, int size) {
+    public static void render(@NotNull Emoji emoji, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
+        if (Objects.isNull(emoji.getRenderResourceLocation())) return;
+
         RenderUtil.renderFittedCenterTexture(
                 guiGraphics,
                 emoji.getRenderResourceLocation(),
@@ -34,7 +39,7 @@ public final class EmojiUtil {
         );
     }
 
-    public static RenderType getRenderType(ResourceLocation resourceLocation) {
+    public static @NotNull RenderType getRenderType(@NotNull ResourceLocation resourceLocation) {
         var compositeState = RenderType.CompositeState.builder()
                 .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeTextShader))
                 .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
@@ -72,7 +77,7 @@ public final class EmojiUtil {
         );
     }
 
-    public static String normalizeNameOrCategory(String sourceValue) {
+    public static @NotNull String normalizeNameOrCategory(@NotNull String sourceValue) {
         return StringUtils.strip(
                 sourceValue.toLowerCase()
                         .replaceAll("-+| +|\\.+", "_")
@@ -81,11 +86,11 @@ public final class EmojiUtil {
         );
     }
 
-    public static String getNameFromPath(ResourceLocation resourceLocation) {
+    public static @NotNull String getNameFromPath(@NotNull ResourceLocation resourceLocation) {
         return getNameFromPath(resourceLocation.toString());
     }
 
-    public static String getNameFromPath(String path) {
+    public static @NotNull String getNameFromPath(@NotNull String path) {
         return path.transform(name -> name.substring(name.lastIndexOf('/') + 1))
                 .transform(name -> name.substring(0, name.lastIndexOf('.')));
     }

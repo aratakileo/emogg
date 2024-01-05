@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.aratakileo.emogg.Emogg;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileReader;
@@ -18,12 +19,12 @@ public class EmoggConfig {
             .setPrettyPrinting()
             .create();
 
-    public static EmoggConfig instance = new EmoggConfig();
+    public static @NotNull EmoggConfig instance = new EmoggConfig();
 
     // JSON values
     public boolean isDebugModeEnabled = false;
-    public ArrayList<FueController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
-    public ArrayList<String> hiddenCategoryNames = new ArrayList<>();
+    public @NotNull ArrayList<FueController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
+    public @NotNull ArrayList<String> hiddenCategoryNames = new ArrayList<>();
 
     public static void load() {
         if (file.exists())

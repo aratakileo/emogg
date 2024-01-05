@@ -3,7 +3,8 @@ package io.github.aratakileo.emogg.gui.component;
 import io.github.aratakileo.emogg.gui.EmojiFont;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import io.github.aratakileo.emogg.util.RenderUtil;
+import io.github.aratakileo.emogg.util.GuiUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class Button extends AbstractWidget {
     private int padding = 0;
@@ -12,11 +13,11 @@ public class Button extends AbstractWidget {
         super(x, y, width, height);
     }
 
-    public Button(int x, int y, Component text) {
+    public Button(int x, int y, @NotNull Component text) {
         this(x, y, text, 5);
     }
 
-    public Button(int x, int y, Component text, int padding) {
+    public Button(int x, int y, @NotNull Component text, int padding) {
         super(
                 x,
                 y,
@@ -35,16 +36,16 @@ public class Button extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
-        RenderUtil.drawRect(x, y, width, height, 0xaa222222, 1, 0xaa000000);
+    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+        GuiUtil.drawRect(guiGraphics, x, y, width, height, 0xaa222222, 1, 0xaa000000);
 
         if (isHovered)
-            RenderUtil.drawRectStroke(x, y, width, height, 1, 0xffffffff);
+            GuiUtil.drawRectStroke(guiGraphics, x, y, width, height, 1, 0xffffffff);
 
         renderString(guiGraphics);
     }
 
-    public void setMessage(Component text, boolean isHorizontalCentered) {
+    public void setMessage(@NotNull Component text, boolean isHorizontalCentered) {
         super.setMessage(text);
 
         final var prevWidth = width;

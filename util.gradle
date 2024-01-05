@@ -1,0 +1,86 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
+ext.support_minecraft_versions = project.hasProperty("support_minecraft_versions")
+        ? support_minecraft_versions : minecraft_version
+version = "${mod_version}+${support_minecraft_versions}"
+fabric_version = fabric_version.contains("+") ? fabric_version : "$fabric_version+$minecraft_version"
+
+ext.getMinecraftDependsVersion = { ->
+    final var segments = support_minecraft_versions.split("-")
+
+    if (segments.length == 1)
+        return "=${support_minecraft_versions}"
+
+    return ">=${segments[0]} <=${segments[1]}"
+}
+
+ext.getResourcesAbsPath = { ->
+    return sourceSets.main.resources.srcDirs.first().absolutePath
+}
+
+repositories {
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+}
+
+configurations {
+    extraLib
+}
+
+ext.implEmbeddedMod = { String requestValue ->
+    dependencies {
+        extraLib requestValue
+        modImplementation requestValue
+    }
+}
+
+processResources {
+    doLast {
+        final var file = file("${buildDir}/resources/main/fabric.mod.json")
+        final var jsonMap = new JsonSlurper().parse(file) as Map<String, ?>
+
+        if (!jsonMap.containsKey("jars") && !configurations.extraLib.files.isEmpty())
+            jsonMap.put("jars", [])
+
+        for (libFile in configurations.extraLib.files)
+            (jsonMap.get("jars") as ArrayList<Map<String, String>>).add([file: "lib/${libFile.name}"])
+
+        if (!jsonMap.containsKey("depends"))
+            jsonMap.put("depends", [:])
+
+        (jsonMap.get("depends") as Map<String, String>).put("minecraft", getMinecraftDependsVersion())
+
+        file.text = JsonOutput.prettyPrint(JsonOutput.toJson(jsonMap))
+    }
+}
+
+jar {
+    into("lib") {
+        from configurations.extraLib
+    }
+}
+
+build {
+    doLast {
+        if (file("$projectDir/applicable.paths").exists())
+            for (path in file("$projectDir/applicable.paths").readLines()) {
+                if (path.startsWith("#")) continue
+
+                if (path.toLowerCase().startsWith("%appdata%"))
+                    path = System.getenv("APPDATA") + path.substring("%appdata%".length())
+
+                if (!file(path).exists()) {
+                    println "WARN: dir `$path` does not exist!"
+                    continue
+                }
+
+                copy {
+                    from "${libsDirectory.asFile.get().path}/$archives_base_name-${version}.jar"
+                    into path
+                }
+            }
+        else println "WARN: file `applicable.paths` is not defined!"
+    }
+}

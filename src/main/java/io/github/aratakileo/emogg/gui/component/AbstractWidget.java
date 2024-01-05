@@ -1,6 +1,6 @@
 package io.github.aratakileo.emogg.gui.component;
 
-import io.github.aratakileo.emogg.util.RenderUtil;
+import io.github.aratakileo.emogg.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -11,22 +11,26 @@ import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public abstract class AbstractWidget extends AbstractButton {
-    public final static MouseHintPositioner MOUSE_HINT_POSITIONER = new MouseHintPositioner();
+    public final static MouseTooltipPositioner MOUSE_TOOLTIP_POSITIONER = new MouseTooltipPositioner();
 
-    protected ClientTooltipPositioner hintPositioner = new MenuTooltipPositioner(this);
-    protected Consumer<AbstractWidget> onClicked = null;
+    private @Nullable Tooltip tooltip;
+
+    protected @NotNull ClientTooltipPositioner tooltipPositioner = new MenuTooltipPositioner(this);
+    protected @Nullable Consumer<AbstractWidget> onClicked = null;
 
     public AbstractWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
     }
 
-    public AbstractWidget(int x, int y, int width, int height, Component message) {
+    public AbstractWidget(int x, int y, int width, int height, @NotNull Component message) {
         super(x, y, width, height, message);
     }
 
@@ -36,22 +40,42 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     @Override
-    public boolean keyPressed(int key, int j, int k) {
-        if (this.active && this.visible) {
-            if (key != 257 && key != 32 && key != 335)
-                return false;
-
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (active && visible && (keyCode == 257 || keyCode == 32 || keyCode == 335)) {
             onPress();
-
             return true;
         }
+
         return false;
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
-        RenderUtil.drawRect(x, y, width, height, 0xaa222222, 1, 0xaa000000);
+    public final boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
+        return mouseScrolled(mouseX, mouseY, 0, verticalAmount);
+    }
+
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        return false;
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+        super.render(guiGraphics, mouseX, mouseY, dt);
+
+        if (visible && isHovered)
+            renderTooltip(guiGraphics, mouseX, mouseY, dt);
+    }
+
+    @Override
+    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+        GuiUtil.drawRect(guiGraphics, x, y, width, height, 0xaa222222, 1, 0xaa000000);
         renderString(guiGraphics);
+    }
+
+    public void renderTooltip(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+        if (Objects.isNull(tooltip)) return;
+
+        Minecraft.getInstance().screen.setTooltipForNextRenderPass(tooltip, tooltipPositioner, isFocused());
     }
 
     @Override
@@ -67,21 +91,18 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+    protected void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
         defaultButtonNarrationText(narrationElementOutput);
     }
 
     @Override
-    protected @NotNull ClientTooltipPositioner createTooltipPositioner() {
-        return this.isHovered
-                && this.isFocused()
-                && Minecraft.getInstance().getLastInputType().isKeyboard()
-                ? super.createTooltipPositioner() : hintPositioner;
+    public void setPosition(int x, int y) {
+        setX(x);
+        setY(y);
     }
 
     public void setLeftTop(int left, int top) {
-        setX(left);
-        setY(top);
+        setPosition(left, top);
     }
 
     public void setRightBottom(int right, int bottom) {
@@ -90,11 +111,11 @@ public abstract class AbstractWidget extends AbstractButton {
     }
 
     public int getRight() {
-        return x + width;
+        return getX() + width;
     }
 
     public int getBottom() {
-        return y + height;
+        return getY() + height;
     }
 
     public void renderString(GuiGraphics guiGraphics) {
@@ -121,27 +142,35 @@ public abstract class AbstractWidget extends AbstractButton {
         playDownSound(Minecraft.getInstance().getSoundManager());
     }
 
-    public void setOnClicked(Consumer<AbstractWidget> onClicked) {
+    public void setOnClicked(@Nullable Consumer<AbstractWidget> onClicked) {
         this.onClicked = onClicked;
     }
 
-    public void setHint(@NotNull String hint) {
-        setHint(Component.literal(hint));
+    public void setTooltip(@NotNull String message) {
+        setTooltip(Component.literal(message));
     }
 
-    public void setHint(@NotNull Component hint) {
-        setTooltip(Tooltip.create(hint));
+    public void setTooltip(@NotNull Component message) {
+        setTooltip(Tooltip.create(message));
     }
 
-    public void disableHint() {
-        setTooltip(null);
+    public void setTooltip(@Nullable Tooltip tooltip) {
+        this.tooltip = tooltip;
     }
 
-    public void setHintPositioner(ClientTooltipPositioner hintPositioner) {
-        this.hintPositioner = hintPositioner;
+    public @Nullable Tooltip getTooltip() {
+        return tooltip;
     }
 
-    private static class MouseHintPositioner implements ClientTooltipPositioner {
+    public void disableTooltip() {
+        this.tooltip = null;
+    }
+
+    public void setTooltipPositioner(@NotNull ClientTooltipPositioner tooltipPositioner) {
+        this.tooltipPositioner = tooltipPositioner;
+    }
+
+    private static class MouseTooltipPositioner implements ClientTooltipPositioner {
         @Override
         public @NotNull Vector2ic positionTooltip(
                 int guiWidth,

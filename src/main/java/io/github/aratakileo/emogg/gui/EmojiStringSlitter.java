@@ -12,16 +12,16 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class EmojiStringSlitter extends StringSplitter {
-    public EmojiStringSlitter(WidthProvider widthProvider) {
+    public EmojiStringSlitter(@NotNull WidthProvider widthProvider) {
         super(widthProvider);
     }
 
     @Override
     public void splitLines(
-            FormattedText formattedText,
+            @NotNull FormattedText formattedText,
             int maxWidth,
-            Style style,
-            BiConsumer<FormattedText, Boolean> biConsumer
+            @NotNull Style style,
+            @NotNull BiConsumer<FormattedText, Boolean> biConsumer
     ) {
         final var styledContentConsumer = new StyledContentConsumer(formattedText);
         final List<LineComponent> list = Lists.newArrayList();
@@ -101,14 +101,14 @@ public class EmojiStringSlitter extends StringSplitter {
 
     private static class StyledContentConsumer {
         private final EmojiTextProcessor emojiTextProcessor;
-        private FormattedText processedFormattedText = FormattedText.EMPTY;
+        private @NotNull FormattedText processedFormattedText = FormattedText.EMPTY;
         private int offset = 0;
 
         public StyledContentConsumer(@NotNull FormattedText sourceFormattedText) {
             emojiTextProcessor = EmojiTextProcessor.from(sourceFormattedText.getString());
         }
 
-        public Optional<Integer> accept(Style style, String string) {
+        public @NotNull Optional<Integer> accept(@NotNull Style style, @NotNull String string) {
             final var stringBuilder = new StringBuilder();
             var i = -1;
 
@@ -136,7 +136,7 @@ public class EmojiStringSlitter extends StringSplitter {
             return Optional.empty();
         }
 
-        public FormattedText getProcessedFormattedTextAndReset() {
+        public @NotNull FormattedText getProcessedFormattedTextAndReset() {
             final var processedFormattedTextOld = processedFormattedText;
 
             processedFormattedText = FormattedText.EMPTY;

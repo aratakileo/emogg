@@ -5,20 +5,22 @@ import io.github.aratakileo.emogg.gui.component.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SettingsScreen extends AbstractScreen {
     public SettingsScreen() {
         super(Component.translatable("emogg.settings.title"));
     }
 
-    public SettingsScreen(Screen parent) {
+    public SettingsScreen(@Nullable Screen parent) {
         super(Component.translatable("emogg.settings.title"), parent);
     }
 
     @Override
     protected void init() {
         addRenderableWidget(new Button(0, 40, getIsDebugModeEnabledText()) {{
-            setHint(Component.translatable("emogg.settings.option.is_debug_mode_enabled.description"));
+            setTooltip(Component.translatable("emogg.settings.option.is_debug_mode_enabled.description"));
             setOnClicked(button -> {
                 EmoggConfig.instance.isDebugModeEnabled = !EmoggConfig.instance.isDebugModeEnabled;
                 ((Button)button).setMessage(getIsDebugModeEnabledText(), true);
@@ -33,14 +35,14 @@ public class SettingsScreen extends AbstractScreen {
         }});
     }
 
-    private Component getIsDebugModeEnabledText() {
+    private @NotNull Component getIsDebugModeEnabledText() {
         return Component.translatable(
                 "emogg.settings.option.is_debug_mode_enabled.title",
                 getState(EmoggConfig.instance.isDebugModeEnabled)
         );
     }
 
-    private String getState(boolean state) {
+    private @NotNull String getState(boolean state) {
         return "§l"
                 + (state ? "§2" : "§c")
                 + Language.getInstance().getOrDefault("emogg.gui.state." + (state ? "enabled" : "disabled"));

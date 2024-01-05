@@ -18,10 +18,10 @@ public class ModrinthApi {
     private final static String REQUEST_URL = "https://api.modrinth.com/v2/project/{identifier}/version?" +
             "game_versions=%5B%22{minecraft_version}%22%5D";
     private final static HttpClient client = HttpClient.newHttpClient();
-    private static ResponseCode responseCode = ResponseCode.NO_RESPONSE;
-    private static String updateVersion;
+    private static @NotNull ResponseCode responseCode = ResponseCode.NO_RESPONSE;
+    private static @Nullable String updateVersion;
 
-    public static ResponseCode getResponseCode() {
+    public static @NotNull ResponseCode getResponseCode() {
         return responseCode;
     }
 
@@ -67,7 +67,7 @@ public class ModrinthApi {
         }
     }
 
-    public static String getLinkForUpdate() {
+    public static @NotNull String getLinkForUpdate() {
         return "https://modrinth.com/mod/emogg/versions?g=" + SharedConstants.getCurrentVersion().getName();
     }
 
@@ -103,7 +103,7 @@ public class ModrinthApi {
      * Supports version format that starts with: `x.x-BETA.x` or `x.x.x`, with `-` or `+` and Minecraft verison name, or without it, where x is digit or number
      *
      */
-    private static Pair<String[], Integer> getVersionMetadata(@NotNull String version) {
+    private static @NotNull Pair<String[], Integer> getVersionMetadata(@NotNull String version) {
         if (version.contains("+"))
             version = version.split("\\+")[0];
 

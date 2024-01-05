@@ -4,6 +4,7 @@ import io.github.aratakileo.emogg.api.ModrinthApi;
 import io.github.aratakileo.emogg.gui.EmojiSuggestion;
 import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
+import io.github.aratakileo.emogg.util.StringUtil;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
 import io.github.aratakileo.suggestionsapi.injector.Injector;
 import io.github.aratakileo.suggestionsapi.util.Cast;
@@ -14,6 +15,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +73,7 @@ public class Emogg implements ClientModInitializer {
         registerBuiltinResourcePack("twemogg");
     }
 
-    private void registerBuiltinResourcePack(String resourcepackName) {
+    private void registerBuiltinResourcePack(@NotNull String resourcepackName) {
         ResourceManagerHelper.registerBuiltinResourcePack(
                 new ResourceLocation(NAMESPACE_OR_ID, resourcepackName),
                 FabricLoader.getInstance().getModContainer(NAMESPACE_OR_ID).orElseThrow(),
@@ -80,7 +82,7 @@ public class Emogg implements ClientModInitializer {
         );
     }
 
-    public static String getVersion() {
+    public static @NotNull String getVersion() {
         return FabricLoader.getInstance()
                 .getModContainer(NAMESPACE_OR_ID)
                 .get()

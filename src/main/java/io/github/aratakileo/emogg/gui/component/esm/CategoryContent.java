@@ -6,17 +6,19 @@ import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
 import net.minecraft.locale.Language;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class CategoryContent {
     private final String name;
 
-    private List<Emoji> emojis;
+    private @Nullable List<Emoji> emojis;
     private int lineCount;
     private boolean isExpanded;
 
-    public CategoryContent(String name) {
+    public CategoryContent(@NotNull String name) {
         this.name = name;
         this.isExpanded = !EmoggConfig.instance.hiddenCategoryNames.contains(name);
 
@@ -51,11 +53,15 @@ public class CategoryContent {
         }
     }
 
-    public String getName() {
+    public void toggleExpand() {
+        setExpanded(!isExpanded);
+    }
+
+    public @NotNull String getName() {
         return name;
     }
 
-    public String getDisplayableName() {
+    public @NotNull String getDisplayableName() {
         final var categoryLangKey = "emogg.category." + name;
         final var displayableName = Language.getInstance().getOrDefault(categoryLangKey);
 
@@ -65,7 +71,7 @@ public class CategoryContent {
         return displayableName;
     }
 
-    public String getDisplayableName(int maxWidth) {
+    public @NotNull String getDisplayableName(int maxWidth) {
         final var displayableName = getDisplayableName();
         final var font = EmojiFont.getInstance();
 
@@ -85,7 +91,7 @@ public class CategoryContent {
         return stringBuilder.toString();
     }
 
-    public List<Emoji> getEmojis() {
+    public @Nullable List<Emoji> getEmojis() {
         return emojis;
     }
 

@@ -22,19 +22,19 @@ public class Emoji {
         this.category = category;
     }
 
-    public String getName() {return name;}
+    public @NotNull String getName() {return name;}
 
-    public String getCategory() {return category;}
+    public @NotNull String getCategory() {return category;}
 
-    public String getCode() {
+    public @NotNull String getCode() {
         return ":" + name + ':';
     }
 
-    public String getEscapedCode() {return '\\' + getCode();}
+    public @NotNull String getEscapedCode() {return '\\' + getCode();}
 
-    public ResourceLocation getResourceLocation() {return resourceLocation;}
+    public @NotNull ResourceLocation getResourceLocation() {return resourceLocation;}
 
-    public ResourceLocation getRenderResourceLocation() {return  resourceLocation;}
+    public @Nullable ResourceLocation getRenderResourceLocation() {return resourceLocation;}
 
     public int getWidth() {
         return width;
@@ -60,7 +60,7 @@ public class Emoji {
         return false;
     }
 
-    public static @Nullable Emoji from(String name, ResourceLocation resourceLocation) {
+    public static @Nullable Emoji from(@NotNull String name, @NotNull ResourceLocation resourceLocation) {
         name = EmojiUtil.normalizeNameOrCategory(name);
 
         var category = resourceLocation.getPath().substring(EmojiUtil.EMOJI_FOLDER_NAME.length() + 1);

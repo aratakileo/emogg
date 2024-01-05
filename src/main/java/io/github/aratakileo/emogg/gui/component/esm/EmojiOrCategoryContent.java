@@ -2,12 +2,13 @@ package io.github.aratakileo.emogg.gui.component.esm;
 
 import io.github.aratakileo.emogg.handler.Emoji;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EmojiOrCategoryContent {
     private final Emoji emoji;
     private final CategoryContent categoryContent;
 
-    private EmojiOrCategoryContent(Emoji emoji, CategoryContent categoryContent) {
+    private EmojiOrCategoryContent(@Nullable Emoji emoji, @Nullable CategoryContent categoryContent) {
         this.emoji = emoji;
         this.categoryContent = categoryContent;
     }
@@ -24,7 +25,7 @@ public class EmojiOrCategoryContent {
         return emoji != null;
     }
 
-    public Emoji getEmoji() {
+    public @Nullable Emoji getEmoji() {
         return emoji;
     }
 
@@ -32,7 +33,7 @@ public class EmojiOrCategoryContent {
         return categoryContent != null;
     }
 
-    public CategoryContent getCategoryContent() {
+    public @Nullable CategoryContent getCategoryContent() {
         return categoryContent;
     }
 }

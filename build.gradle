@@ -3,10 +3,8 @@ plugins {
     id 'maven-publish'
 }
 
-final var supportMinecraftVersion = project.hasProperty("support_minecraft_version")
-        ? project.support_minecraft_version : project.minecraft_version
+apply from: 'util.gradle'
 
-version = "${project.mod_version}+${supportMinecraftVersion}"
 group = project.maven_group
 
 repositories {
@@ -21,14 +19,6 @@ repositories {
             includeGroup 'com.terraformersmc'
         }
     }
-
-    maven {
-        url = "https://api.modrinth.com/maven"
-    }
-}
-
-configurations {
-    extraLibs
 }
 
 dependencies {
@@ -40,22 +30,17 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    modImplementation "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
-    extraLibs "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
+    implEmbeddedMod "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    inputs.property "suggestions_api_version", project.suggestions_api_version
+    inputs.property "suggestions_api_version", suggestions_api_version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version,
-                "suggestions_api_version": project.suggestions_api_version
+                "suggestions_api_version": suggestions_api_version
     }
 }
 
@@ -86,10 +71,6 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
-    }
-
-    into("lib") {
-        from configurations.extraLibs
     }
 }
 

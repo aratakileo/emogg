@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class EmojiLiteral {
@@ -16,7 +17,7 @@ public class EmojiLiteral {
 
     public final static char DUMMY_CHAR = '\u2603';
 
-    private final @NotNull Emoji emoji;
+    private final Emoji emoji;
     private final boolean isEscaped;
 
     public EmojiLiteral(@NotNull Emoji emoji, boolean isEscaped) {
@@ -27,10 +28,12 @@ public class EmojiLiteral {
     public float render(
             float x,
             float y,
-            Matrix4f matrix4f,
-            MultiBufferSource multiBufferSource,
+            @NotNull Matrix4f matrix4f,
+            @NotNull MultiBufferSource multiBufferSource,
             int light
     ) {
+        if (Objects.isNull(emoji.getRenderResourceLocation())) return 0;
+
         float textureSize = 16, textureX = 0, textureY = 0, textureOffset = 16 / textureSize, offsetY = 1, offsetX = 0,
                 width = DEFAULT_RENDER_SIZE, height = DEFAULT_RENDER_SIZE;
         if (emoji.getWidth() < emoji.getHeight()) {

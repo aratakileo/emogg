@@ -1,16 +1,18 @@
 package io.github.aratakileo.emogg.gui.component;
 
-import io.github.aratakileo.emogg.util.RenderUtil;
+import io.github.aratakileo.emogg.util.Rect2i;
+import io.github.aratakileo.emogg.util.GuiUtil;
 import net.minecraft.client.gui.GuiGraphics;
+import org.jetbrains.annotations.NotNull;
 
 public class VerticalScrollbar extends AbstractWidget {
-    private final RenderUtil.Rect2i thumbRect;
+    private final Rect2i thumbRect;
+    private final int padding;
 
     private int maxProgress,
             segmentSize,
             progress = 0,
-            scrollingThumbTopToTouchOffset = -1,
-            padding;
+            scrollingThumbTopToTouchOffset = -1;
 
     public VerticalScrollbar(
             int x,
@@ -24,7 +26,7 @@ public class VerticalScrollbar extends AbstractWidget {
         super(x, y, width, height);
 
         this.padding = padding;
-        this.thumbRect = new RenderUtil.Rect2i(0, 0, width - padding * 2, 0);
+        this.thumbRect = new Rect2i(0, 0, width - padding * 2, 0);
 
         setMaxProgress(maxProgress, segmentSize);
     }
@@ -37,7 +39,7 @@ public class VerticalScrollbar extends AbstractWidget {
         return progress;
     }
 
-    public RenderUtil.Rect2i getRenderableThumbRect() {
+    public @NotNull Rect2i getRenderableThumbRect() {
         return thumbRect.move(x + padding, y + padding);
     }
 
@@ -70,19 +72,19 @@ public class VerticalScrollbar extends AbstractWidget {
     public void setProgress(int progress) {
         this.progress = Math.min(maxProgress, Math.max(progress, 0));
         this.thumbRect.setY((int) (
-                (height - thumbRect.height - padding * 2)
+                (height - thumbRect.getHeight() - padding * 2)
                         * ((double) this.progress / (double) this.maxProgress)
         ));
     }
 
     public void setScrollProgressByThumbY(int localY) {
-        final var maxThumbTop = height - padding * 2 - thumbRect.height;
+        final var maxThumbTop = height - padding * 2 - thumbRect.getHeight();
         setThumbY(localY, maxThumbTop);
         progress = (int) (maxProgress * (double)thumbRect.getY() / (double)(maxThumbTop));
     }
 
     private void setThumbY(int localY) {
-        final var maxThumbTop = height - padding * 2 - thumbRect.height;
+        final var maxThumbTop = height - padding * 2 - thumbRect.getHeight();
         setThumbY(localY, maxThumbTop);
     }
 
@@ -91,8 +93,9 @@ public class VerticalScrollbar extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
-        RenderUtil.drawRect(
+    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+        GuiUtil.drawRect(
+                guiGraphics,
                 x,
                 y,
                 width,
@@ -102,7 +105,8 @@ public class VerticalScrollbar extends AbstractWidget {
                 0xaa000000
         );
 
-        RenderUtil.drawRect(
+        GuiUtil.drawRect(
+                guiGraphics,
                 getRenderableThumbRect(),
                 (getRenderableThumbRect().contains(mouseX, mouseY)) ? 0xaacbcbcb : 0xaa6c757d
         );
@@ -121,8 +125,8 @@ public class VerticalScrollbar extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-        setProgress((int) (progress - scrollDelta));
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        setProgress((int) (progress - verticalAmount));
 
         scrollingThumbTopToTouchOffset = -1;
 

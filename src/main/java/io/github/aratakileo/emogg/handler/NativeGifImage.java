@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -41,7 +42,7 @@ public class NativeGifImage {
         return delays.length;
     }
 
-    public NativeImage getVerticalScroll() {
+    public @NotNull NativeImage getVerticalScroll() {
         final var nativeImage = new NativeImage(NativeImage.Format.RGBA, width, height * frames, false);
 
         for (var y = 0; y < height * frames; y++)
@@ -51,7 +52,7 @@ public class NativeGifImage {
         return nativeImage;
     }
 
-    public int processFrames(FrameProcessor frameProcessor) {
+    public int processFrames(@NotNull FrameProcessor frameProcessor) {
         var totalDelay = 0;
 
         for (var i = 0; i < getFrameCount(); i++) {
@@ -69,7 +70,7 @@ public class NativeGifImage {
         return totalDelay;
     }
 
-    public static NativeGifImage read(ResourceLocation resourceLocation) throws IOException {
+    public static @NotNull NativeGifImage read(@NotNull ResourceLocation resourceLocation) throws IOException {
         final var optionalResource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
 
         if (optionalResource.isEmpty())
@@ -78,8 +79,8 @@ public class NativeGifImage {
         return read(optionalResource.get().open());
     }
 
-    public static NativeGifImage read(InputStream inputStream) throws IOException {
-        NativeGifImage nativeGifImage;
+    public static @NotNull NativeGifImage read(@NotNull InputStream inputStream) throws IOException {
+        var nativeGifImage = (NativeGifImage)null;
 
         try {
             nativeGifImage = read(inputStream.readAllBytes());
@@ -90,7 +91,7 @@ public class NativeGifImage {
         return nativeGifImage;
     }
 
-    public static NativeGifImage read(byte[] fileData) throws IOException {
+    public static @NotNull NativeGifImage read(byte[] fileData) throws IOException {
         final var byteBuffer = MemoryUtil.memAlloc(fileData.length);
         final NativeGifImage nativeGifImage;
 
@@ -153,5 +154,5 @@ public class NativeGifImage {
         void process(int index, int delayAmountBefore, @NotNull Frame frame);
     }
 
-    public record Frame(NativeImage nativeImage, int delay) {}
+    public record Frame(@NotNull NativeImage nativeImage, int delay) {}
 }
