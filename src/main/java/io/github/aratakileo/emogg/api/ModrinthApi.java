@@ -2,8 +2,7 @@ package io.github.aratakileo.emogg.api;
 
 import com.google.gson.JsonParser;
 import io.github.aratakileo.emogg.Emogg;
-import net.minecraft.SharedConstants;
-import org.apache.commons.lang3.ArrayUtils;
+import io.github.aratakileo.emogg.util.Platform;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Pair;
@@ -39,7 +38,7 @@ public class ModrinthApi {
                         "User-Agent",
                         "github.com/aratakileo/"
                                 + Emogg.NAMESPACE_OR_ID
-                                + '@' + Emogg.getVersion()
+                                + '@' + Platform.getModVersion(Emogg.NAMESPACE_OR_ID)
                                 + " (aratakileo@gmail.com)"
                 )
                 .build();
@@ -68,13 +67,13 @@ public class ModrinthApi {
     }
 
     public static @NotNull String getLinkForUpdate() {
-        return "https://modrinth.com/mod/emogg/versions?g=" + SharedConstants.getCurrentVersion().getName();
+        return "https://modrinth.com/mod/emogg/versions?g=" + Platform.getMinecraftVersion();
     }
 
     private static boolean isVersionGreaterThanCurrent(@Nullable String version) {
         if (version == null) return false;
 
-        final var currentVerMetadata = getVersionMetadata(Emogg.getVersion());
+        final var currentVerMetadata = getVersionMetadata(Platform.getModVersion(Emogg.NAMESPACE_OR_ID));
         final var otherVerMetadata = getVersionMetadata(version);
         final var currentVerSecondDigit = currentVerMetadata.getB();
         final var otherVerSecondDigit = otherVerMetadata.getB();
@@ -117,9 +116,9 @@ public class ModrinthApi {
         return new Pair<>(basicVersionSegments[0].split("\\."), metadataSecondDigit);
     }
 
-    private static String getRequestUrl() {
+    private static @NotNull String getRequestUrl() {
         return REQUEST_URL.replace("{identifier}", Emogg.NAMESPACE_OR_ID)
-                .replace("{minecraft_version}", SharedConstants.getCurrentVersion().getName());
+                .replace("{minecraft_version}", Platform.getMinecraftVersion());
     }
 
     public enum ResponseCode {

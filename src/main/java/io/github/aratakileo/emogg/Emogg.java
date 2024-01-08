@@ -4,7 +4,7 @@ import io.github.aratakileo.emogg.api.ModrinthApi;
 import io.github.aratakileo.emogg.gui.EmojiSuggestion;
 import io.github.aratakileo.emogg.handler.EmoggConfig;
 import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.util.StringUtil;
+import io.github.aratakileo.emogg.util.Platform;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
 import io.github.aratakileo.suggestionsapi.injector.Injector;
 import io.github.aratakileo.suggestionsapi.util.Cast;
@@ -45,7 +45,7 @@ public class Emogg implements ClientModInitializer {
 
         LOGGER.info(String.format(
                 "[emogg] Installed v%s; %s to download (from modrinth.com)%s",
-                getVersion(),
+                Platform.getModVersion(NAMESPACE_OR_ID),
                 switch (ModrinthApi.getResponseCode()) {
                     case SUCCESSFUL, NEEDS_TO_BE_UPDATED -> "available";
                     default -> "not available";
@@ -80,14 +80,5 @@ public class Emogg implements ClientModInitializer {
                 Component.translatable(String.format("emogg.resourcepack.%s.name", resourcepackName)),
                 ResourcePackActivationType.DEFAULT_ENABLED
         );
-    }
-
-    public static @NotNull String getVersion() {
-        return FabricLoader.getInstance()
-                .getModContainer(NAMESPACE_OR_ID)
-                .get()
-                .getMetadata()
-                .getVersion()
-                .getFriendlyString();
     }
 }

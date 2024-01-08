@@ -66,6 +66,8 @@ build {
     doLast {
         if (file("$projectDir/applicable.paths").exists())
             for (path in file("$projectDir/applicable.paths").readLines()) {
+                path = path.strip()
+
                 if (path.startsWith("#")) continue
 
                 if (path.toLowerCase().startsWith("%appdata%"))
