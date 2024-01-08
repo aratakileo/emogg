@@ -32,7 +32,6 @@
     "emogg.mixins.json"
   ],
   "depends": {
-    "fabric-api": "*",
     "suggestions-api": ">=${suggestions_api_version}"
   },
   "accessWidener" : "emogg.accesswidener"
