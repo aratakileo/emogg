@@ -1,4 +1,4 @@
-Language: **[English]** | [[Русский]](/README_ru.md)
+Language: **[English]** | [[Русский]](preview/README_ru.md)
 
 # Emogg for better chatting experienсe! <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 Adds emoji support to the chat and to most of the Minecraft interface!
