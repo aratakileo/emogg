@@ -1,8 +1,8 @@
 # Emogg – для лучше опыта при общении в чате! <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 Добавляет поддержку эмодзи в чат и большую часть интерфейса Minecraft!
 
-![](/preview-1.gif)
-![](/preview-2.gif)
+![](https://github.com/aratakileo/emogg/blob/main/preview/preview-1.gif)
+![](https://github.com/aratakileo/emogg/blob/main/preview/preview-2.gif)
 
 ### Особенности мода
 - поддержка как статических, так и анимированных эмодзи
