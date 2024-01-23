@@ -6,6 +6,13 @@ Adds emoji support to the chat and to most of the Minecraft interface!
 ![](preview/preview-1.gif)
 ![](preview/preview-2.gif)
 
+<p align="center">
+ <a href="https://discord.gg/t5ZqftXG4b">
+    <img src="https://img.shields.io/badge/Discord-7289da?style=for-the-badge&logo=discord&logoColor=ffffff" alt="Discord" />
+  </a>
+ 
+</p>
+
 ### Features
 - support for both static and animated emojis
 - ease of adding your own emojis by a resource pack! Use any of the below ways:
