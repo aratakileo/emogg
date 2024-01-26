@@ -45,7 +45,7 @@ public class EmojiFont extends Font {
             int underlineColor,
             int light
     ) {
-        if (text.isEmpty()) return 0;
+        if (text.isEmpty()) return x;
 
         final var emojiTextProcessor = EmojiTextProcessor.from(text);
 
@@ -83,7 +83,7 @@ public class EmojiFont extends Font {
     ) {
         final var emojiTextProcessor = EmojiTextProcessor.from(asString(formattedCharSequence));
 
-        if (emojiTextProcessor.isEmpty()) return 0;
+        if (emojiTextProcessor.isEmpty()) return (int) x;
 
         color = adjustColor(color);
 
