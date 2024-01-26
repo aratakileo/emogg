@@ -24,7 +24,7 @@ Adds emoji support to the chat and to most of the Minecraft interface!
 - by default, two emoji texture packs are built into the mod at once, each of which you can disable through the resource pack selection menu, like a regular resource pack
 
 ### How do emojis work?
-To use emoji, you need to type `:emoji_name:`. If you do this in a chat, you will be shown autocompletion hints. The emoji selection menu is also available in the chat, which opens by clicking on the button in the lower right corner.
+To use emoji, you need to type `:emoji_name:`. If you do this in a chat, you will be shown autocompletion hints. The emoji selection menu is also available in the chat, which opens by clicking on the button in the lower right corner, or by clicking middle mouse button or by pressing `Shift` + `Esc`.
 
 If you play on the server or over the network, then in addition to the fact that you and other players must have this mod installed, everyone must have the same resource packs added. If any of these conditions are not met, then instead of emojis, other players will see `:emoji_name:`.
 
