@@ -1,9 +1,8 @@
 package io.github.aratakileo.emogg;
 
 import io.github.aratakileo.emogg.api.ModrinthApi;
+import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.gui.EmojiSuggestion;
-import io.github.aratakileo.emogg.handler.EmoggConfig;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
 import io.github.aratakileo.emogg.util.Platform;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
 import io.github.aratakileo.suggestionsapi.injector.Injector;
@@ -36,7 +35,7 @@ public class Emogg implements ClientModInitializer {
         SuggestionsAPI.registerInjector(Injector.simple(
                 Pattern.compile(":[A-Za-z0-9_]*(:)?$"),
                 (currentExpression, startOffset) -> Cast.of(
-                        EmojiHandler.getInstance()
+                        EmojiManager.getInstance()
                                 .getEmojisStream()
                                 .map(EmojiSuggestion::new)
                                 .toList()
@@ -67,7 +66,7 @@ public class Emogg implements ClientModInitializer {
             LOGGER.warn("[emogg] It looks like you are using an unofficial version port!");
 
         EmoggConfig.load();
-        EmojiHandler.init();
+        EmojiManager.init();
 
         registerBuiltinResourcePack("builtin");
         registerBuiltinResourcePack("twemogg");

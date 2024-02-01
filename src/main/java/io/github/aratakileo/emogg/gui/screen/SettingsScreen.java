@@ -1,6 +1,6 @@
 package io.github.aratakileo.emogg.gui.screen;
 
-import io.github.aratakileo.emogg.handler.EmoggConfig;
+import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.gui.component.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;

@@ -1,7 +1,7 @@
 package io.github.aratakileo.emogg.gui.component;
 
-import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.handler.Emoji;
+import io.github.aratakileo.emogg.emoji.EmojiManager;
+import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
@@ -63,14 +63,14 @@ public class EmojiButton extends Button {
     protected void changeDisplayableEmoji() {
         prevDisplayableEmoji = displayableEmoji;
 
-        EmojiHandler.getInstance()
+        EmojiManager.getInstance()
                 .getRandomEmoji()
                 .ifPresent(emoji -> displayableEmoji = emoji);
 
         if (displayableEmoji == null || prevDisplayableEmoji == null) return;
 
         while (displayableEmoji.getName().equals(prevDisplayableEmoji.getName()))
-            EmojiHandler.getInstance()
+            EmojiManager.getInstance()
                     .getRandomEmoji()
                     .ifPresent(emoji -> displayableEmoji = emoji);
     }

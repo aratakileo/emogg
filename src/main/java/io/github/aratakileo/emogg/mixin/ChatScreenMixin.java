@@ -1,5 +1,6 @@
 package io.github.aratakileo.emogg.mixin;
 
+import io.github.aratakileo.emogg.emoji.EmojiManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -12,10 +13,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import oshi.util.tuples.Pair;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.handler.FueController;
-import io.github.aratakileo.emogg.handler.Emoji;
-import io.github.aratakileo.emogg.gui.component.esm.EmojiSelectionMenu;
+import io.github.aratakileo.emogg.emoji.FueController;
+import io.github.aratakileo.emogg.emoji.Emoji;
+import io.github.aratakileo.emogg.gui.esm.EmojiSelectionMenu;
 import io.github.aratakileo.emogg.gui.component.EmojiButton;
 import io.github.aratakileo.emogg.util.KeyboardUtil;
 
@@ -55,7 +55,7 @@ public class ChatScreenMixin {
             emojiSelectionMenu.visible = !emojiSelectionMenu.visible;
         });
 
-        if (EmojiHandler.getInstance().isEmpty()) {
+        if (EmojiManager.getInstance().isEmpty()) {
             emojiButton.active = false;
             emojiButton.visible = false;
         }
@@ -95,10 +95,11 @@ public class ChatScreenMixin {
         self.setFocused(input);
     }
 
-    @Inject(method = "handleChatInput", at = @At("HEAD"))
-    public void handleChatInput(String text, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
-        FueController.collectStatisticFrom(text);
-    }
+    //TODO fue statistics
+//    @Inject(method = "handleChatInput", at = @At("HEAD"))
+//    public void handleChatInput(String text, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
+//        FueController.collectStatisticFrom(text);
+//    }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {

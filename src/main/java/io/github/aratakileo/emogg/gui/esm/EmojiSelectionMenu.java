@@ -1,14 +1,11 @@
-package io.github.aratakileo.emogg.gui.component.esm;
+package io.github.aratakileo.emogg.gui.esm;
 
 import io.github.aratakileo.emogg.Emogg;
+import io.github.aratakileo.emogg.EmoggConfig;
+import io.github.aratakileo.emogg.emoji.*;
 import io.github.aratakileo.emogg.gui.component.AbstractWidget;
 import io.github.aratakileo.emogg.gui.component.VerticalScrollbar;
-import io.github.aratakileo.emogg.handler.EmoggConfig;
-import io.github.aratakileo.emogg.gui.EmojiFont;
 import io.github.aratakileo.emogg.gui.screen.SettingsScreen;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.handler.FueController;
-import io.github.aratakileo.emogg.handler.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.Rect2i;
 import io.github.aratakileo.emogg.util.GuiUtil;
@@ -41,7 +38,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
     );
 
     private final float emojiSize, contentWidth;
-    private final EmojiFont font;
     private final Rect2i settingsButtonRect, plusButtonRect;
     private final ArrayList<CategoryContent> categoryContents = new ArrayList<>();
     private final boolean isSinglePage;
@@ -77,9 +73,8 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.visible = false;
         this.emojiSize = emojiSize;
         this.contentWidth = contentWidth;
-        this.font = EmojiFont.getInstance();
 
-        final var emojiHandler = EmojiHandler.getInstance();
+        final var emojiHandler = EmojiManager.getInstance();
         final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategoryNames().stream().toList());
 
         Collections.sort(categoryNames);
@@ -87,17 +82,17 @@ public class EmojiSelectionMenu extends AbstractWidget {
         var totalLinesAmount = 0;
 
         // Reordering categories
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_ANIME);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_MEMES);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_PEOPLE);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_NATURE);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_FOOD);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_ACTIVITIES);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_TRAVEL);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_OBJECTS);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_SYMBOLS);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_FLAGS);
-        moveCategoryDown(categoryNames, EmojiHandler.CATEGORY_DEFAULT);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_ANIME);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_MEMES);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_PEOPLE);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_NATURE);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_FOOD);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_ACTIVITIES);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_TRAVEL);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_OBJECTS);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_SYMBOLS);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_FLAGS);
+        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_DEFAULT);
         moveCategoryTo(categoryNames, FueController.CATEGORY_FREQUENTLY_USED, false);
 
         for (final var categoryName: categoryNames) {
@@ -124,14 +119,14 @@ public class EmojiSelectionMenu extends AbstractWidget {
         if (isSinglePage)
             width -= SCROLLBAR_WIDTH;
 
-        final var buttonSize = font.lineHeight + 2;
+        final var buttonSize = EmojiGlyph.HEIGHT + 2;
 
         this.settingsButtonRect = new Rect2i(
-                width - font.lineHeight - 3,
+                (int) (width - EmojiGlyph.HEIGHT - 3),
                 1,
-                buttonSize
+                (int) buttonSize
         );
-        this.plusButtonRect = settingsButtonRect.copy().moveX(-buttonSize - 1);
+        this.plusButtonRect = settingsButtonRect.copy().moveX((int) (-buttonSize - 1));
 
         setTooltipPositioner(MOUSE_TOOLTIP_POSITIONER);
     }
@@ -139,7 +134,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     public EmojiSelectionMenu(float emojiSize) {
         this(
                 emojiSize,
-                EmojiFont.getInstance().lineHeight + 3,
+                (int) (EmojiGlyph.HEIGHT + 3),
                 (emojiSize + 1) * MAX_NUMBER_OF_EMOJIS_IN_LINE
         );
     }
@@ -219,7 +214,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         final var mouseColumn = (int) ((mouseX - x) / (emojiSize + 1));
         final var mouseLine = (int) ((mouseY - y) / (emojiSize + 1)) - 1;
-        final var categoryTitleOffsetY = (int) ((emojiSize - font.lineHeight) / 2);
+        final var categoryTitleOffsetY = (int) ((emojiSize - EmojiGlyph.HEIGHT) / 2);
 
         hoveredEmojiOrCategoryContent = null;
 
@@ -263,8 +258,8 @@ public class EmojiSelectionMenu extends AbstractWidget {
                     setTooltip(categoryContent.getDisplayableName());
                 }
 
-                final var expandIndicatorChar = categoryContent.isExpanded() ? '-' : '+';
-                final var expandIndicatorLocalX = (int) (contentWidth - font.width(expandIndicatorChar));
+                final var expandIndicatorChar = categoryContent.isExpanded() ? "-" : "+";
+                final var expandIndicatorLocalX = (int) (contentWidth - getFont().width(expandIndicatorChar));
 
                 renderString(
                         guiGraphics,
@@ -287,7 +282,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                     renderString(
                             guiGraphics,
                             debugString,
-                            -font.width(debugString, false) - 2,
+                            -getFont().width(debugString) - 2,
                             categoryTitleLocalY,
                             0xffffff
                     );
@@ -332,7 +327,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                         renderString(
                                 guiGraphics,
                                 debugString,
-                                -font.width(debugString, false) - 2,
+                                -getFont().width(debugString) - 2,
                                 emojiY - y + 2,
                                 0xffffff
                         );
