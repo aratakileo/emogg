@@ -3,3 +3,5 @@
 run
 build
 applicable.paths
+/emogg_client.launch
+/emogg_server.launch

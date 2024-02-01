@@ -1,11 +1,10 @@
-package io.github.aratakileo.emogg.handler;
+package io.github.aratakileo.emogg.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -13,7 +12,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class NativeGifImage {
+public class NativeGifImage implements AutoCloseable {
     public final static String GIF_EXTENSION = ".gif";
 
     private final int width;
@@ -68,15 +67,6 @@ public class NativeGifImage {
         }
 
         return totalDelay;
-    }
-
-    public static @NotNull NativeGifImage read(@NotNull ResourceLocation resourceLocation) throws IOException {
-        final var optionalResource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
-
-        if (optionalResource.isEmpty())
-            throw new IOException("The resource cannot be found: " + resourceLocation.getPath());
-
-        return read(optionalResource.get().open());
     }
 
     public static @NotNull NativeGifImage read(@NotNull InputStream inputStream) throws IOException {
@@ -148,6 +138,11 @@ public class NativeGifImage {
         }
 
         return nativeGifImage;
+    }
+
+    @Override
+    public void close() {
+        // Handled by GC
     }
 
     public interface FrameProcessor {

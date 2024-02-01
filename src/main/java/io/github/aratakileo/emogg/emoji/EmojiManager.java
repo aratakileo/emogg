@@ -1,8 +1,12 @@
-package io.github.aratakileo.emogg.handler;
+package io.github.aratakileo.emogg.emoji;
 
 import com.google.common.collect.Lists;
+import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.util.EmojiUtil;
+import io.github.aratakileo.emogg.util.NativeGifImage;
 import io.github.aratakileo.emogg.util.StringUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
@@ -17,8 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class EmojiHandler {
-    private static @Nullable EmojiHandler instance;
+@Environment(EnvType.CLIENT)
+public class EmojiManager {
+    private static @Nullable EmojiManager instance;
 
     public final static Predicate<@NotNull String> HAS_EMOJIS_EXTENSION
             = path -> path.endsWith(EmojiUtil.PNG_EXTENSION) || path.endsWith(NativeGifImage.GIF_EXTENSION);
@@ -37,24 +42,38 @@ public class EmojiHandler {
             CATEGORY_SYMBOLS = "symbols",
             CATEGORY_FLAGS = "flags";
 
-    private final ConcurrentHashMap<@NotNull String, @NotNull Emoji> allEmojis = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<@NotNull Integer, @NotNull Emoji> emojiById = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<@NotNull String, @NotNull Emoji> emojiByName = new ConcurrentHashMap<>();
+    // Only used to keep ids consistent across resource reloads
+    // TODO: keep ids consistent across resource reloads
+    private final Map<@NotNull String, @NotNull Integer> nameToIdMap = new HashMap<>();
+
     private final ConcurrentHashMap<@NotNull String, @NotNull List<@NotNull String>> emojiCategories
             = new ConcurrentHashMap<>();
 
-    private EmojiHandler() {
+
+    private EmojiManager() {
         // All login in `init()`
     }
 
     public boolean isEmpty() {
-        return allEmojis.isEmpty();
+        return emojiByName.isEmpty();
+    }
+
+    public boolean hasEmoji(int id) {
+        return emojiById.containsKey(id);
     }
 
     public boolean hasEmoji(String name) {
-        return allEmojis.containsKey(name);
+        return emojiByName.containsKey(name);
+    }
+
+    public @Nullable Emoji getEmoji(int id) {
+        return emojiById.get(id);
     }
 
     public @Nullable Emoji getEmoji(String name) {
-        return allEmojis.get(name);
+        return emojiByName.get(name);
     }
 
     public @NotNull ConcurrentHashMap.KeySetView<@NotNull String, @NotNull List<@NotNull String>> getCategoryNames() {
@@ -67,19 +86,21 @@ public class EmojiHandler {
 
         if (!emojiCategories.containsKey(name)) return null;
 
-        return emojiCategories.get(name).stream().map(allEmojis::get).toList();
+        return emojiCategories.get(name).stream().map(emojiByName::get).toList();
     }
 
     public @NotNull Stream<@NotNull Emoji> getEmojisStream() {
-        return Lists.newArrayList(allEmojis.values()).stream();
+        return Lists.newArrayList(emojiByName.values()).stream();
     }
 
     public @NotNull Optional<Emoji> getRandomEmoji() {
-        return allEmojis.values()
+        return emojiByName.values()
                 .stream()
-                .skip((int) (allEmojis.size() * Math.random()))
+                .skip((int) (emojiByName.size() * Math.random()))
                 .findFirst();
     }
+
+    // TODO: refactor name generation to work with different loader readers
 
     public void regEmoji(@NotNull ResourceLocation resourceLocation) {
         var emojiName = EmojiUtil.normalizeNameOrCategory(EmojiUtil.getNameFromPath(resourceLocation));
@@ -94,17 +115,15 @@ public class EmojiHandler {
             return;
         }
 
-        var emoji = Emoji.from(emojiName, resourceLocation);
-
-        if (emoji == null) {
-            Emogg.LOGGER.error(String.format(
-                    "Failed to load %s, because it is invalid",
-                    StringUtil.repr(resourceLocation)
-            ));
-            return;
+        int id;
+        synchronized (nameToIdMap) {
+            id = nameToIdMap.computeIfAbsent(emojiName, name -> nameToIdMap.size());
         }
 
-        allEmojis.put(emojiName, emoji);
+        var emoji = Emoji.fromResource(id, emojiName, resourceLocation);
+
+        emojiByName.put(emojiName, emoji);
+        emojiById.put(emoji.getId(), emoji);
 
         regEmojiInItsCategory(emoji);
 
@@ -118,14 +137,14 @@ public class EmojiHandler {
     }
 
     private @Nullable String getUniqueName(@NotNull ResourceLocation resourceLocation, @NotNull String emojiName) {
-        if (allEmojis.containsKey(emojiName)) {
-            if (allEmojis.get(emojiName).getResourceLocation().equals(resourceLocation))
-                return null;
+        if (emojiByName.containsKey(emojiName)) {
+//            if (emojiByName.get(emojiName).getResourceLocation().equals(resourceLocation))
+//                return null;
 
             var emojiNameIndex = 0;
             var newEmojiName = emojiName + emojiNameIndex;
 
-            while (allEmojis.containsKey(newEmojiName)) {
+            while (emojiByName.containsKey(newEmojiName)) {
                 emojiNameIndex++;
                 newEmojiName = emojiName + emojiNameIndex;
             }
@@ -154,30 +173,31 @@ public class EmojiHandler {
         if (EmoggConfig.instance.isDebugModeEnabled)
             Emogg.LOGGER.info("[emogg] Updating emoji lists...");
 
+        EmojiAtlas.clear();
+
         emojiCategories.clear();
-        allEmojis.clear();
+        emojiById.clear();
+        emojiByName.clear();
 
         resourceManager.listResources(EmojiUtil.EMOJI_FOLDER_NAME, IS_EMOJI_LOCATION)
                 .keySet()
-                .parallelStream()
                 .forEach(this::regEmoji);
 
-        emojiCategories.values().parallelStream().forEach(Collections::sort);
+        emojiCategories.values().forEach(Collections::sort);
 
-        if (!allEmojis.isEmpty())
+        if (!emojiByName.isEmpty()) {
             Emogg.LOGGER.info(String.format(
-                    "[emogg] Updating the lists is complete. %s emojis have been defined and loaded in %ss!",
-                    allEmojis.size(),
+                    "[emogg] Updated emoji list. discovered %s emojis in %ss!",
+                    emojiByName.size(),
                     (System.currentTimeMillis() - startsLoadingAt) / 1000d
             ));
-        else
-            Emogg.LOGGER.info("[emogg] Updating the lists is complete. No emojis has been defined!");
+        }
 
         FueController.removeAllNonExistentFue();
     }
 
     public static void init() {
-        instance = new EmojiHandler();
+        instance = new EmojiManager();
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(
                 new SimpleSynchronousResourceReloadListener() {
@@ -194,7 +214,8 @@ public class EmojiHandler {
         );
     }
 
-    public static @Nullable EmojiHandler getInstance() {
+    public static @NotNull EmojiManager getInstance() {
+        if (instance == null) throw new NullPointerException("EmojiManager not initialized!");
         return instance;
     }
 }

@@ -1,9 +1,9 @@
-package io.github.aratakileo.emogg.gui.component.esm;
+package io.github.aratakileo.emogg.gui.esm;
 
-import io.github.aratakileo.emogg.gui.EmojiFont;
-import io.github.aratakileo.emogg.handler.EmoggConfig;
-import io.github.aratakileo.emogg.handler.Emoji;
-import io.github.aratakileo.emogg.handler.EmojiHandler;
+import io.github.aratakileo.emogg.EmoggConfig;
+import io.github.aratakileo.emogg.emoji.Emoji;
+import io.github.aratakileo.emogg.emoji.EmojiManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.locale.Language;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -73,16 +73,16 @@ public class CategoryContent {
 
     public @NotNull String getDisplayableName(int maxWidth) {
         final var displayableName = getDisplayableName();
-        final var font = EmojiFont.getInstance();
+        final var font = Minecraft.getInstance().font;
 
-        if (font.width(displayableName, false) <= maxWidth) return displayableName;
+        if (font.width(displayableName) <= maxWidth) return displayableName;
 
         final var stringBuilder = new StringBuilder(displayableName);
 
         for (var i = displayableName.length() - 1; i >= 0; i--) {
             stringBuilder.deleteCharAt(i);
 
-            if (font.width(stringBuilder + "...", false) <= maxWidth) {
+            if (font.width(stringBuilder + "...") <= maxWidth) {
                 stringBuilder.append("...");
                 break;
             }
@@ -104,7 +104,7 @@ public class CategoryContent {
     }
 
     public void refreshEmojis() {
-        emojis = EmojiHandler.getInstance().getEmojisByCategory(name);
+        emojis = EmojiManager.getInstance().getEmojisByCategory(name);
         lineCount = (int) (
                 Math.ceil((double)emojis.size() / (double) EmojiSelectionMenu.MAX_NUMBER_OF_EMOJIS_IN_LINE) + 1
         );

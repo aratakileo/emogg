@@ -1,6 +1,6 @@
-package io.github.aratakileo.emogg.gui.component.esm;
+package io.github.aratakileo.emogg.gui.esm;
 
-import io.github.aratakileo.emogg.handler.Emoji;
+import io.github.aratakileo.emogg.emoji.Emoji;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

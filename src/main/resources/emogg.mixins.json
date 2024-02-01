@@ -7,8 +7,14 @@
   ],
   "client": [
     "ChatScreenMixin",
+    "ComponentSerializerMixin",
+    "FontManagerMixin",
+    "FontMixin",
+    "GameRendererMixin",
     "InBedChatScreenMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "MutableComponentMixin",
+    "StringRenderOutputMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,9 +1,9 @@
-package io.github.aratakileo.emogg.handler;
+package io.github.aratakileo.emogg;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.aratakileo.emogg.Emogg;
+import io.github.aratakileo.emogg.emoji.FueController;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -25,6 +25,7 @@ public class EmoggConfig {
     public boolean isDebugModeEnabled = false;
     public @NotNull ArrayList<FueController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
     public @NotNull ArrayList<String> hiddenCategoryNames = new ArrayList<>();
+    public boolean useCustomShaders = true;
 
     public static void load() {
         if (file.exists())

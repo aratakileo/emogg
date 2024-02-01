@@ -2,6 +2,7 @@ package io.github.aratakileo.emogg.gui.component;
 
 import io.github.aratakileo.emogg.util.GuiUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -168,6 +169,10 @@ public abstract class AbstractWidget extends AbstractButton {
 
     public void setTooltipPositioner(@NotNull ClientTooltipPositioner tooltipPositioner) {
         this.tooltipPositioner = tooltipPositioner;
+    }
+
+    protected static Font getFont() {
+        return Minecraft.getInstance().font;
     }
 
     private static class MouseTooltipPositioner implements ClientTooltipPositioner {
