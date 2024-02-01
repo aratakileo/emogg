@@ -18,7 +18,7 @@ public class EmojiSuggestion implements Suggestion, SuggestionRenderer {
     }
 
     @Override
-    public @NotNull String getText() {
+    public @NotNull String getSuggestionText() {
         return emoji.getCode();
     }
 
