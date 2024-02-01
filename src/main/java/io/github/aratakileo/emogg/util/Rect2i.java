@@ -104,11 +104,6 @@ public class Rect2i extends net.minecraft.client.renderer.Rect2i {
         return contains((int) Math.ceil(x), (int) Math.ceil(y));
     }
 
-//    public boolean overlaps(int x, int y, int width, int height) {
-//        return Math.min(getRight(), x + width) - Math.max(getX(), x) > 0 &&
-//                Math.min(getBottom(), y + height) - Math.max(getY(), y) > 0;
-//    }
-
     public @NotNull Rect2i expand(int horizontal, int vertical) {
         final var returnable = copy();
         returnable.setSize(getWidth() + horizontal, getHeight() + vertical);

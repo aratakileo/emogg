@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -76,7 +75,7 @@ public class EmojiAtlas {
         }
 
         @Override
-        public void load(ResourceManager resourceManager) throws IOException {
+        public void load(ResourceManager resourceManager) {
         }
 
         public @Nullable EmojiGlyph.Atlas stitch(NativeImage image) {
@@ -248,7 +247,7 @@ public class EmojiAtlas {
         }
 
         @Override
-        public void dumpContents(ResourceLocation resourceLocation, Path path) throws IOException {
+        public void dumpContents(ResourceLocation resourceLocation, Path path) {
 //        _debugDrawFreeSpace();
 
             TextureUtil.writeAsPNG(
@@ -257,6 +256,10 @@ public class EmojiAtlas {
                     0,
                     totalWidth, totalHeight
             );
+        }
+
+        public ResourceLocation getName() {
+            return name;
         }
     }
 }

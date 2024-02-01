@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import oshi.util.tuples.Pair;
-import io.github.aratakileo.emogg.emoji.FueController;
 import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.gui.esm.EmojiSelectionMenu;
 import io.github.aratakileo.emogg.gui.component.EmojiButton;

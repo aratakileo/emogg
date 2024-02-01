@@ -3,10 +3,8 @@ package io.github.aratakileo.emogg.emoji;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.Util;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class MultiFrameEmojiGlyphProvider implements EmojiGlyphProvider {

@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -18,7 +17,6 @@ import java.util.function.Supplier;
 public final class Emoji {
     private final int id;
     private final String name;
-//    private final ResourceLocation resourceLocation;
     private final String category;
 
     private final EmojiLoader loader;
@@ -29,12 +27,10 @@ public final class Emoji {
 
     private Emoji(int id,
                     @NotNull String name,
-//                    @NotNull ResourceLocation resourceLocation,
                     @NotNull String category,
                     @NotNull EmojiLoader loader) {
         this.id = id;
         this.name = name;
-//        this.resourceLocation = resourceLocation;
         this.category = category;
         this.loader = loader;
     }
@@ -140,6 +136,6 @@ public final class Emoji {
         INACTIVE,
         LOADING,
         ACTIVE,
-        ERROR;
+        ERROR
     }
 }

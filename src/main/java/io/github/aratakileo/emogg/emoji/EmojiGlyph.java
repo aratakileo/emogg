@@ -50,6 +50,7 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
      * <p>
      * See the implementation in {@link EmojiGlyph.Atlas} for an example.
      */
+    @SuppressWarnings("SameParameterValue")
     protected abstract void renderImpl(VertexConsumer builder, Matrix4f mat, float r, float g, float b, float a, int packedLightCoords);
 
     @Override
@@ -96,10 +97,6 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
             builder.vertex(mat, 0f, 1f, 0f).color(r, g, b, a).uv(u0, v1).uv2(packedLightCoords).endVertex();
             builder.vertex(mat, 1f, 1f, 0f).color(r, g, b, a).uv(u1, v1).uv2(packedLightCoords).endVertex();
             builder.vertex(mat, 1f, 0f, 0f).color(r, g, b, a).uv(u1, v0).uv2(packedLightCoords).endVertex();
-        }
-
-        public Rect2i getRect() {
-            return rect;
         }
     }
 

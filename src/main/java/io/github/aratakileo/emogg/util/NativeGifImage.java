@@ -1,8 +1,6 @@
 package io.github.aratakileo.emogg.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.stb.STBImage;

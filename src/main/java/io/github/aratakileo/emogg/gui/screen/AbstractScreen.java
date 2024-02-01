@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractScreen extends Screen {
-    protected @Nullable Screen parent;
+    protected final @Nullable Screen parent;
 
     protected AbstractScreen(@NotNull Component component, @Nullable Screen parent) {
         super(component);

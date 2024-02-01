@@ -27,10 +27,6 @@ public class EmojiFontSet extends FontSet {
         EmojiFontSet.instance = this;
     }
 
-    public EmojiFontSet(TextureManager textureManager, ResourceLocation resourceLocation) {
-        this(textureManager);
-    }
-
     public static int codePointToId(int codePoint) {
         //TODO: avoid special unicode characters? (control, private_use, etc.)
         return codePoint - 33;
@@ -46,7 +42,6 @@ public class EmojiFontSet extends FontSet {
 
     @Override
     public @NotNull EmojiGlyph getGlyph(int iChar) {
-        @SuppressWarnings("DataFlowIssue")
         var emoji = EmojiManager.getInstance().getEmoji(codePointToId(iChar));
         if (emoji == null) return EmojiGlyph.ERROR;
         return emoji.getGlyph();

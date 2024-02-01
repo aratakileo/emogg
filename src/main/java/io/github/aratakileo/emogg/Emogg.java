@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 
 public class Emogg implements ClientModInitializer {
-    public static Logger LOGGER = LoggerFactory.getLogger(Emogg.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(Emogg.class);
 
     public static final String NAMESPACE_OR_ID = "emogg";
 

@@ -1,28 +1,13 @@
 package io.github.aratakileo.emogg.util;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.aratakileo.emogg.emoji.EmojiGlyph;
-import io.github.aratakileo.suggestionsapi.util.RenderUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 import io.github.aratakileo.emogg.emoji.Emoji;
-
-import java.util.Objects;
-
-import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
 
 public final class EmojiUtil {
     public final static String PNG_EXTENSION = ".png",
