@@ -9,6 +9,8 @@ import io.github.aratakileo.emogg.gui.screen.SettingsScreen;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.Rect2i;
 import io.github.aratakileo.emogg.util.GuiUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class EmojiSelectionMenu extends AbstractWidget {
     public final static int MAX_NUMBER_OF_EMOJIS_IN_LINE = 9,
             MAX_NUMBER_OF_LINES_ON_PAGE = 8,

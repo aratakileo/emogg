@@ -1,9 +1,12 @@
 package io.github.aratakileo.emogg.gui.esm;
 
 import io.github.aratakileo.emogg.emoji.Emoji;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Environment(EnvType.CLIENT)
 public class EmojiOrCategoryContent {
     private final Emoji emoji;
     private final CategoryContent categoryContent;

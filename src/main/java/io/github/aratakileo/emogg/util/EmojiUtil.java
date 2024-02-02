@@ -1,6 +1,8 @@
 package io.github.aratakileo.emogg.util;
 
 import io.github.aratakileo.emogg.emoji.EmojiGlyph;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import io.github.aratakileo.emogg.emoji.Emoji;
 
+@Environment(EnvType.CLIENT)
 public final class EmojiUtil {
     public final static String PNG_EXTENSION = ".png",
             EMOJI_FOLDER_NAME = "emoji";

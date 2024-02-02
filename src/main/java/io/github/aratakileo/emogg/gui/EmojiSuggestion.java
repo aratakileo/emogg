@@ -5,11 +5,14 @@ import io.github.aratakileo.emogg.emoji.EmojiGlyph;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.suggestionsapi.suggestion.Suggestion;
 import io.github.aratakileo.suggestionsapi.suggestion.SuggestionRenderer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class EmojiSuggestion implements Suggestion, SuggestionRenderer {
     private final Emoji emoji;
 

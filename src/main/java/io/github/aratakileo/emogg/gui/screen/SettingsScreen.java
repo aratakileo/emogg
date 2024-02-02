@@ -3,6 +3,8 @@ package io.github.aratakileo.emogg.gui.screen;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.gui.component.Button;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class SettingsScreen extends AbstractScreen {
     public SettingsScreen() {
         super(Component.translatable("emogg.settings.title"));

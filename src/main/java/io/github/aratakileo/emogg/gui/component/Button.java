@@ -1,10 +1,13 @@
 package io.github.aratakileo.emogg.gui.component;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import io.github.aratakileo.emogg.util.GuiUtil;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class Button extends AbstractWidget {
     private int padding = 0;
 

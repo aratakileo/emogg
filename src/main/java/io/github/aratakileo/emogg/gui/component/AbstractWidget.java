@@ -1,6 +1,8 @@
 package io.github.aratakileo.emogg.gui.component;
 
 import io.github.aratakileo.emogg.util.GuiUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,6 +21,7 @@ import org.joml.Vector2ic;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public abstract class AbstractWidget extends AbstractButton {
     public final static MouseTooltipPositioner MOUSE_TOOLTIP_POSITIONER = new MouseTooltipPositioner();
 

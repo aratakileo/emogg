@@ -3,6 +3,8 @@ package io.github.aratakileo.emogg.gui.esm;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.locale.Language;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class CategoryContent {
     private final String name;
 

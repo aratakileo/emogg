@@ -1,6 +1,8 @@
 package io.github.aratakileo.emogg.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.stb.STBImage;
@@ -10,6 +12,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Environment(EnvType.CLIENT)
 public class NativeGifImage implements AutoCloseable {
     public final static String GIF_EXTENSION = ".gif";
 
