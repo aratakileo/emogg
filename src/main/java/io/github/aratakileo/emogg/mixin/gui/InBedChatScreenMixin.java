@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin;
+package io.github.aratakileo.emogg.mixin.gui;
 
 import io.github.aratakileo.emogg.util.KeyboardUtil;
 import net.minecraft.client.gui.screens.InBedChatScreen;

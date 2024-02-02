@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin;
+package io.github.aratakileo.emogg.mixin.gui;
 
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.api.ModrinthApi;

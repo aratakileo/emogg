@@ -6,15 +6,15 @@
   "mixins": [
   ],
   "client": [
-    "ChatScreenMixin",
-    "ComponentSerializerMixin",
-    "FontManagerMixin",
-    "FontMixin",
     "GameRendererMixin",
-    "InBedChatScreenMixin",
-    "MinecraftMixin",
-    "MutableComponentMixin",
-    "StringRenderOutputMixin"
+    "font.FontManagerMixin",
+    "font.FontMixin",
+    "font.StringRenderOutputMixin",
+    "component.ComponentSerializerMixin",
+    "component.MutableComponentMixin",
+    "gui.ChatScreenMixin",
+    "gui.InBedChatScreenMixin",
+    "gui.MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1
