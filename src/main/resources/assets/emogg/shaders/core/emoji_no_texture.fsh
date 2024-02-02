@@ -17,8 +17,5 @@ out vec4 fragColor;
 
 void main() {
     vec4 color = vertexColor * ColorModulator;
-    if (color.a < 0.1) {
-        discard;
-    }
     fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
 }
