@@ -4,8 +4,8 @@
         "srcrgb": "srcalpha",
         "dstrgb": "1-srcalpha"
     },
-    "vertex": "emogg:emoji_see_through",
-    "fragment": "emogg:emoji_see_through",
+    "vertex": "emoji_see_through",
+    "fragment": "emoji_see_through",
     "attributes": [
         "Position",
         "Color",
