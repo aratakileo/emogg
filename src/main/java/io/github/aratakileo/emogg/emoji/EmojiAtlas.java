@@ -92,7 +92,7 @@ public class EmojiAtlas {
             }
 
             if (EmoggConfig.instance.isDebugModeEnabled)
-                Emogg.LOGGER.info("Stitching emoji texture to "+pos.toString(NumberFormat.getIntegerInstance()));
+                Emogg.LOGGER.info("Stitching emoji texture to ({},{})", pos.x, pos.y);
 
             bind();
             image.upload(0, pos.x, pos.y, false);
