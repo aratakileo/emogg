@@ -128,7 +128,7 @@ public class EmojiManager {
 
         if (EmoggConfig.instance.isDebugModeEnabled)
             Emogg.LOGGER.info(String.format(
-                    "Loaded %s as %s to %s",
+                    "Discovered %s as %s to category <%s>",
                     StringUtil.repr(resourceLocation),
                     emoji.getCode(),
                     emoji.getCategory()
