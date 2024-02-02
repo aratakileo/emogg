@@ -8,7 +8,9 @@ import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.util.Rect2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.font.GlyphRenderTypes;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.Dumpable;
@@ -44,6 +46,14 @@ public class EmojiAtlas {
         textures.clear();
     }
 
+    static {
+        HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> {
+            if (EmoggConfig.instance.isDebugModeEnabled && !textures.isEmpty()) {
+                textures.get(textures.size() - 1).drawDebugHUD(guiGraphics);
+            }
+        });
+    }
+
     private static class EmojiAtlasTexture extends AbstractTexture implements Dumpable {
         private final ResourceLocation name;
         private int totalWidth = 256, totalHeight = 256;
@@ -53,7 +63,8 @@ public class EmojiAtlas {
 
         private final GlyphRenderTypes glyphRenderTypes;
 
-        private static final boolean DEBUG_FILL_BG = false;
+        // Can be changed to fill the bg with a specific color for debugging
+        private static final int BG_FILL_COLOR = 0x00000000;
 
         public EmojiAtlasTexture(String name) {
             RenderSystem.assertOnRenderThreadOrInit();
@@ -70,13 +81,13 @@ public class EmojiAtlas {
                     true, // Linear Filtering
                     false // No Mipmap
             );
+            fillBackground();
+
             freeSpace.add(new Rect2i(0, 0, totalWidth, totalHeight));
             glyphRenderTypes = EmojiGlyphRenderTypes.emoji(this.name);
 
             Emogg.LOGGER.info("Created emoji atlas texture: {}x{} {}",
                     totalWidth, totalHeight, getName());
-
-            if (DEBUG_FILL_BG) _debugFillBg();
         }
 
         @Override
@@ -210,7 +221,7 @@ public class EmojiAtlas {
                     true, // Linear Filtering
                     false // No Mipmap
             );
-            if (DEBUG_FILL_BG) _debugFillBg();
+            fillBackground();
 
             // Apply old data
             bind();
@@ -223,12 +234,12 @@ public class EmojiAtlas {
             return true;
         }
 
-        private void _debugFillBg() {
-            var fill = new NativeImage(NativeImage.Format.RGBA, totalWidth, totalHeight, false);
-            fill.fillRect(0, 0, totalWidth, totalHeight, 0xFFFF0000);
-            bind();
-            fill.upload(0, 0, 0, false);
-            fill.close();
+        private void fillBackground() {
+            try (var image = new NativeImage(NativeImage.Format.RGBA, totalWidth, totalHeight, false)) {
+                image.fillRect(0, 0, totalWidth, totalHeight, BG_FILL_COLOR);
+                bind();
+                image.upload(0, 0, 0, false);
+            }
         }
 
         private void _debugDrawFreeSpace() {
@@ -266,6 +277,29 @@ public class EmojiAtlas {
 
         public ResourceLocation getName() {
             return name;
+        }
+
+        public void drawDebugHUD(GuiGraphics guiGraphics) {
+            double scale = (double) guiGraphics.guiHeight() / totalHeight;
+
+            guiGraphics.blit(
+                    getName(),
+                    0, 0,
+                    (int) (totalWidth * scale), (int) (totalHeight * scale),
+                    0f, 0f,
+                    totalWidth, totalHeight,
+                    totalWidth, totalHeight
+            );
+
+            var random = new Random();
+            for (var rect : freeSpace) {
+                random.setSeed(rect.hashCode());
+                guiGraphics.fill(
+                        (int) (rect.getX() * scale), (int) (rect.getY() * scale),
+                        (int) (rect.getRight() * scale), (int) (rect.getBottom() * scale),
+                        random.nextInt(0, 0xFFFFFF+1) | (128 << 24)
+                );
+            }
         }
     }
 }
