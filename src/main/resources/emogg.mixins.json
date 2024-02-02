@@ -7,9 +7,9 @@
   ],
   "client": [
     "GameRendererMixin",
-    "component.MutableComponentMixin",
-    "component.ComponentSerializerMixin",
-    "component.ComponentMixin",
+    "parsing.MutableComponentMixin",
+    "parsing.ComponentMixin",
+    "parsing.ComponentSerializerMixin",
     "font.FontManagerMixin",
     "font.FontMixin",
     "font.StringRenderOutputMixin",

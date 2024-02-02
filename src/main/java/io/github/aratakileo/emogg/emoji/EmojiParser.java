@@ -19,7 +19,9 @@ import java.util.regex.Pattern;
 public class EmojiParser {
     public final static Pattern PATTERN = Pattern.compile("(\\\\?):([_A-Za-z0-9]+):");
 
-    private static final Map<IdentityWrapper<MutableComponent>, MutableComponent> originalComponents = new WeakHashMap<>();
+    private static final Map<IdentityWrapper<MutableComponent>, MutableComponent> parsedToOriginal = new WeakHashMap<>();
+    // Used to query parsedToOriginal
+    private static final IdentityWrapper.Mutable<MutableComponent> queryingIdentityWrapper = new IdentityWrapper.Mutable<>();
 
     public record Section(int start, int end, String emoji, boolean escaped) { }
 
@@ -48,7 +50,7 @@ public class EmojiParser {
             if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.debug("Parsing <"+component+">");
 
-            originalComponents.put(new IdentityWrapper<>(component), component.copy());
+            parsedToOriginal.put(new IdentityWrapper<>(component), component.copy());
 
             List<Component> components = new ArrayList<>();
 
@@ -119,6 +121,8 @@ public class EmojiParser {
 
     public static void parse(MutableComponent component) {
         if (!isParsable(component)) return;
+        queryingIdentityWrapper.mutValue = component;
+        if (parsedToOriginal.containsKey(queryingIdentityWrapper)) return;
         try {
             if (!parsing) {
                 parsing = true;
@@ -152,11 +156,10 @@ public class EmojiParser {
         return RenderSystem.isOnRenderThreadOrInit();
     }
 
-    private static final IdentityWrapper.Mutable<MutableComponent> queryingIdentityWrapper = new IdentityWrapper.Mutable<>();
     public static @Nullable MutableComponent getOriginal(Component component) {
         if (!mayBeParseResult(component)) return null;
         queryingIdentityWrapper.mutValue = (MutableComponent) component;
-        return originalComponents.get(queryingIdentityWrapper);
+        return parsedToOriginal.get(queryingIdentityWrapper);
     }
 
     // Mixin helpers
@@ -187,7 +190,7 @@ public class EmojiParser {
     }
 
     /**
-     * Used by {@link io.github.aratakileo.emogg.mixin.component.ComponentMixin}
+     * Used by {@link io.github.aratakileo.emogg.mixin.parsing.ComponentMixin}
      * <p>
      * To indicate if we are in a {@link Component#getString()} or {@link Component#getString(int)} method,
      * we always use the original components in this method and the methods it calls

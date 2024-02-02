@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin.component;
+package io.github.aratakileo.emogg.mixin.parsing;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;

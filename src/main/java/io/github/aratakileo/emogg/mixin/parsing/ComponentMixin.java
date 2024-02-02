@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin.component;
+package io.github.aratakileo.emogg.mixin.parsing;
 
 import io.github.aratakileo.emogg.emoji.EmojiParser;
 import net.minecraft.network.chat.Component;
