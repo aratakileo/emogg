@@ -7,11 +7,12 @@
   ],
   "client": [
     "GameRendererMixin",
+    "component.MutableComponentMixin",
+    "component.ComponentSerializerMixin",
+    "component.ComponentMixin",
     "font.FontManagerMixin",
     "font.FontMixin",
     "font.StringRenderOutputMixin",
-    "component.ComponentSerializerMixin",
-    "component.MutableComponentMixin",
     "gui.ChatScreenMixin",
     "gui.InBedChatScreenMixin",
     "gui.MinecraftMixin"

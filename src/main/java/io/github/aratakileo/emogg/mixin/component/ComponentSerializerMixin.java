@@ -2,8 +2,6 @@ package io.github.aratakileo.emogg.mixin.component;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
-import io.github.aratakileo.emogg.Emogg;
-import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.emoji.EmojiParser;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,12 +21,10 @@ public abstract class ComponentSerializerMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext, CallbackInfoReturnable<JsonElement> cir) {
-        final var original = EmojiParser.getOriginal(component);
-        if (original != null) {
-            if (EmoggConfig.instance.enableDebugMode)
-                Emogg.LOGGER.info("Serializing original component <"+original+"> of <"+component+">");
-            cir.cancel();
-            cir.setReturnValue(serialize(original, type, jsonSerializationContext));
-        }
+        EmojiParser.mixinApplyUsingOriginal(
+                component, cir,
+                c -> serialize(c, type, jsonSerializationContext),
+                "ComponentSerializer - "
+        );
     }
 }

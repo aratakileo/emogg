@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class MutableComponentMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(ComponentContents componentContents, List<Component> list, Style style, CallbackInfo ci) {
-        if (EmojiParser.isOnLogicalClient())
-            EmojiParser.parse((MutableComponent) (Object) this);
+        if (!EmojiParser.isOnLogicalClient()) return;
+        EmojiParser.parse((MutableComponent) (Object) this);
     }
 }
