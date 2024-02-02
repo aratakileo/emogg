@@ -9,8 +9,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Deciphering:
+ * <p>
+ * Fue -> FUE -> Frequently Used Emojis
+ */
 @Environment(EnvType.CLIENT)
-public class FueController { // Fue = FUE = Frequently Used Emojis
+public class FueController {
     public final static String CATEGORY_FREQUENTLY_USED = "$frequently_used";
 
     private final static int MAX_NUMBER_OF_RECENTLY_USED_EMOJIS = 45,
@@ -26,7 +31,12 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
                 .toList();
     }
 
-    public static void removeAllNonExistentFue() { // Fue = FUE = Frequently Used Emojis
+    /**
+     * Deciphering:
+     * <p>
+     * Fue -> FUE -> Frequently Used Emojis
+     */
+    public static void removeAllNonExistentFue() {
         EmoggConfig.instance.frequentlyUsedEmojis.removeIf(emojiStatistic -> {
             final var itExists = EmojiManager.getInstance().hasEmoji(emojiStatistic.emojiName);
 
@@ -45,9 +55,9 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
             if (!section.escaped()) {
                 final var emoji = EmojiManager.getInstance().getEmoji(section.emoji());
 
-                if (emoji == null || emojisNamesInText.contains(emoji.getName())) continue;
+                if (emoji == null || emojisNamesInText.contains(emoji.getKey())) continue;
 
-                emojisNamesInText.add(emoji.getName());
+                emojisNamesInText.add(emoji.getKey());
                 markEmojiUse(emoji);
             }
         }
@@ -63,39 +73,16 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
                 EmoggConfig.instance.frequentlyUsedEmojis.remove(frequentlyUsedEmojiStatistic);
         }
 
-//        bubbleSortEmojis();
         EmoggConfig.instance.frequentlyUsedEmojis.sort(
                 Comparator.<EmojiStatistic>comparingInt(e -> e.usePoints).reversed()
         );
         EmoggConfig.save();
     }
 
-//    private static void bubbleSortEmojis() {
-//        final var frequentlyUsedEmojis = EmoggConfig.instance.frequentlyUsedEmojis;
-//        EmojiStatistic temp;
-//        boolean swapped;
-//
-//        for (var i = 0; i < frequentlyUsedEmojis.size() - 1; i++) {
-//            swapped = false;
-//
-//            for (var k = frequentlyUsedEmojis.size() - 1; k > i; k--) {
-//                temp = frequentlyUsedEmojis.get(k);
-//
-//                if (temp.usePoints <= frequentlyUsedEmojis.get(k - 1).usePoints) continue;
-//
-//                frequentlyUsedEmojis.set(k, frequentlyUsedEmojis.get(k - 1));
-//                frequentlyUsedEmojis.set(k - 1, temp);
-//                swapped = true;
-//            }
-//
-//            if (!swapped) break;
-//        }
-//    }
-
     private static void markEmojiUse(@NotNull Emoji emoji) {
         final var frequentlyUsedEmojis = EmoggConfig.instance.frequentlyUsedEmojis;
-        final var frequentlyUsedEmojiNames = getFrequentlyUsedEmojiNames();
-        final var emojiName = emoji.getName();
+        final var frequentlyUsedEmojiNames = getFueNames();
+        final var emojiName = emoji.getKey();
 
         if (frequentlyUsedEmojiNames.contains(emojiName)) {
             final var emojiStatistic = frequentlyUsedEmojis.get(frequentlyUsedEmojiNames.indexOf(emojiName));
@@ -109,7 +96,12 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
         frequentlyUsedEmojis.add(new EmojiStatistic(emojiName));
     }
 
-    private static @NotNull List<@NotNull String> getFrequentlyUsedEmojiNames() {
+    /**
+     * Deciphering:
+     * <p>
+     * Fue -> FUE -> Frequently Used Emojis
+     */
+    private static @NotNull List<@NotNull String> getFueNames() {
         return EmoggConfig.instance.frequentlyUsedEmojis.stream().map(EmojiStatistic::getEmojiName).toList();
     }
 

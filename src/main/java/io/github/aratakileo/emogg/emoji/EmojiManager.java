@@ -30,29 +30,16 @@ public class EmojiManager {
     public final static Predicate<@NotNull ResourceLocation> IS_EMOJI_LOCATION
             = resourceLocation -> HAS_EMOJIS_EXTENSION.test(resourceLocation.getPath());
 
-    public final static String CATEGORY_DEFAULT = "other",
-            CATEGORY_ANIME = "anime",
-            CATEGORY_MEMES = "memes",
-            CATEGORY_PEOPLE = "people",
-            CATEGORY_NATURE = "nature",
-            CATEGORY_FOOD = "food",
-            CATEGORY_ACTIVITIES = "activities",
-            CATEGORY_TRAVEL = "travel",
-            CATEGORY_OBJECTS = "objects",
-            CATEGORY_SYMBOLS = "symbols",
-            CATEGORY_FLAGS = "flags";
-
     private final ConcurrentHashMap<@NotNull Integer, @NotNull Emoji> emojiById = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<@NotNull String, @NotNull Emoji> emojiByName = new ConcurrentHashMap<>();
+
     // Only used to keep ids consistent across resource reloads
     private final Map<@NotNull String, @NotNull Integer> nameToIdMap = new HashMap<>();
-
     private final ConcurrentHashMap<@NotNull String, @NotNull List<@NotNull String>> emojiCategories
             = new ConcurrentHashMap<>();
 
-
     private EmojiManager() {
-        // All login in `init()`
+        // All logic in `init()`
     }
 
     public boolean isEmpty() {
@@ -63,7 +50,7 @@ public class EmojiManager {
         return emojiById.containsKey(id);
     }
 
-    public boolean hasEmoji(String name) {
+    public boolean hasEmoji(@NotNull String name) {
         return emojiByName.containsKey(name);
     }
 
@@ -71,12 +58,16 @@ public class EmojiManager {
         return emojiById.get(id);
     }
 
-    public @Nullable Emoji getEmoji(String name) {
+    public @Nullable Emoji getEmoji(@NotNull String name) {
         return emojiByName.get(name);
     }
 
-    public @NotNull ConcurrentHashMap.KeySetView<@NotNull String, @NotNull List<@NotNull String>> getCategoryNames() {
-        return emojiCategories.keySet();
+    public boolean hasCategory(@NotNull String categoryKey) {
+        return emojiCategories.containsKey(categoryKey);
+    }
+
+    public @NotNull List<String> getCategoryKeys() {
+        return emojiCategories.keySet().stream().toList();
     }
 
     public @Nullable List<@NotNull Emoji> getEmojisByCategory(@NotNull String name) {
@@ -102,15 +93,16 @@ public class EmojiManager {
     // TODO: refactor name generation to work with different loader readers
 
     public void regEmoji(@NotNull ResourceLocation resourceLocation) {
-        var emojiName = EmojiUtil.normalizeNameOrCategory(EmojiUtil.getNameFromPath(resourceLocation));
+        var emojiName = EmojiUtil.normalizeEmojiKeyOrCategoryKey(EmojiUtil.getNameFromPath(resourceLocation));
         emojiName = getUniqueName(resourceLocation, emojiName);
 
-        if (emojiName == null) {
+        if (Objects.isNull(emojiName)) {
             if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.error(String.format(
                         "Failed to load %s, because it is already defined",
                         StringUtil.repr(resourceLocation)
                 ));
+
             return;
         }
 
@@ -160,10 +152,10 @@ public class EmojiManager {
 
         final var emojiNamesInCategory = emojiCategories.get(emoji.getCategory());
 
-        if (emojiNamesInCategory.contains(emoji.getName()))
+        if (emojiNamesInCategory.contains(emoji.getKey()))
             return;
 
-        emojiNamesInCategory.add(emoji.getName());
+        emojiNamesInCategory.add(emoji.getKey());
     }
 
     private void onResourceReload(@NotNull ResourceManager resourceManager) {
@@ -186,7 +178,7 @@ public class EmojiManager {
 
         if (!emojiByName.isEmpty()) {
             Emogg.LOGGER.info(String.format(
-                    "[emogg] Updated emoji list. discovered %s emojis in %ss!",
+                    "[emogg] The emoji list has been updated. Discovered %s emojis in %ss!",
                     emojiByName.size(),
                     (System.currentTimeMillis() - startsLoadingAt) / 1000d
             ));

@@ -50,21 +50,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
     public final VerticalScrollbar verticalScrollbar;
 
-    private void moveCategoryDown(@NotNull List<String> categoryNames, @NotNull String category) {
-        moveCategoryTo(categoryNames, category, true);
-    }
-
-    private void moveCategoryTo(@NotNull List<String> categoryNames, @NotNull String category, boolean isMoveDown) {
-        if (categoryNames.contains(category)) {
-            categoryNames.remove(category);
-
-            if (isMoveDown)
-                categoryNames.add(category);
-            else
-                categoryNames.add(0, category);
-        }
-    }
-
     protected EmojiSelectionMenu(float emojiSize, int headerHeight, float contentWidth) {
         super(
                 0,
@@ -77,29 +62,10 @@ public class EmojiSelectionMenu extends AbstractWidget {
         this.emojiSize = emojiSize;
         this.contentWidth = contentWidth;
 
-        final var emojiHandler = EmojiManager.getInstance();
-        final var categoryNames = new java.util.ArrayList<>(emojiHandler.getCategoryNames().stream().toList());
-
-        Collections.sort(categoryNames);
-
         var totalLinesAmount = 0;
 
-        // Reordering categories
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_ANIME);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_MEMES);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_PEOPLE);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_NATURE);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_FOOD);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_ACTIVITIES);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_TRAVEL);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_OBJECTS);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_SYMBOLS);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_FLAGS);
-        moveCategoryDown(categoryNames, EmojiManager.CATEGORY_DEFAULT);
-        moveCategoryTo(categoryNames, FueController.CATEGORY_FREQUENTLY_USED, false);
-
-        for (final var categoryName: categoryNames) {
-            final var categoryContent = new CategoryContent(categoryName);
+        for (final var categoryKey: EmojiCategory.getCategoryKeys(true)) {
+            final var categoryContent = new CategoryContent(categoryKey);
 
             if (categoryContent.isEmpty()) continue;
 

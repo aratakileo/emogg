@@ -22,9 +22,11 @@ public final class EmojiUtil {
         );
 
         var scale = size / Math.max(emojiGlyph.getAdvance(), EmojiGlyph.HEIGHT);
+
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(x, y, 0f);
         guiGraphics.pose().scale(scale, scale, 0f);
+
         emojiGlyph.render(
                 false,
                 0f, 0f,
@@ -33,6 +35,7 @@ public final class EmojiUtil {
                 1f, 1f, 1f, 1f,
                 LightTexture.FULL_BRIGHT
         );
+
         guiGraphics.pose().popPose();
     }
 
@@ -40,7 +43,7 @@ public final class EmojiUtil {
         render(emoji.getGlyph(), guiGraphics, x, y, size);
     }
 
-    public static @NotNull String normalizeNameOrCategory(@NotNull String sourceValue) {
+    public static @NotNull String normalizeEmojiKeyOrCategoryKey(@NotNull String sourceValue) {
         return StringUtils.strip(
                 sourceValue.toLowerCase()
                         .replaceAll("-+| +|\\.+", "_")

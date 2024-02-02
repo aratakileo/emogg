@@ -72,7 +72,7 @@ public class EmojiButton extends Button {
 
         if (displayableEmoji == null || prevDisplayableEmoji == null) return;
 
-        while (displayableEmoji.getName().equals(prevDisplayableEmoji.getName()))
+        while (displayableEmoji.getKey().equals(prevDisplayableEmoji.getKey()))
             EmojiManager.getInstance()
                     .getRandomEmoji()
                     .ifPresent(emoji -> displayableEmoji = emoji);
