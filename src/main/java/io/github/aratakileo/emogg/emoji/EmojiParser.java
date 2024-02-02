@@ -1,11 +1,8 @@
 package io.github.aratakileo.emogg.emoji;
 
-import com.mojang.datafixers.util.Pair;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.emoji.Emoji;
-import io.github.aratakileo.emogg.emoji.EmojiFontSet;
-import io.github.aratakileo.emogg.emoji.EmojiManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -24,6 +21,8 @@ public class EmojiParser {
     public final static Pattern PATTERN = Pattern.compile("(\\\\?):([_A-Za-z0-9]+):");
 
     private static final WeakHashMap<MutableComponent, MutableComponent> originalComponents = new WeakHashMap<>();
+
+    public record Section(int start, int end, String emoji, boolean escaped) { }
 
     public static List<Section> getEmojiSections(String text) {
         final var matcher = PATTERN.matcher(text);
@@ -47,7 +46,7 @@ public class EmojiParser {
 
             if (sections.isEmpty()) return;
 
-            if (EmoggConfig.instance.isDebugModeEnabled)
+            if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.debug("Parsing <"+component+">");
 
             originalComponents.put(component, component.copy());
@@ -110,7 +109,7 @@ public class EmojiParser {
             component.siblings = components;
             component.contents = LiteralContents.EMPTY;
 
-            if (EmoggConfig.instance.isDebugModeEnabled)
+            if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.debug("Parse result: <"+component+">");
         }
     }
@@ -131,10 +130,12 @@ public class EmojiParser {
         }
     }
 
+    public static boolean isOnLogicalClient() {
+        return RenderSystem.isOnRenderThreadOrInit();
+    }
+
     public static @Nullable MutableComponent getOriginal(Component component) {
         //noinspection SuspiciousMethodCalls
         return originalComponents.get(component);
     }
-
-    public record Section(int start, int end, String emoji, boolean escaped) { }
 }
