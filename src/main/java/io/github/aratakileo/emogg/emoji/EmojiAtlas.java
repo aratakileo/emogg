@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.aratakileo.emogg.Emogg;
+import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.util.Rect2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -71,6 +72,9 @@ public class EmojiAtlas {
             freeSpace.add(new Rect2i(0, 0, totalWidth, totalHeight));
             glyphRenderTypes = EmojiGlyphRenderTypes.emoji(this.name);
 
+            Emogg.LOGGER.info("Created emoji atlas texture: {}x{} {}",
+                    totalWidth, totalHeight, getName());
+
             if (DEBUG_FILL_BG) _debugFillBg();
         }
 
@@ -86,7 +90,8 @@ public class EmojiAtlas {
                 if (!expand()) return null;
             }
 
-            System.out.printf("%d, %d\n", pos.x, pos.y);
+            if (EmoggConfig.instance.isDebugModeEnabled)
+                Emogg.LOGGER.info("Stitching emoji texture to "+pos);
 
             bind();
             image.upload(0, pos.x, pos.y, false);
