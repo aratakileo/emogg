@@ -102,40 +102,38 @@ public class EmojiManager {
     // TODO: refactor name generation to work with different loader readers
 
     public void regEmoji(@NotNull ResourceLocation resourceLocation) {
-        for (int i=0;i<50;i++) {
-            var emojiName = EmojiUtil.normalizeNameOrCategory(EmojiUtil.getNameFromPath(resourceLocation));
-            emojiName = getUniqueName(resourceLocation, emojiName);
+        var emojiName = EmojiUtil.normalizeNameOrCategory(EmojiUtil.getNameFromPath(resourceLocation));
+        emojiName = getUniqueName(resourceLocation, emojiName);
 
-            if (emojiName == null) {
-                if (EmoggConfig.instance.enableDebugMode)
-                    Emogg.LOGGER.error(String.format(
-                            "Failed to load %s, because it is already defined",
-                            StringUtil.repr(resourceLocation)
-                    ));
-                return;
-            }
-
-            int id;
-            synchronized (nameToIdMap) {
-                id = nameToIdMap.computeIfAbsent(emojiName, name -> nameToIdMap.size());
-            }
-
-            var emoji = Emoji.fromResource(id, emojiName, resourceLocation);
-
-            emojiByName.put(emojiName, emoji);
-            emojiById.put(emoji.getId(), emoji);
-
-            regEmojiInItsCategory(emoji);
-
+        if (emojiName == null) {
             if (EmoggConfig.instance.enableDebugMode)
-                Emogg.LOGGER.info(String.format(
-                        "Discovered %s as %s to category <%s>",
-                        StringUtil.repr(resourceLocation),
-                        emoji.getCode(),
-                        emoji.getCategory()
+                Emogg.LOGGER.error(String.format(
+                        "Failed to load %s, because it is already defined",
+                        StringUtil.repr(resourceLocation)
                 ));
+            return;
         }
-    }
+
+        int id;
+        synchronized (nameToIdMap) {
+            id = nameToIdMap.computeIfAbsent(emojiName, name -> nameToIdMap.size());
+        }
+
+        var emoji = Emoji.fromResource(id, emojiName, resourceLocation);
+
+        emojiByName.put(emojiName, emoji);
+        emojiById.put(emoji.getId(), emoji);
+
+        regEmojiInItsCategory(emoji);
+
+        if (EmoggConfig.instance.enableDebugMode)
+            Emogg.LOGGER.info(String.format(
+                    "Discovered %s as %s to category <%s>",
+                    StringUtil.repr(resourceLocation),
+                    emoji.getCode(),
+                    emoji.getCategory()
+            ));
+   }
 
     private @Nullable String getUniqueName(@NotNull ResourceLocation resourceLocation, @NotNull String emojiName) {
         if (emojiByName.containsKey(emojiName)) {
