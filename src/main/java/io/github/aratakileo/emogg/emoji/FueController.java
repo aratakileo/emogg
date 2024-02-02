@@ -1,10 +1,12 @@
 package io.github.aratakileo.emogg.emoji;
 
+import com.google.common.collect.Lists;
 import io.github.aratakileo.emogg.EmoggConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -34,37 +36,40 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
         EmoggConfig.save();
     }
 
-    //TODO fue statistics
-//    public static void collectStatisticFrom(@NotNull String text) {
-//        if (text.isEmpty()) return;
-//
-//        final List<String> emojisInText = Lists.newArrayList();
-//
-//        for (var emojiLiteral: EmojiTextProcessor.from(text).getEmojiLiterals()) {
-//            final var emojiName = emojiLiteral.getEmoji().getName();
-//
-//            if (emojisInText.contains(emojiName)) continue;
-//
-//            emojisInText.add(emojiName);
-//            markEmojiUse(emojiLiteral.getEmoji());
-//        }
-//
-//        if (emojisInText.isEmpty())
-//            return;
-//
-//        for (var frequentlyUsedEmojiStatistic: Lists.newArrayList(EmoggConfig.instance.frequentlyUsedEmojis)) {
-//            if (emojisInText.contains(frequentlyUsedEmojiStatistic.emojiName)) continue;
-//
-//            frequentlyUsedEmojiStatistic.usePoints--;
-//
-//            if (frequentlyUsedEmojiStatistic.usePoints == 0)
-//                EmoggConfig.instance.frequentlyUsedEmojis.remove(frequentlyUsedEmojiStatistic);
-//        }
-//
+    public static void collectStatisticFrom(@NotNull String text) {
+        if (text.isEmpty()) return;
+
+        final List<String> emojisNamesInText = Lists.newArrayList();
+
+        for (var section : EmojiParser.getEmojiSections(text)) {
+            if (!section.escaped()) {
+                final var emoji = EmojiManager.getInstance().getEmoji(section.emoji());
+
+                if (emoji == null || emojisNamesInText.contains(emoji.getName())) continue;
+
+                emojisNamesInText.add(emoji.getName());
+                markEmojiUse(emoji);
+            }
+        }
+
+        if (emojisNamesInText.isEmpty()) return;
+
+        for (var frequentlyUsedEmojiStatistic: Lists.newArrayList(EmoggConfig.instance.frequentlyUsedEmojis)) {
+            if (emojisNamesInText.contains(frequentlyUsedEmojiStatistic.emojiName)) continue;
+
+            frequentlyUsedEmojiStatistic.usePoints--;
+
+            if (frequentlyUsedEmojiStatistic.usePoints == 0)
+                EmoggConfig.instance.frequentlyUsedEmojis.remove(frequentlyUsedEmojiStatistic);
+        }
+
 //        bubbleSortEmojis();
-//        EmoggConfig.save();
-//    }
-//
+        EmoggConfig.instance.frequentlyUsedEmojis.sort(
+                Comparator.<EmojiStatistic>comparingInt(e -> e.usePoints).reversed()
+        );
+        EmoggConfig.save();
+    }
+
 //    private static void bubbleSortEmojis() {
 //        final var frequentlyUsedEmojis = EmoggConfig.instance.frequentlyUsedEmojis;
 //        EmojiStatistic temp;
@@ -86,23 +91,23 @@ public class FueController { // Fue = FUE = Frequently Used Emojis
 //            if (!swapped) break;
 //        }
 //    }
-//
-//    private static void markEmojiUse(@NotNull Emoji emoji) {
-//        final var frequentlyUsedEmojis = EmoggConfig.instance.frequentlyUsedEmojis;
-//        final var frequentlyUsedEmojiNames = getFrequentlyUsedEmojiNames();
-//        final var emojiName = emoji.getName();
-//
-//        if (frequentlyUsedEmojiNames.contains(emojiName)) {
-//            final var emojiStatistic = frequentlyUsedEmojis.get(frequentlyUsedEmojiNames.indexOf(emojiName));
-//            emojiStatistic.usePoints = Math.min(MAX_USES_POINTS, emojiStatistic.usePoints + 1);
-//            return;
-//        }
-//
-//        if (frequentlyUsedEmojiNames.size() == MAX_NUMBER_OF_RECENTLY_USED_EMOJIS)
-//            frequentlyUsedEmojis.remove(frequentlyUsedEmojiNames.size() - 1);
-//
-//        frequentlyUsedEmojis.add(new EmojiStatistic(emojiName));
-//    }
+
+    private static void markEmojiUse(@NotNull Emoji emoji) {
+        final var frequentlyUsedEmojis = EmoggConfig.instance.frequentlyUsedEmojis;
+        final var frequentlyUsedEmojiNames = getFrequentlyUsedEmojiNames();
+        final var emojiName = emoji.getName();
+
+        if (frequentlyUsedEmojiNames.contains(emojiName)) {
+            final var emojiStatistic = frequentlyUsedEmojis.get(frequentlyUsedEmojiNames.indexOf(emojiName));
+            emojiStatistic.usePoints = Math.min(MAX_USES_POINTS, emojiStatistic.usePoints + 1);
+            return;
+        }
+
+        if (frequentlyUsedEmojiNames.size() == MAX_NUMBER_OF_RECENTLY_USED_EMOJIS)
+            frequentlyUsedEmojis.remove(frequentlyUsedEmojiNames.size() - 1);
+
+        frequentlyUsedEmojis.add(new EmojiStatistic(emojiName));
+    }
 
     private static @NotNull List<@NotNull String> getFrequentlyUsedEmojiNames() {
         return EmoggConfig.instance.frequentlyUsedEmojis.stream().map(EmojiStatistic::getEmojiName).toList();

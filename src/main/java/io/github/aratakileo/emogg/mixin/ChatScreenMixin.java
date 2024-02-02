@@ -1,6 +1,7 @@
 package io.github.aratakileo.emogg.mixin;
 
 import io.github.aratakileo.emogg.emoji.EmojiManager;
+import io.github.aratakileo.emogg.emoji.FueController;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -94,11 +95,10 @@ public class ChatScreenMixin {
         self.setFocused(input);
     }
 
-    //TODO fue statistics
-//    @Inject(method = "handleChatInput", at = @At("HEAD"))
-//    public void handleChatInput(String text, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
-//        FueController.collectStatisticFrom(text);
-//    }
+    @Inject(method = "handleChatInput", at = @At("HEAD"))
+    public void handleChatInput(String text, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
+        FueController.collectStatisticFrom(text);
+    }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
