@@ -2,6 +2,8 @@ package io.github.aratakileo.emogg.gui.screen;
 
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
+import io.github.aratakileo.emogg.emoji.Emoji;
+import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.gui.component.Button;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,8 +27,25 @@ public class SettingsScreen extends AbstractScreen {
 
     @Override
     protected void init() {
-        addBooleanConfigButton("enableDebugMode", "enable_debug_mode", 40);
-        addBooleanConfigButton("enableAtlasDebugHUD", "enable_atlas_debug_hud", 60);
+        int y = 40 - 20;
+        addBooleanConfigButton("enableDebugMode", "enable_debug_mode", y+=20);
+        addBooleanConfigButton("enableAtlasDebugHUD", "enable_atlas_debug_hud", y+=20);
+        addRenderableWidget(new Button(
+                0, y+=20,
+                Component.translatable("emogg.settings.option.reload_all.title")) {{
+                    setTooltip(Component.translatable("emogg.settings.option.reload_all.description"));
+                    setOnClicked(button -> EmojiManager.getInstance().getEmojisStream()
+                            .forEach(e -> e.reload(false)));
+                    x = horizontalCenter() - width / 2;
+        }});
+        addRenderableWidget(new Button(
+                0, y+=20,
+                Component.translatable("emogg.settings.option.force_load_all.title")) {{
+                    setTooltip(Component.translatable("emogg.settings.option.force_load_all.description"));
+                    setOnClicked(button -> EmojiManager.getInstance().getEmojisStream()
+                            .forEach(Emoji::forceLoad));
+                    x = horizontalCenter() - width / 2;
+        }});
 
         addRenderableWidget(new Button(0, 0, Component.translatable("emogg.settings.save_and_quit")) {{
             setOnClicked(button -> onClose());

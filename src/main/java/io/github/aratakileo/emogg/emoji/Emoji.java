@@ -100,13 +100,18 @@ public final class Emoji {
         }
     }
 
-    public void reload(boolean immediately) {
+    public void reload(boolean forceLoadImmediately) {
         state = State.INACTIVE;
         if (loadingFuture != null && !loadingFuture.isDone()) loadingFuture.cancel(true);
         loadingFuture = null;
+        // TODO: free the atlas space when reloading
         glyphProvider = null;
         loadError = null;
-        if (immediately) updateLoadingState();
+        if (forceLoadImmediately) forceLoad();
+    }
+
+    public void forceLoad() {
+        updateLoadingState();
     }
 
     public static Emoji fromResource(int id, @NotNull String name, @NotNull ResourceLocation resourceLocation) {
