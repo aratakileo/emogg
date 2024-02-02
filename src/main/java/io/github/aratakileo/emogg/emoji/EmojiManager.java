@@ -45,7 +45,6 @@ public class EmojiManager {
     private final ConcurrentHashMap<@NotNull Integer, @NotNull Emoji> emojiById = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<@NotNull String, @NotNull Emoji> emojiByName = new ConcurrentHashMap<>();
     // Only used to keep ids consistent across resource reloads
-    // TODO: keep ids consistent across resource reloads
     private final Map<@NotNull String, @NotNull Integer> nameToIdMap = new HashMap<>();
 
     private final ConcurrentHashMap<@NotNull String, @NotNull List<@NotNull String>> emojiCategories
