@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.nio.file.Path;
+import java.text.NumberFormat;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
@@ -91,7 +92,7 @@ public class EmojiAtlas {
             }
 
             if (EmoggConfig.instance.isDebugModeEnabled)
-                Emogg.LOGGER.info("Stitching emoji texture to "+pos);
+                Emogg.LOGGER.info("Stitching emoji texture to "+pos.toString(NumberFormat.getIntegerInstance()));
 
             bind();
             image.upload(0, pos.x, pos.y, false);
