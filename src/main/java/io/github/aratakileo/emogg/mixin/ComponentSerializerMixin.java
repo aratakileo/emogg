@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.emoji.parsing.EmojiParser;
+import io.github.aratakileo.emogg.emoji.EmojiParser;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

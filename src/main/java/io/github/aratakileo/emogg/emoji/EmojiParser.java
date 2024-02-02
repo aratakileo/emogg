@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.emoji.parsing;
+package io.github.aratakileo.emogg.emoji;
 
 import com.mojang.datafixers.util.Pair;
 import io.github.aratakileo.emogg.Emogg;
