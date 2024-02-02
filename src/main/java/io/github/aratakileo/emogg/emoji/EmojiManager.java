@@ -106,7 +106,7 @@ public class EmojiManager {
         emojiName = getUniqueName(resourceLocation, emojiName);
 
         if (emojiName == null) {
-            if (EmoggConfig.instance.isDebugModeEnabled)
+            if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.error(String.format(
                         "Failed to load %s, because it is already defined",
                         StringUtil.repr(resourceLocation)
@@ -126,7 +126,7 @@ public class EmojiManager {
 
         regEmojiInItsCategory(emoji);
 
-        if (EmoggConfig.instance.isDebugModeEnabled)
+        if (EmoggConfig.instance.enableDebugMode)
             Emogg.LOGGER.info(String.format(
                     "Discovered %s as %s to category <%s>",
                     StringUtil.repr(resourceLocation),
@@ -169,7 +169,7 @@ public class EmojiManager {
     private void load(@NotNull ResourceManager resourceManager) {
         final var startsLoadingAt = System.currentTimeMillis();
 
-        if (EmoggConfig.instance.isDebugModeEnabled)
+        if (EmoggConfig.instance.enableDebugMode)
             Emogg.LOGGER.info("[emogg] Updating emoji lists...");
 
         EmojiAtlas.clear();

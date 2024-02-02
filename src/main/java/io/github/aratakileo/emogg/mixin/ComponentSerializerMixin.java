@@ -25,7 +25,7 @@ public abstract class ComponentSerializerMixin {
     private void serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext, CallbackInfoReturnable<JsonElement> cir) {
         final var original = EmojiParser.getOriginal(component);
         if (original != null) {
-            if (EmoggConfig.instance.isDebugModeEnabled)
+            if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.info("Serializing original component <"+original+"> of <"+component+">");
             cir.cancel();
             cir.setReturnValue(serialize(original, type, jsonSerializationContext));

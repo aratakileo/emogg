@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.nio.file.Path;
-import java.text.NumberFormat;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
@@ -48,7 +47,7 @@ public class EmojiAtlas {
 
     static {
         HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> {
-            if (EmoggConfig.instance.isDebugModeEnabled && !textures.isEmpty()) {
+            if (EmoggConfig.instance.enableAtlasDebugHUD && !textures.isEmpty()) {
                 textures.get(textures.size() - 1).drawDebugHUD(guiGraphics);
             }
         });
@@ -102,7 +101,7 @@ public class EmojiAtlas {
                 if (!expand()) return null;
             }
 
-            if (EmoggConfig.instance.isDebugModeEnabled)
+            if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.info("Stitching emoji texture to ({},{})", pos.x, pos.y);
 
             bind();

@@ -277,7 +277,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                         0xffffff
                 );
 
-                if (EmoggConfig.instance.isDebugModeEnabled) {
+                if (EmoggConfig.instance.enableDebugMode) {
                     final var debugString = String.valueOf(iline);
                     renderString(
                             guiGraphics,
@@ -322,7 +322,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
                     EmojiUtil.render(emoji, guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
 
-                    if (EmoggConfig.instance.isDebugModeEnabled && icolumn == 0) {
+                    if (EmoggConfig.instance.enableDebugMode && icolumn == 0) {
                         final var debugString = String.valueOf(iline);
                         renderString(
                                 guiGraphics,
