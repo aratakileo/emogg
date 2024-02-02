@@ -25,69 +25,74 @@ public class EmojiParser {
 
     private static final WeakHashMap<MutableComponent, MutableComponent> originalComponents = new WeakHashMap<>();
 
+    public static List<Section> getEmojiSections(String text) {
+        final var matcher = PATTERN.matcher(text);
+        List<Section> sections = new ArrayList<>();
+        while (matcher.find()) {
+            sections.add(new Section(
+                    matcher.start(),
+                    matcher.end(),
+                    matcher.group(2), // Emoji name
+                    !matcher.group(1).isEmpty() // Is escaped
+            ));
+        }
+        return sections;
+    }
+
     private static void _parse(MutableComponent component) {
         if (component.getContents() instanceof LiteralContents literalContents) {
             final var originalText = literalContents.text();
-            final var matcher = PATTERN.matcher(originalText);
 
-            List<Pair<Pair<Integer, Integer>, Emoji>> sections = new ArrayList<>();
-
-            while (matcher.find()) {
-                final var slash = matcher.group(1);
-                final var name = matcher.group(2);
-                final var section = Pair.of(matcher.start(), matcher.end());
-                if (!slash.isEmpty()) {
-                    sections.add(Pair.of(section, null));
-                } else {
-                    final var emoji = EmojiManager.getInstance().getEmoji(name);
-                    if (emoji != null) {
-                        sections.add(Pair.of(section, emoji));
-                    }
-                }
-            }
+            final var sections = getEmojiSections(originalText);
 
             if (sections.isEmpty()) return;
 
             if (EmoggConfig.instance.isDebugModeEnabled)
-                Emogg.LOGGER.info("Parsing <"+component+">");
+                Emogg.LOGGER.debug("Parsing <"+component+">");
 
             originalComponents.put(component, component.copy());
 
             List<Component> components = new ArrayList<>();
 
             var stringBuilder = new StringBuilder();
-
             int lastEnd = 0;
             for (int i = 0; i < sections.size() + 1; i++) {
                 if (i != sections.size()) {
-                    var pair = sections.get(i);
-                    var section = pair.getFirst();
-                    var emoji = pair.getSecond();
+                    var section = sections.get(i);
 
                     stringBuilder.append(
                             originalText,
                             lastEnd,
-                            section.getFirst()
+                            section.start()
                     );
-                    lastEnd = section.getSecond();
 
-                    if (emoji != null) {
-                        if (!stringBuilder.isEmpty()) {
-                            components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
-                            stringBuilder.setLength(0);
+                    if (!section.escaped()) {
+                        var emoji = EmojiManager.getInstance().getEmoji(section.emoji());
+
+                        if (emoji != null) {
+                            if (!stringBuilder.isEmpty()) {
+                                components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
+                                stringBuilder.setLength(0);
+                            }
+
+                            // We only set lastEnd if the escaped or emoji is valid.
+                            // Since, otherwise, the string builder should append the emoji syntax as normal text later.
+                            lastEnd = section.end();
+
+                            final var emojiComponent = MutableComponent.create(new LiteralContents(
+                                    Character.toString(EmojiFontSet.idToCodePoint(emoji.getId()))
+                            ));
+                            emojiComponent.setStyle(Style.EMPTY.withFont(EmojiFontSet.NAME));
+                            components.add(emojiComponent);
                         }
-
-                        final var emojiComponent = MutableComponent.create(new LiteralContents(
-                                Character.toString(EmojiFontSet.idToCodePoint(emoji.getId()))
-                        ));
-                        emojiComponent.setStyle(Style.EMPTY.withFont(EmojiFontSet.NAME));
-                        components.add(emojiComponent);
                     } else { // escaped
                         stringBuilder.append(
                                 originalText,
-                                section.getFirst() + 1,
-                                section.getSecond()
+                                section.start() + 1,
+                                section.end()
                         );
+
+                        lastEnd = section.end();
                     }
                 } else { // Ending
                     stringBuilder.append(
@@ -106,7 +111,7 @@ public class EmojiParser {
             component.contents = LiteralContents.EMPTY;
 
             if (EmoggConfig.instance.isDebugModeEnabled)
-                Emogg.LOGGER.info("Parse result: <"+component+">");
+                Emogg.LOGGER.debug("Parse result: <"+component+">");
         }
     }
 
@@ -130,4 +135,6 @@ public class EmojiParser {
         //noinspection SuspiciousMethodCalls
         return originalComponents.get(component);
     }
+
+    public record Section(int start, int end, String emoji, boolean escaped) { }
 }
