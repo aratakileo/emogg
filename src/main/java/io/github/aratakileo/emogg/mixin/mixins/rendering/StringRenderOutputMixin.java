@@ -1,6 +1,7 @@
-package io.github.aratakileo.emogg.mixin.rendering;
+package io.github.aratakileo.emogg.mixin.mixins.rendering;
 
 import io.github.aratakileo.emogg.emoji.EmojiFontSet;
+import io.github.aratakileo.emogg.mixin.MixinHelpers;
 import net.minecraft.network.chat.Style;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,13 +21,15 @@ public class StringRenderOutputMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void noShadowForEmojis(int i, Style style, int j, CallbackInfoReturnable<Boolean> cir) {
-        if (this.dropShadow && style.getFont().equals(EmojiFontSet.NAME)) {
-            this.x += EmojiFontSet.getInstance()
-                    .getGlyphInfo(i, false)
-                    .getAdvance(style.isBold());
-            cir.setReturnValue(true);
-            cir.cancel();
+    private void noShadowAndGlowOutlineForEmojis(int i, Style style, int j, CallbackInfoReturnable<Boolean> cir) {
+        if (this.dropShadow || MixinHelpers.shouldSkipEmojiGlyphRender) {
+            if (style.getFont().equals(EmojiFontSet.NAME)) {
+                this.x += EmojiFontSet.getInstance()
+                        .getGlyphInfo(i, false)
+                        .getAdvance(style.isBold());
+                cir.setReturnValue(true);
+                cir.cancel();
+            }
         }
     }
 }

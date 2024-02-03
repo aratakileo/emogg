@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin.font;
+package io.github.aratakileo.emogg.mixin.mixins.font;
 
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.emoji.EmojiFontSet;

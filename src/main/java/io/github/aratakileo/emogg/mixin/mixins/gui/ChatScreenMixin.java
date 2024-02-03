@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin.gui;
+package io.github.aratakileo.emogg.mixin.mixins.gui;
 
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.FueController;

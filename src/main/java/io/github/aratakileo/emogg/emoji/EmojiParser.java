@@ -190,7 +190,7 @@ public class EmojiParser {
     }
 
     /**
-     * Used by {@link io.github.aratakileo.emogg.mixin.parsing.ComponentMixin}
+     * Used by {@link io.github.aratakileo.emogg.mixin.mixins.parsing.ComponentMixin}
      * <p>
      * To indicate if we are in a {@link Component#getString()} or {@link Component#getString(int)} method,
      * we always use the original components in this method and the methods it calls
