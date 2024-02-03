@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -17,7 +16,7 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public final class Emoji {
     private final int id;
-    private final String key;
+    private final String name;
     private final String category;
 
     private final EmojiLoader loader;
@@ -27,23 +26,23 @@ public final class Emoji {
     private State state = State.INACTIVE;
 
     private Emoji(int id,
-                    @NotNull String key,
+                    @NotNull String name,
                     @NotNull String category,
                     @NotNull EmojiLoader loader) {
         this.id = id;
-        this.key = key;
+        this.name = name;
         this.category = category;
         this.loader = loader;
     }
 
     public int getId() {return id;}
 
-    public @NotNull String getKey() {return key;}
+    public @NotNull String getName() {return name;}
 
     public @NotNull String getCategory() {return category;}
 
     public @NotNull String getCode() {
-        return ":" + key + ':';
+        return ":" + name + ':';
     }
 
     public @NotNull String getEscapedCode() {return '\\' + getCode();}
@@ -88,11 +87,11 @@ public final class Emoji {
             glyphProvider = loadingFuture.get();
             state = State.ACTIVE;
         } catch (ExecutionException e) {
-            Emogg.LOGGER.warn("Emoji " + key + " loading failed!", e.getCause());
+            Emogg.LOGGER.warn("Emoji " + name + " loading failed!", e.getCause());
             loadError = e.getCause().toString();
             state = State.ERROR;
         } catch (InterruptedException | CancellationException e) {
-            Emogg.LOGGER.warn("Emoji " + key + " loading failed!", e);
+            Emogg.LOGGER.warn("Emoji " + name + " loading failed!", e);
             loadError = e.toString();
             state = State.ERROR;
         }

@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 public class SettingsScreen extends AbstractScreen {
     private final @Nullable List<Button> debugButtons = new ArrayList<>();
+    private @Nullable Button subdebug_btn_1;
 
     public SettingsScreen() {
         super(Component.translatable("emogg.settings.title"));
@@ -46,6 +47,7 @@ public class SettingsScreen extends AbstractScreen {
                 y+=20,
                 null
         );
+        subdebug_btn_1 = debugButton;
 
         if (Objects.nonNull(debugButton) && Objects.nonNull(debugButtons))
             debugButtons.add(debugButton);
@@ -127,6 +129,12 @@ public class SettingsScreen extends AbstractScreen {
         if (Objects.isNull(debugButtons)) return;
 
         debugButtons.forEach(btn -> btn.visible = EmoggConfig.instance.enableDebugMode);
+
+        if (
+                !EmoggConfig.instance.enableDebugMode
+                        && EmoggConfig.instance.enableAtlasDebugHUD
+                        && Objects.nonNull(subdebug_btn_1)
+        ) subdebug_btn_1.onPress(false);
     }
 
     @Override

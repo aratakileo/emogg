@@ -31,10 +31,16 @@ public class Button extends AbstractWidget {
         this.padding = padding;
     }
 
+    public void onPress(boolean byPlayer) {
+        if (byPlayer)
+            playClickSound();
+
+        super.onPress();
+    }
+
     @Override
     public void onPress() {
-        playClickSound();
-        super.onPress();
+        onPress(true);
     }
 
     @Override

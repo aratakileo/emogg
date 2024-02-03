@@ -55,9 +55,9 @@ public class FueController {
             if (!section.escaped()) {
                 final var emoji = EmojiManager.getInstance().getEmoji(section.emoji());
 
-                if (emoji == null || emojisNamesInText.contains(emoji.getKey())) continue;
+                if (emoji == null || emojisNamesInText.contains(emoji.getName())) continue;
 
-                emojisNamesInText.add(emoji.getKey());
+                emojisNamesInText.add(emoji.getName());
                 markEmojiUse(emoji);
             }
         }
@@ -82,7 +82,7 @@ public class FueController {
     private static void markEmojiUse(@NotNull Emoji emoji) {
         final var frequentlyUsedEmojis = EmoggConfig.instance.frequentlyUsedEmojis;
         final var frequentlyUsedEmojiNames = getFueNames();
-        final var emojiName = emoji.getKey();
+        final var emojiName = emoji.getName();
 
         if (frequentlyUsedEmojiNames.contains(emojiName)) {
             final var emojiStatistic = frequentlyUsedEmojis.get(frequentlyUsedEmojiNames.indexOf(emojiName));

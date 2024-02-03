@@ -152,10 +152,10 @@ public class EmojiManager {
 
         final var emojiNamesInCategory = emojiCategories.get(emoji.getCategory());
 
-        if (emojiNamesInCategory.contains(emoji.getKey()))
+        if (emojiNamesInCategory.contains(emoji.getName()))
             return;
 
-        emojiNamesInCategory.add(emoji.getKey());
+        emojiNamesInCategory.add(emoji.getName());
     }
 
     private void onResourceReload(@NotNull ResourceManager resourceManager) {
