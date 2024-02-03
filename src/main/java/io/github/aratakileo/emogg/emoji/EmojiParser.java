@@ -178,8 +178,7 @@ public class EmojiParser {
                                                    CallbackInfoReturnable<T> cir,
                                                    Function<Component, T> operation,
                                                    String debugLogPrefix) {
-        if (!EmojiParser.isOnLogicalClient()) return;
-//        System.out.println(component);
+        //
         final var original = EmojiParser.getOriginal(component);
         if (original != null) {
             if (EmoggConfig.instance.enableDebugMode)
