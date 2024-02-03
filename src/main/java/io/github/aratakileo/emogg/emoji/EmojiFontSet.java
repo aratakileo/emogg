@@ -28,7 +28,6 @@ public class EmojiFontSet extends FontSet {
     }
 
     public static int codePointToId(int codePoint) {
-        //TODO: avoid special unicode characters? (control, private_use, etc.)
         return codePoint - 33;
     }
     public static int idToCodePoint(int id) {
