@@ -36,7 +36,7 @@ public class EmojiGlyphRenderTypes {
             true,
             RenderType.CompositeState.builder()
                     .setShaderState(Shaders.EMOJI)
-                    .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+                    .setTextureState(new RenderStateShard.TextureStateShard(texture, true, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .createCompositeState(false)
@@ -50,7 +50,7 @@ public class EmojiGlyphRenderTypes {
             true,
             RenderType.CompositeState.builder()
                     .setShaderState(Shaders.EMOJI_SEE_THROUGH)
-                    .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+                    .setTextureState(new RenderStateShard.TextureStateShard(texture, true, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .setDepthTestState(NO_DEPTH_TEST)
@@ -66,7 +66,7 @@ public class EmojiGlyphRenderTypes {
             true,
             RenderType.CompositeState.builder()
                     .setShaderState(Shaders.EMOJI)
-                    .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+                    .setTextureState(new RenderStateShard.TextureStateShard(texture, true, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .setLayeringState(POLYGON_OFFSET_LAYERING)
@@ -82,11 +82,57 @@ public class EmojiGlyphRenderTypes {
 
     // ##### Emoji Vanilla Begin #####
 
+    private static final Function<ResourceLocation, RenderType> RT_VANILLA_EMOJI = texture -> init(RenderType.create(
+            "emoji",
+            DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+            VertexFormat.Mode.QUADS,
+            256,
+            false,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_TEXT_SHADER)
+                    .setTextureState(new RenderStateShard.TextureStateShard(texture, true, false))
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setLightmapState(LIGHTMAP)
+                    .createCompositeState(false)
+    ));
+    private static final Function<ResourceLocation, RenderType> RT_VANILLA_EMOJI_SEE_THROUGH = texture -> init(RenderType.create(
+            "emoji_see_through",
+            DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+            VertexFormat.Mode.QUADS,
+            256,
+            false,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_TEXT_SEE_THROUGH_SHADER)
+                    .setTextureState(new RenderStateShard.TextureStateShard(texture, true, false))
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setLightmapState(LIGHTMAP)
+                    .setDepthTestState(NO_DEPTH_TEST)
+                    .setWriteMaskState(COLOR_WRITE)
+                    .createCompositeState(false)
+    ));
+    private static final Function<ResourceLocation, RenderType> RT_VANILLA_EMOJI_POLYGON_OFFSET = texture -> init(RenderType.create(
+            "emoji_polygon_offset",
+            DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+            VertexFormat.Mode.QUADS,
+            256,
+            false,
+            true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_TEXT_SHADER)
+                    .setTextureState(new RenderStateShard.TextureStateShard(texture, true, false))
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setLightmapState(LIGHTMAP)
+                    .setLayeringState(POLYGON_OFFSET_LAYERING)
+                    .createCompositeState(false)
+    ));
+
     private static final Function<ResourceLocation, GlyphRenderTypes> EMOJI_VANILLA =
             texture -> new GlyphRenderTypes(
-                    init(RenderType.text(texture)),
-                    init(RenderType.textSeeThrough(texture)),
-                    init(RenderType.textPolygonOffset(texture))
+                    RT_VANILLA_EMOJI.apply(texture),
+                    RT_VANILLA_EMOJI_SEE_THROUGH.apply(texture),
+                    RT_VANILLA_EMOJI_POLYGON_OFFSET.apply(texture)
             );
 
     public static GlyphRenderTypes emoji(ResourceLocation texture) {
