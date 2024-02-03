@@ -76,10 +76,6 @@ public class EmojiAtlas {
                     getId(),
                     totalWidth, totalHeight
             );
-            setFilter(
-                    true, // Linear Filtering
-                    false // No Mipmap
-            );
             fillBackground();
 
             freeSpace.add(new Rect2i(0, 0, totalWidth, totalHeight));
@@ -215,10 +211,6 @@ public class EmojiAtlas {
                     NativeImage.InternalGlFormat.RGBA,
                     getId(),
                     totalWidth, totalHeight
-            );
-            setFilter(
-                    true, // Linear Filtering
-                    false // No Mipmap
             );
             fillBackground();
 
