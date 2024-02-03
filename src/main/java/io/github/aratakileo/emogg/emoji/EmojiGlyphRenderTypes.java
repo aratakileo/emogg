@@ -282,19 +282,19 @@ public class EmojiGlyphRenderTypes {
 
         public static void loadShaders(ResourceProvider resourceProvider, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list) throws IOException {
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emogg_emoji", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
+                    new ShaderInstance(resourceProvider, "emoji", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
                     shader -> emoji = shader
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emogg_emoji_see_through", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
+                    new ShaderInstance(resourceProvider, "emoji_see_through", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
                     shader -> emojiSeeThrough = shader
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emogg_emoji_no_texture", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP),
+                    new ShaderInstance(resourceProvider, "emoji_no_texture", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP),
                     shader -> emojiNoTexture = shader
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emogg_emoji_no_texture_see_through", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP),
+                    new ShaderInstance(resourceProvider, "emoji_no_texture_see_through", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP),
                     shader -> emojiNoTextureSeeThrough = shader
             ));
         }
