@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin.font;
+package io.github.aratakileo.emogg.mixin.rendering;
 
 import io.github.aratakileo.emogg.emoji.EmojiFontSet;
 import net.minecraft.network.chat.Style;

@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin;
+package io.github.aratakileo.emogg.mixin.rendering;
 
 import io.github.aratakileo.emogg.emoji.EmojiGlyphRenderTypes;
 import net.minecraft.client.renderer.GameRenderer;

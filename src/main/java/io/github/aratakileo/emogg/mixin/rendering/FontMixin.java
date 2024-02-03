@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.mixin.font;
+package io.github.aratakileo.emogg.mixin.rendering;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.aratakileo.emogg.emoji.EmojiGlyph;
