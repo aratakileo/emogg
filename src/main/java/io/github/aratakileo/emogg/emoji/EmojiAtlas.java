@@ -112,6 +112,7 @@ public class EmojiAtlas {
             return glyph;
         }
 
+        @SuppressWarnings("SameParameterValue")
         private @Nullable Vector2i fit(int width, int height, int padding) {
             width += padding * 2;
             height += padding * 2;
@@ -233,6 +234,7 @@ public class EmojiAtlas {
             }
         }
 
+        @SuppressWarnings("unused")
         private void _debugDrawFreeSpace() {
             RenderSystem.assertOnRenderThreadOrInit();
             var image = new NativeImage(NativeImage.Format.RGBA, totalWidth, totalHeight, false);
@@ -248,7 +250,6 @@ public class EmojiAtlas {
                     Emogg.LOGGER.warn(e.toString());
                 }
             }
-//        image.drawPixels();
             bind();
             image.upload(0, 0, 0, false);
             image.close();
