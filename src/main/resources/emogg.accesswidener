@@ -56,3 +56,5 @@ accessible field net/minecraft/network/chat/MutableComponent contents Lnet/minec
 mutable field net/minecraft/network/chat/MutableComponent contents Lnet/minecraft/network/chat/ComponentContents;
 accessible field net/minecraft/network/chat/MutableComponent siblings Ljava/util/List;
 mutable field net/minecraft/network/chat/MutableComponent siblings Ljava/util/List;
+
+accessible field net/minecraft/client/renderer/RenderBuffers fixedBuffers Ljava/util/SortedMap;

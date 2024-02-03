@@ -1,12 +1,13 @@
 package io.github.aratakileo.emogg.emoji;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
 import io.github.aratakileo.emogg.EmoggConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.GlyphRenderTypes;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -24,7 +25,9 @@ import static net.minecraft.client.renderer.RenderStateShard.*;
 
 @Environment(EnvType.CLIENT)
 public class EmojiGlyphRenderTypes {
-    private static final Function<ResourceLocation, RenderType> RT_EMOJI = Util.memoize(texture -> RenderType.create(
+    // ##### Emoji Custom Begin #####
+
+    private static final Function<ResourceLocation, RenderType> RT_EMOJI = texture -> init(RenderType.create(
             "emoji",
             DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
             VertexFormat.Mode.QUADS,
@@ -38,7 +41,7 @@ public class EmojiGlyphRenderTypes {
                     .setLightmapState(LIGHTMAP)
                     .createCompositeState(false)
     ));
-    private static final Function<ResourceLocation, RenderType> RT_EMOJI_SEE_THROUGH = Util.memoize(texture -> RenderType.create(
+    private static final Function<ResourceLocation, RenderType> RT_EMOJI_SEE_THROUGH = texture -> init(RenderType.create(
             "emoji_see_through",
             DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
             VertexFormat.Mode.QUADS,
@@ -54,7 +57,7 @@ public class EmojiGlyphRenderTypes {
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false)
     ));
-    private static final Function<ResourceLocation, RenderType> RT_EMOJI_POLYGON_OFFSET = Util.memoize(texture -> RenderType.create(
+    private static final Function<ResourceLocation, RenderType> RT_EMOJI_POLYGON_OFFSET = texture -> init(RenderType.create(
             "emoji_polygon_offset",
             DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
             VertexFormat.Mode.QUADS,
@@ -70,16 +73,21 @@ public class EmojiGlyphRenderTypes {
                     .createCompositeState(false)
     ));
 
-    private static final Function<ResourceLocation, GlyphRenderTypes> EMOJI_CUSTOM = Util.memoize(
+    private static final Function<ResourceLocation, GlyphRenderTypes> EMOJI_CUSTOM =
             texture -> new GlyphRenderTypes(
                     RT_EMOJI.apply(texture),
                     RT_EMOJI_SEE_THROUGH.apply(texture),
                     RT_EMOJI_POLYGON_OFFSET.apply(texture)
-            )
-    );
-    private static final Function<ResourceLocation, GlyphRenderTypes> EMOJI_VANILLA = Util.memoize(
-            GlyphRenderTypes::createForColorTexture
-    );
+            );
+
+    // ##### Emoji Vanilla Begin #####
+
+    private static final Function<ResourceLocation, GlyphRenderTypes> EMOJI_VANILLA =
+            texture -> new GlyphRenderTypes(
+                    init(RenderType.text(texture)),
+                    init(RenderType.textSeeThrough(texture)),
+                    init(RenderType.textPolygonOffset(texture))
+            );
 
     public static GlyphRenderTypes emoji(ResourceLocation texture) {
         if (EmoggConfig.instance.useCustomShaders) {
@@ -89,10 +97,11 @@ public class EmojiGlyphRenderTypes {
         }
     }
 
+    // ##### Emoji No Texture Custom Begin #####
 
     private static final int NO_TEXTURE_BUFFER_SIZE = 256;
     private static final VertexFormat.Mode NO_TEXTURE_VERTEX_FORMAT = VertexFormat.Mode.TRIANGLES;
-    private static final RenderType RT_EMOJI_NO_TEXTURE = RenderType.create(
+    private static final RenderType RT_EMOJI_NO_TEXTURE = init(RenderType.create(
             "emoji_no_texture",
             DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
             NO_TEXTURE_VERTEX_FORMAT,
@@ -106,8 +115,8 @@ public class EmojiGlyphRenderTypes {
                     .setLightmapState(LIGHTMAP)
                     .setLayeringState(POLYGON_OFFSET_LAYERING)
                     .createCompositeState(false)
-    );
-    private static final RenderType RT_EMOJI_NO_TEXTURE_SEE_THROUGH = RenderType.create(
+    ));
+    private static final RenderType RT_EMOJI_NO_TEXTURE_SEE_THROUGH = init(RenderType.create(
             "emoji_no_texture_see_through",
             DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
             NO_TEXTURE_VERTEX_FORMAT,
@@ -122,8 +131,8 @@ public class EmojiGlyphRenderTypes {
                     .setDepthTestState(NO_DEPTH_TEST)
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false)
-    );
-    private static final RenderType RT_EMOJI_NO_TEXTURE_POLYGON_OFFSET = RenderType.create(
+    ));
+    private static final RenderType RT_EMOJI_NO_TEXTURE_POLYGON_OFFSET = init(RenderType.create(
             "emoji_no_texture_polygon_offset",
             DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
             NO_TEXTURE_VERTEX_FORMAT,
@@ -137,9 +146,11 @@ public class EmojiGlyphRenderTypes {
                     .setLightmapState(LIGHTMAP)
                     .setLayeringState(POLYGON_OFFSET_LAYERING)
                     .createCompositeState(false)
-    );
+    ));
 
-    private static final RenderType RT_VANILLA_EMOJI_NO_TEXTURE = RenderType.create(
+    // ##### Emoji No Texture Vanilla Begin #####
+
+    private static final RenderType RT_VANILLA_EMOJI_NO_TEXTURE = init(RenderType.create(
             "emoji_no_texture",
             DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
             NO_TEXTURE_VERTEX_FORMAT,
@@ -152,8 +163,8 @@ public class EmojiGlyphRenderTypes {
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .createCompositeState(false)
-    );
-    private static final RenderType RT_VANILLA_EMOJI_NO_TEXTURE_SEE_THROUGH = RenderType.create(
+    ));
+    private static final RenderType RT_VANILLA_EMOJI_NO_TEXTURE_SEE_THROUGH = init(RenderType.create(
             "emoji_no_texture_see_through",
             DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
             NO_TEXTURE_VERTEX_FORMAT,
@@ -168,8 +179,8 @@ public class EmojiGlyphRenderTypes {
                     .setDepthTestState(NO_DEPTH_TEST)
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false)
-    );
-    private static final RenderType RT_VANILLA_EMOJI_NO_TEXTURE_POLYGON_OFFSET = RenderType.create(
+    ));
+    private static final RenderType RT_VANILLA_EMOJI_NO_TEXTURE_POLYGON_OFFSET = init(RenderType.create(
             "emoji_no_texture_polygon_offset",
             DefaultVertexFormat.POSITION_COLOR_LIGHTMAP,
             NO_TEXTURE_VERTEX_FORMAT,
@@ -183,7 +194,7 @@ public class EmojiGlyphRenderTypes {
                     .setLightmapState(LIGHTMAP)
                     .setLayeringState(POLYGON_OFFSET_LAYERING)
                     .createCompositeState(false)
-    );
+    ));
 
     private static final GlyphRenderTypes EMOJI_NO_TEXTURE_CUSTOM = new GlyphRenderTypes(
             RT_EMOJI_NO_TEXTURE,
@@ -202,6 +213,14 @@ public class EmojiGlyphRenderTypes {
         } else {
             return EMOJI_NO_TEXTURE_VANILLA;
         }
+    }
+
+    private static RenderType init(RenderType renderType) {
+        Minecraft.getInstance()
+                .renderBuffers()
+                .fixedBuffers
+                .put(renderType, new BufferBuilder(renderType.bufferSize()));
+        return renderType;
     }
 
     public static class Shaders {

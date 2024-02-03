@@ -6,16 +6,16 @@
   "mixins": [
   ],
   "client": [
-    "GameRendererMixin",
-    "parsing.MutableComponentMixin",
-    "parsing.ComponentMixin",
-    "parsing.ComponentSerializerMixin",
     "font.FontManagerMixin",
-    "font.FontMixin",
-    "font.StringRenderOutputMixin",
     "gui.ChatScreenMixin",
     "gui.InBedChatScreenMixin",
-    "gui.MinecraftMixin"
+    "gui.MinecraftMixin",
+    "parsing.ComponentMixin",
+    "parsing.ComponentSerializerMixin",
+    "parsing.MutableComponentMixin",
+    "rendering.FontMixin",
+    "rendering.GameRendererMixin",
+    "rendering.StringRenderOutputMixin"
   ],
   "injectors": {
     "defaultRequire": 1
