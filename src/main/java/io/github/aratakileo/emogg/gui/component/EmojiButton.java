@@ -1,12 +1,15 @@
 package io.github.aratakileo.emogg.gui.component;
 
-import io.github.aratakileo.emogg.handler.EmojiHandler;
-import io.github.aratakileo.emogg.handler.Emoji;
+import io.github.aratakileo.emogg.emoji.EmojiManager;
+import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Environment(EnvType.CLIENT)
 public class EmojiButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
@@ -57,20 +60,27 @@ public class EmojiButton extends Button {
             renderSize += 2;
         }
 
-        EmojiUtil.render(displayableEmoji, guiGraphics, renderX, renderY, renderSize);
+        EmojiUtil.render(
+                displayableEmoji.getGlyph(),
+                guiGraphics,
+                renderX,
+                renderY,
+                renderSize,
+                !isHovered
+        );
     }
 
     protected void changeDisplayableEmoji() {
         prevDisplayableEmoji = displayableEmoji;
 
-        EmojiHandler.getInstance()
+        EmojiManager.getInstance()
                 .getRandomEmoji()
                 .ifPresent(emoji -> displayableEmoji = emoji);
 
         if (displayableEmoji == null || prevDisplayableEmoji == null) return;
 
         while (displayableEmoji.getName().equals(prevDisplayableEmoji.getName()))
-            EmojiHandler.getInstance()
+            EmojiManager.getInstance()
                     .getRandomEmoji()
                     .ifPresent(emoji -> displayableEmoji = emoji);
     }

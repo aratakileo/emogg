@@ -1,9 +1,12 @@
 package io.github.aratakileo.emogg.util;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public final class GuiUtil {
     public static void renderTexture(
             @NotNull GuiGraphics guiGraphics,

@@ -1,83 +1,70 @@
 package io.github.aratakileo.emogg.util;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import io.github.aratakileo.suggestionsapi.util.RenderUtil;
+import io.github.aratakileo.emogg.emoji.EmojiGlyph;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
-import io.github.aratakileo.emogg.handler.Emoji;
 
-import java.util.Objects;
-
-import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_NEAREST;
-
+@Environment(EnvType.CLIENT)
 public final class EmojiUtil {
     public final static String PNG_EXTENSION = ".png",
             EMOJI_FOLDER_NAME = "emoji";
 
-    public static void render(@NotNull Emoji emoji, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
-        if (Objects.isNull(emoji.getRenderResourceLocation())) return;
+    public static void render(
+            @NotNull EmojiGlyph emojiGlyph,
+            @NotNull GuiGraphics guiGraphics,
+            int x,
+            int y,
+            int size,
+            int color,
+            boolean grayscale
+    ) {
+        var renderType = emojiGlyph.renderType(Font.DisplayMode.NORMAL);
+        if (grayscale && emojiGlyph instanceof EmojiGlyph.TexturedEmojiGlyph textured)
+            renderType = textured.grayScaleRenderType(Font.DisplayMode.NORMAL);
 
-        RenderUtil.renderFittedCenterTexture(
-                guiGraphics,
-                emoji.getRenderResourceLocation(),
-                x,
-                y,
-                emoji.getWidth(),
-                emoji.getHeight(),
-                size,
-                size
-        );
-    }
+        var builder = guiGraphics.bufferSource().getBuffer(renderType);
 
-    public static @NotNull RenderType getRenderType(@NotNull ResourceLocation resourceLocation) {
-        var compositeState = RenderType.CompositeState.builder()
-                .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeTextShader))
-                .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
-                .setTransparencyState(new RenderStateShard.TransparencyStateShard(
-                        "translucent_transparency",
-                        () -> {
-                            RenderSystem.enableBlend();
-                            RenderSystem.blendFuncSeparate(
-                                    GlStateManager.SourceFactor.SRC_ALPHA,
-                                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                                    GlStateManager.SourceFactor.ONE,
-                                    GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
-                            );
-                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                            },
-                        () -> {
-                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                            RenderSystem.disableBlend();
-                            RenderSystem.defaultBlendFunc();
-                        }
-                ))
-                .setLightmapState(new RenderStateShard.LightmapStateShard(true))
-                .createCompositeState(false);
+        var scale = size / Math.max(emojiGlyph.getAdvance(), EmojiGlyph.HEIGHT);
 
-        return RenderType.create(
-                "emogg_renderer",
-                DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
-                VertexFormat.Mode.QUADS,
-                256,
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(x, y, 0f);
+        guiGraphics.pose().scale(scale, scale, 0f);
+
+        final float a = (float) (color >> 24 & 255) / 255f,
+                r = (float) (color >> 16 & 255) / 255f,
+                g = (float) (color >> 8 & 255) / 255f,
+                b = (float) (color & 255) / 255f;
+
+        emojiGlyph.renderColored(
                 false,
-                true,
-                compositeState
+                0f, 0f,
+                guiGraphics.pose().last().pose(),
+                builder,
+                r, g, b, a,
+                LightTexture.FULL_BRIGHT
         );
+
+        guiGraphics.pose().popPose();
     }
 
-    public static @NotNull String normalizeNameOrCategory(@NotNull String sourceValue) {
+    public static void render(
+            @NotNull EmojiGlyph emojiGlyph,
+            @NotNull GuiGraphics guiGraphics,
+            int x,
+            int y,
+            int size,
+            boolean grayscale
+    ) {
+        render(emojiGlyph, guiGraphics, x, y, size, 0xffffffff, grayscale);
+    }
+
+    public static @NotNull String normalizeEmojiKeyOrCategoryKey(@NotNull String sourceValue) {
         return StringUtils.strip(
                 sourceValue.toLowerCase()
                         .replaceAll("-+| +|\\.+", "_")

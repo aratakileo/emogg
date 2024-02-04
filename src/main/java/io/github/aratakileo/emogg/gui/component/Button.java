@@ -1,11 +1,13 @@
 package io.github.aratakileo.emogg.gui.component;
 
-import io.github.aratakileo.emogg.gui.EmojiFont;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import io.github.aratakileo.emogg.util.GuiUtil;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class Button extends AbstractWidget {
     private int padding = 0;
 
@@ -21,18 +23,24 @@ public class Button extends AbstractWidget {
         super(
                 x,
                 y,
-                EmojiFont.getInstance().width(text.getString()) + padding * 2,
-                EmojiFont.getInstance().lineHeight + padding * 2,
+                getFont().width(text.getString()) + padding * 2,
+                getFont().lineHeight + padding * 2,
                 text
         );
 
         this.padding = padding;
     }
 
+    public void onPress(boolean byPlayer) {
+        if (byPlayer)
+            playClickSound();
+
+        super.onPress();
+    }
+
     @Override
     public void onPress() {
-        playClickSound();
-        super.onPress();
+        onPress(true);
     }
 
     @Override
@@ -49,7 +57,7 @@ public class Button extends AbstractWidget {
         super.setMessage(text);
 
         final var prevWidth = width;
-        width = EmojiFont.getInstance().width(text.getString()) + padding * 2;
+        width = getFont().width(text.getString()) + padding * 2;
 
         if (isHorizontalCentered && width != prevWidth)
             x -= (width - prevWidth) / 2;

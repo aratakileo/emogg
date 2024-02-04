@@ -37,3 +37,24 @@ mutable field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/Strin
 
 extendable method net/minecraft/client/gui/Font renderText (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)F
 extendable method net/minecraft/client/gui/components/AbstractWidget render (Lnet/minecraft/client/gui/GuiGraphics;IIF)V
+
+accessible field net/minecraft/network/chat/contents/LiteralContents text Ljava/lang/String;
+mutable field net/minecraft/network/chat/contents/LiteralContents text Ljava/lang/String;
+
+accessible class net/minecraft/client/gui/font/FontManager$Preparation
+
+accessible field net/minecraft/client/gui/font/glyphs/BakedGlyph u0 F
+mutable field net/minecraft/client/gui/font/glyphs/BakedGlyph u0 F
+accessible field net/minecraft/client/gui/font/glyphs/BakedGlyph u1 F
+mutable field net/minecraft/client/gui/font/glyphs/BakedGlyph u1 F
+accessible field net/minecraft/client/gui/font/glyphs/BakedGlyph v0 F
+mutable field net/minecraft/client/gui/font/glyphs/BakedGlyph v0 F
+accessible field net/minecraft/client/gui/font/glyphs/BakedGlyph v1 F
+mutable field net/minecraft/client/gui/font/glyphs/BakedGlyph v1 F
+
+accessible field net/minecraft/network/chat/MutableComponent contents Lnet/minecraft/network/chat/ComponentContents;
+mutable field net/minecraft/network/chat/MutableComponent contents Lnet/minecraft/network/chat/ComponentContents;
+accessible field net/minecraft/network/chat/MutableComponent siblings Ljava/util/List;
+mutable field net/minecraft/network/chat/MutableComponent siblings Ljava/util/List;
+
+accessible field net/minecraft/client/renderer/RenderBuffers fixedBuffers Ljava/util/SortedMap;

@@ -2,9 +2,12 @@ package io.github.aratakileo.emogg.gui.component;
 
 import io.github.aratakileo.emogg.util.Rect2i;
 import io.github.aratakileo.emogg.util.GuiUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 
+@Environment(EnvType.CLIENT)
 public class VerticalScrollbar extends AbstractWidget {
     private final Rect2i thumbRect;
     private final int padding;

@@ -1,14 +1,21 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "io.github.aratakileo.emogg.mixin",
+  "package": "io.github.aratakileo.emogg.mixin.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
-    "ChatScreenMixin",
-    "InBedChatScreenMixin",
-    "MinecraftMixin"
+    "font.FontManagerMixin",
+    "gui.ChatScreenMixin",
+    "gui.InBedChatScreenMixin",
+    "gui.MinecraftMixin",
+    "parsing.ComponentMixin",
+    "parsing.ComponentSerializerMixin",
+    "parsing.MutableComponentMixin",
+    "rendering.FontMixin",
+    "rendering.GameRendererMixin",
+    "rendering.StringRenderOutputMixin"
   ],
   "injectors": {
     "defaultRequire": 1

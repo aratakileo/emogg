@@ -132,6 +132,15 @@ public class Rect2i extends net.minecraft.client.renderer.Rect2i {
         setY(bottom - getHeight());
     }
 
+    public boolean hasArea() {
+        return getWidth() > 0 && getHeight() > 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Rect2i{%d, %d, %d, %d}".formatted(getX(), getY(), getWidth(), getHeight());
+    }
+
     public @NotNull Rect2i copy() {
         return new Rect2i(getX(), getY(), getWidth(), getHeight());
     }

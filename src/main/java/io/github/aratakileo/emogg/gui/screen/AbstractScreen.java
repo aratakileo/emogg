@@ -1,5 +1,7 @@
 package io.github.aratakileo.emogg.gui.screen;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -7,8 +9,9 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Environment(EnvType.CLIENT)
 public abstract class AbstractScreen extends Screen {
-    protected @Nullable Screen parent;
+    protected final @Nullable Screen parent;
 
     protected AbstractScreen(@NotNull Component component, @Nullable Screen parent) {
         super(component);
