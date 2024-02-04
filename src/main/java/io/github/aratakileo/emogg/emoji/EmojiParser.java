@@ -3,7 +3,7 @@ package io.github.aratakileo.emogg.emoji;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.util.IdentityWrapper;
+import io.github.aratakileo.emogg.util.WeakIdentityHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.*;
@@ -19,9 +19,7 @@ import java.util.regex.Pattern;
 public class EmojiParser {
     public final static Pattern PATTERN = Pattern.compile("(\\\\?):([_A-Za-z0-9]+):");
 
-    private static final Map<IdentityWrapper<MutableComponent>, MutableComponent> parsedToOriginal = new WeakHashMap<>();
-    // Used to query parsedToOriginal
-    private static final IdentityWrapper.Mutable<MutableComponent> queryingIdentityWrapper = new IdentityWrapper.Mutable<>();
+    private static final WeakIdentityHashMap<MutableComponent, MutableComponent> parsedToOriginal = new WeakIdentityHashMap<>();
 
     public record Section(int start, int end, String emoji, boolean escaped) { }
 
@@ -50,7 +48,7 @@ public class EmojiParser {
             if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.debug("Parsing <"+component+">");
 
-            parsedToOriginal.put(new IdentityWrapper<>(component), component.copy());
+            parsedToOriginal.put(component, component.copy());
 
             List<Component> components = new ArrayList<>();
 
@@ -126,8 +124,7 @@ public class EmojiParser {
 
     public static void parse(MutableComponent component) {
         if (!isParsable(component)) return;
-        queryingIdentityWrapper.mutValue = component;
-        if (parsedToOriginal.containsKey(queryingIdentityWrapper)) return;
+        if (parsedToOriginal.containsKey(component)) return;
         try {
             if (!parsing) {
                 parsing = true;
@@ -163,8 +160,7 @@ public class EmojiParser {
 
     public static @Nullable MutableComponent getOriginal(Component component) {
         if (!mayBeParseResult(component)) return null;
-        queryingIdentityWrapper.mutValue = (MutableComponent) component;
-        return parsedToOriginal.get(queryingIdentityWrapper);
+        return parsedToOriginal.get((MutableComponent) component);
     }
 
     // Mixin helpers
