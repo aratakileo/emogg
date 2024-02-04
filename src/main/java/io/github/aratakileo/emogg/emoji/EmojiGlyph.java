@@ -8,9 +8,12 @@ import io.github.aratakileo.emogg.util.Rect2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.Util;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.GlyphRenderTypes;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -101,11 +104,24 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
         }
     }
 
-    public static class Atlas extends RectEmojiGlyph {
+    public static abstract class TexturedEmojiGlyph extends RectEmojiGlyph {
+        private final ResourceLocation texture;
+
+        public TexturedEmojiGlyph(ResourceLocation texture) {
+            super(EmoggRenderTypes.emojiTextured(texture));
+            this.texture = texture;
+        }
+
+        public RenderType grayScaleRenderType(Font.DisplayMode mode) {
+            return EmoggRenderTypes.emojiTexturedGrayscale(this.texture).select(mode);
+        }
+    }
+
+    public static class Atlas extends TexturedEmojiGlyph {
         private final Rect2i rect;
 
-        protected Atlas(GlyphRenderTypes glyphRenderTypes, Rect2i rect) {
-            super(glyphRenderTypes);
+        protected Atlas(ResourceLocation texture, Rect2i rect) {
+            super(texture);
             this.rect = rect;
         }
 
@@ -129,9 +145,9 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
 
     public static final EmojiGlyph ERROR = new EmojiGlyph.Error();
 
-    private static class Error extends RectEmojiGlyph {
+    private static class Error extends TexturedEmojiGlyph {
         private Error() {
-            super(EmoggRenderTypes.emojiTextured(MissingTextureAtlasSprite.getLocation()));
+            super(MissingTextureAtlasSprite.getLocation());
         }
 
         @Override

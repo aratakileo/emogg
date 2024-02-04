@@ -61,12 +61,12 @@ public class EmojiButton extends Button {
         }
 
         EmojiUtil.render(
-                displayableEmoji,
+                displayableEmoji.getGlyph(),
                 guiGraphics,
                 renderX,
                 renderY,
                 renderSize,
-                isHovered ? 0xffffffff : 0xff696969
+                !isHovered
         );
     }
 

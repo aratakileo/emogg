@@ -32,7 +32,7 @@ public class EmojiSuggestion implements Suggestion, SuggestionRenderer {
 
     @Override
     public int renderContent(@NotNull GuiGraphics guiGraphics, @NotNull Font font, int x, int y, int color) {
-        EmojiUtil.render(emoji, guiGraphics, x + 1, y, (int) EmojiGlyph.HEIGHT);
+        EmojiUtil.render(emoji.getGlyph(), guiGraphics, x + 1, y, (int) EmojiGlyph.HEIGHT, false);
 
         return guiGraphics.drawString(
                 font,

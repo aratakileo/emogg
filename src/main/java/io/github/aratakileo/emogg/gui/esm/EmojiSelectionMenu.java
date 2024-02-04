@@ -21,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -289,7 +287,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
                         );
                     }
 
-                    EmojiUtil.render(emoji, guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2));
+                    EmojiUtil.render(emoji.getGlyph(), guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2), false);
 
                     if (EmoggConfig.instance.enableDebugMode && icolumn == 0) {
                         final var debugString = String.valueOf(iline);

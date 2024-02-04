@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import io.github.aratakileo.emogg.emoji.Emoji;
 
 @Environment(EnvType.CLIENT)
 public final class EmojiUtil {
@@ -22,11 +21,14 @@ public final class EmojiUtil {
             int x,
             int y,
             int size,
-            int color
+            int color,
+            boolean grayscale
     ) {
-        var builder = guiGraphics.bufferSource().getBuffer(
-                emojiGlyph.renderType(Font.DisplayMode.NORMAL)
-        );
+        var renderType = emojiGlyph.renderType(Font.DisplayMode.NORMAL);
+        if (grayscale && emojiGlyph instanceof EmojiGlyph.TexturedEmojiGlyph textured)
+            renderType = textured.grayScaleRenderType(Font.DisplayMode.NORMAL);
+
+        var builder = guiGraphics.bufferSource().getBuffer(renderType);
 
         var scale = size / Math.max(emojiGlyph.getAdvance(), EmojiGlyph.HEIGHT);
 
@@ -56,24 +58,10 @@ public final class EmojiUtil {
             @NotNull GuiGraphics guiGraphics,
             int x,
             int y,
-            int size
-    ) {
-        render(emojiGlyph, guiGraphics, x, y, size, 0xffffffff);
-    }
-
-    public static void render(@NotNull Emoji emoji, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
-        render(emoji.getGlyph(), guiGraphics, x, y, size);
-    }
-
-    public static void render(
-            @NotNull Emoji emoji,
-            @NotNull GuiGraphics guiGraphics,
-            int x,
-            int y,
             int size,
-            int color
+            boolean grayscale
     ) {
-        render(emoji.getGlyph(), guiGraphics, x, y, size, color);
+        render(emojiGlyph, guiGraphics, x, y, size, 0xffffffff, grayscale);
     }
 
     public static @NotNull String normalizeEmojiKeyOrCategoryKey(@NotNull String sourceValue) {

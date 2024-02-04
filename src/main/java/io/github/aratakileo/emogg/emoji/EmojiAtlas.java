@@ -5,14 +5,12 @@ import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.EmoggRenderTypes;
 import io.github.aratakileo.emogg.util.Rect2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.font.GlyphRenderTypes;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.Dumpable;
 import net.minecraft.resources.ResourceLocation;
@@ -61,7 +59,7 @@ public class EmojiAtlas {
 
         private final Collection<EmojiGlyph.Atlas> stitchedGlyphs = new ArrayList<>();
 
-        private final GlyphRenderTypes glyphRenderTypes;
+//        private final GlyphRenderTypes glyphRenderTypes;
 
         // Can be changed to fill the bg with a specific color for debugging
         private static final int BG_FILL_COLOR = 0x00000000;
@@ -80,7 +78,7 @@ public class EmojiAtlas {
             fillBackground();
 
             freeSpace.add(new Rect2i(0, 0, totalWidth, totalHeight));
-            glyphRenderTypes = EmoggRenderTypes.emojiTextured(this.name);
+//            glyphRenderTypes = EmoggRenderTypes.emojiTextured(this.name);
 
             Emogg.LOGGER.info("Created emoji atlas texture: {}x{} {}",
                     totalWidth, totalHeight, getName());
@@ -105,7 +103,7 @@ public class EmojiAtlas {
             image.upload(0, pos.x, pos.y, false);
 
             var glyph = new EmojiGlyph.Atlas(
-                    glyphRenderTypes,
+                    name,
                     new Rect2i(pos.x, pos.y, image.getWidth(), image.getHeight())
             );
             glyph.updateUV(totalWidth, totalHeight);

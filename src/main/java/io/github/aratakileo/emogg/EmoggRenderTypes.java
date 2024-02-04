@@ -147,6 +147,24 @@ public class EmoggRenderTypes {
         }
     }
 
+    private static final Function<ResourceLocation, GlyphRenderTypes> EMOJI_TEXTURED_GRAYSCALE =
+            Util.memoize(texture -> createGlyphRT(
+                    "emoji_textured_grayscale",
+                    VertexFormat.Mode.QUADS,
+                    Shaders.EMOJI_TEXTURED_GRAYSCALE,
+                    Shaders.EMOJI_TEXTURED_GRAYSCALE_SEE_THROUGH,
+                    texture, true
+            ));
+
+    public static GlyphRenderTypes emojiTexturedGrayscale(ResourceLocation texture) {
+        if (EmoggConfig.instance.useCustomShaders) {
+            return EMOJI_TEXTURED_GRAYSCALE.apply(texture);
+        } else {
+            // No vanilla fallback, falling back to colored
+            return EMOJI_TEXTURED_VANILLA.apply(texture);
+        }
+    }
+
     private static final GlyphRenderTypes EMOJI_NO_TEXTURE =
             createGlyphRT(
                     "emoji_no_texture",
@@ -191,8 +209,22 @@ public class EmoggRenderTypes {
         private static @Nullable ShaderInstance emojiLoading;
         private static @Nullable ShaderInstance emojiLoadingSeeThrough;
 
-        private static final ShaderStateShard EMOJI_TEXTURED = new ShaderStateShard(() -> emojiTextured);
-        private static final ShaderStateShard EMOJI_TEXTURED_SEE_THROUGH = new ShaderStateShard(() -> emojiTexturedSeeThrough);
+        private static final ShaderStateShard EMOJI_TEXTURED = new ShaderStateShard(() -> {
+            Uni.grayscaleModeIntensity.set(0f);
+            return emojiTextured;
+        });
+        private static final ShaderStateShard EMOJI_TEXTURED_SEE_THROUGH = new ShaderStateShard(() -> {
+            Uni.grayscaleModeIntensity.set(0f);
+            return emojiTexturedSeeThrough;
+        });
+        private static final ShaderStateShard EMOJI_TEXTURED_GRAYSCALE = new ShaderStateShard(() -> {
+            Uni.grayscaleModeIntensity.set(1f);
+            return emojiTextured;
+        });
+        private static final ShaderStateShard EMOJI_TEXTURED_GRAYSCALE_SEE_THROUGH = new ShaderStateShard(() -> {
+            Uni.grayscaleModeIntensity.set(1f);
+            return emojiTexturedSeeThrough;
+        });
         private static final ShaderStateShard EMOJI_NO_TEXTURE = new ShaderStateShard(() -> emojiNoTexture);
         private static final ShaderStateShard EMOJI_NO_TEXTURE_SEE_THROUGH = new ShaderStateShard(() -> emojiNoTextureSeeThrough);
         private static final ShaderStateShard EMOJI_LOADING = new ShaderStateShard(() -> emojiLoading);
@@ -200,16 +232,23 @@ public class EmoggRenderTypes {
 
         public static class Uni {
             public static MultiUniform loadingAnimationTime = new MultiUniform(2);
+            public static MultiUniform grayscaleModeIntensity = new MultiUniform(2);
         }
 
         private static void _loadShaders(ResourceProvider resourceProvider, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list) throws IOException {
             list.add(Pair.of(
                     new ShaderInstance(resourceProvider, "emoji_textured", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
-                    shader -> emojiTextured = shader
+                    shader -> {
+                        emojiTextured = shader;
+                        Uni.grayscaleModeIntensity.uniforms[0] = shader.safeGetUniform("grayscale");
+                    }
             ));
             list.add(Pair.of(
                     new ShaderInstance(resourceProvider, "emoji_textured_see_through", DefaultVertexFormat.POSITION_COLOR_TEX),
-                    shader -> emojiTexturedSeeThrough = shader
+                    shader -> {
+                        emojiTexturedSeeThrough = shader;
+                        Uni.grayscaleModeIntensity.uniforms[1] = shader.safeGetUniform("grayscale");
+                    }
             ));
             list.add(Pair.of(
                     new ShaderInstance(resourceProvider, "emoji_no_texture", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP),
