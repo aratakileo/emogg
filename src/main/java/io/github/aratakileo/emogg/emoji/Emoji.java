@@ -5,6 +5,7 @@ import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.NativeGifImage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,12 +47,6 @@ public final class Emoji {
 
     public @NotNull String getEscapedCode() {return '\\' + getCode();}
 
-//    private Supplier<EmojiGlyph> GLYPH_LOADING = () -> {
-//        EmojiGlyph glyph = new EmojiGlyph.Loading();
-//        GLYPH_LOADING = () -> glyph;
-//        return glyph;
-//    };
-
     public @NotNull EmojiGlyph getGlyph() {
         updateLoadingState();
 
@@ -64,8 +59,6 @@ public final class Emoji {
                 yield EmojiGlyph.EMPTY;
             }
         };
-
-//        glyph = EmojiGlyph.LOADING;
 
         if (glyph == null) {
             Emogg.LOGGER.warn("Failed to get glyph for emoji " + this + ": null");
@@ -139,7 +132,7 @@ public final class Emoji {
         return new Emoji(id, name, category, loader);
     }
 
-    private enum State {
+    public enum State {
         INACTIVE,
         LOADING,
         ACTIVE,

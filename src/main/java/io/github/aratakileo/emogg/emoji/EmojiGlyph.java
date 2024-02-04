@@ -155,51 +155,6 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
             r = g = b = 1f;
             super.renderImpl(builder, mat, r, g, b, a, packedLightCoords);
         }
-
-//        private void centerCircle(VertexConsumer builder, Matrix4f mat, float radius, float z, float r, float g, float b, float a, int packedLightCoords) {
-//            final int EDGES = 16;
-//            for (int i = 0; i <= EDGES; i++) {
-//                float rad = (float) i / EDGES * Mth.TWO_PI;
-//                float x = Mth.cos(-rad) * radius + 0.5f;
-//                float y = Mth.sin(-rad) * radius + 0.5f;
-//
-//                builder.vertex(mat, x, y, z)
-//                        .color(r, g, b, a)
-//                        .uv2(packedLightCoords)
-//                        .endVertex();
-//                if (i != 0) {
-//                    builder.vertex(mat, 0.5f, 0.5f, z)
-//                            .color(r, g, b, a)
-//                            .uv2(packedLightCoords)
-//                            .endVertex();
-//                    if (i != EDGES) {
-//                        builder.vertex(mat, x, y, z)
-//                                .color(r, g, b, a)
-//                                .uv2(packedLightCoords)
-//                                .endVertex();
-//                    }
-//                }
-//            }
-//        }
-//
-//        @Override
-//        protected void renderImpl(VertexConsumer builder, Matrix4f mat, float r, float g, float b, float a, int packedLightCoords) {
-//            r = g = b = 1f;
-//
-//            float time = (float) (Util.getMillis() - initialTime) / 1000f;
-//            time *= 0.5f; // speed
-//            time %= 1f;
-//
-//            centerCircle(builder, mat, 0.5f, 0f, r, g, b, 0.3f, packedLightCoords);
-//
-//            float radius = Math.min(time * 2f, 1f);
-//            radius = Mth.sin(radius * Mth.HALF_PI);
-//            radius *= 0.5f;
-//            float alpha = Math.min(2f - time * 2f, 1f);
-//            alpha *= 0.5f;
-//
-//            centerCircle(builder, mat, radius, 0.01f, r, g, b, alpha, packedLightCoords);
-//        }
     }
 
     public static final EmojiGlyph EMPTY = new EmojiGlyph.Empty();
