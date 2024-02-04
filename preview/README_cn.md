@@ -1,7 +1,7 @@
-Language: **[English]** | [[Русский]](preview/README_ru.md) | [[中文]](preview/README_cn.md)
+语言: [[English]](https://github.com/aratakileo/emogg) | [[Русский]](preview/README_ru.md) | [[中文]](preview/README_cn.md)
 
-# Emogg for better chatting experienсe! <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
-Adds emoji support to the chat and to most of the Minecraft interface!
+# Emogg，为了更好的聊天体验！<img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
+为 Minecraft 添加表情包功能。
 
 ![](preview/preview-1.gif)
 ![](preview/preview-2.gif)
@@ -12,17 +12,17 @@ Adds emoji support to the chat and to most of the Minecraft interface!
   </a>
 </p>
 
-### Features
-- Support for both static and animated emojis
-- Custom emojis via resource packs, by simply put your emoji images in `assets/emogg/emoji`  
-  You can also generate the resource pack from discord server emojis using [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)
-- Emojis will be shown in chat, on signs, in item names, on entity name tags, in container names, etc. (It might not work in plain texts yet)
-- Emoji suggestions and completion (available only for chat)
-- A emoji selection menu (available only for chat)
-- Two built-in emoji packs
+### 功能
+- 支持静态和动画表情
+- 通过资源包添加自定义表情：只需将表情图片放在资源包的`assets/emogg/emoji`文件夹中。  
+  也可以通过[我们的网站](https://aratakileo.github.io/emogg-resourcepack-maker/)将 Discord 表情转换成资源包。
+- 表情会在聊天，告示牌，物品名，实体名，以及容器标题等中显示（暂时还不能支持一些纯文本）
+- 表情提示和自动补全
+- 表情选择菜单
+- 两个内置表情包
 
-### How to use emojis?
-To use emoji, you need to type `:emoji_name:`.
+### 如何使用？
+要输入表情，只需输入`:表情名称:`（中英文冒号皆可）。
 If you do this in the chat screen, you will be shown autocompletion hints.
 The emoji selection menu is also available for the chat,
 which opens by clicking on the button in the lower right corner,
