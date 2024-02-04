@@ -1,0 +1,16 @@
+configurations {
+    extraLib
+}
+
+ext.implEmbeddedMod = { String requestValue ->
+    dependencies {
+        extraLib requestValue
+        modImplementation requestValue
+    }
+}
+
+jar {
+    into("lib") {
+        from configurations.extraLib
+    }
+}

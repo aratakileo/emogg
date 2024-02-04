@@ -1,0 +1,46 @@
+ext.support_minecraft_versions = project.hasProperty("support_minecraft_versions")
+        ? support_minecraft_versions : minecraft_version
+
+ext.getVersionFullName = { String platform ->
+    return "${mod_version}+${support_minecraft_versions}-${platform}"
+}
+
+ext.getMinecraftDependsVersion = { String platform ->
+    final var segments = support_minecraft_versions.split("-")
+
+    if (platform in ['forge', 'neoforge']) {
+        if (segments.length == 1)
+            return "[${support_minecraft_versions}]"
+
+        return "[${segments[0]},${segments[1]}]"
+    }
+
+    if (segments.length == 1)
+        return "=${support_minecraft_versions}"
+
+    return ">=${segments[0]} <=${segments[1]}"
+}
+
+processResources {
+    from project(":general").sourceSets.main.resources
+
+    final var replaceProperties = [
+            "version": getVersionFullName(platform),
+            "minecraft_version": getMinecraftDependsVersion(platform),
+            "modid": project.modid,
+            "suggestions_api_ver_name": project.suggestions_api_ver_name
+    ]
+
+    inputs.properties replaceProperties
+    filteringCharset "UTF-8"
+
+    filesMatching(["fabric.mod.json", "META-INF/mods.toml"]) {
+        expand replaceProperties
+    }
+}
+
+repositories {
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+}

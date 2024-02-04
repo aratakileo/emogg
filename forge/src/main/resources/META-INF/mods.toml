@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[46,)"
+license="GPL-3.0"
+
+[[mods]]
+modId="${modid}"
+version="${version}"
+displayName="emogg"
+logoFile= "assets/emogg/icon.png"
+description='''
+API for working with Minecraft suggestions
+'''
+authors="Arataki Leo and shBLOCK"
+displayURL="https://modrinth.com/mod/emogg"
+issueTrackerURL="https://github.com/aratakileo/emogg/issues"
+
+[[dependencies.emogg]]
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_version}"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.emogg]]
+modId="suggestionsapi"
+mandatory=true
+versionRange="${suggestions_api_ver_name}"
+ordering="NONE"
+side="CLIENT"

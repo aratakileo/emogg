@@ -1,0 +1,74 @@
+plugins {
+    id 'fabric-loom' version '1.3-SNAPSHOT'
+    id 'maven-publish'
+}
+
+ext.platform = 'fabric'
+
+apply from: '../util/core.gradle'
+apply from: '../util/fabric.gradle'
+
+archivesBaseName = "${project.archives_base_name}-${ext.getVersionFullName(platform)}"
+
+repositories {
+    maven {
+        url = 'https://maven.terraformersmc.com/releases'
+        content {
+            includeGroup 'com.terraformersmc'
+        }
+    }
+}
+
+dependencies {
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    compileOnly project(":general")
+
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}+${project.minecraft_version}"
+
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    implEmbeddedMod "maven.modrinth:suggestions-api:${project.suggestions_api_ver_name}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    source(project(":general").sourceSets.main.allSource)
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
+}
+
+def refmap_file = "$archivesBaseName-refmap.json"
+
+processResources {
+    from project(":general").sourceSets.main.resources
+
+    inputs.property "refmap_file", refmap_file
+    filteringCharset "UTF-8"
+
+    filesMatching("${project.modid}.mixins.json") {
+        expand "refmap_file": refmap_file
+    }
+}
+
+loom {
+    accessWidenerPath = project(":general").file("src/main/resources/emogg.accesswidener")
+}

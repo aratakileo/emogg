@@ -1,0 +1,67 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+
+ext.platform = 'forge'
+
+apply from: '../util/core.gradle'
+
+archivesBaseName = "${project.archives_base_name}-${ext.getVersionFullName(platform)}"
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+
+    runs {
+        configureEach {
+            workingDirectory rootProject.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            mods {
+                emogg {
+                    source sourceSets.main
+                    source project(":general").sourceSets.main
+                }
+            }
+        }
+
+        client {}
+        server {}
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    compileOnly project(":general")
+
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+
+    jarJar(group: "maven.modrinth", name: "suggestions-api", version: "[${project.suggestions_api_forge_ver},)")
+}
+
+mixin {
+    add sourceSets.main, "${project.modid}.refmap.json"
+    config "${project.modid}.mixins.json"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    source(project(":general").sourceSets.main.allSource)
+}
+
+jar.finalizedBy('reobfJar')
+
+def refmap_file = "${project.modid}.refmap.json"
+
+processResources {
+    from project(":general").sourceSets.main.resources
+
+    inputs.property "refmap_file", refmap_file
+    filteringCharset "UTF-8"
+
+    filesMatching("${project.modid}.mixins.json") {
+        expand "refmap_file": refmap_file
+    }
+}

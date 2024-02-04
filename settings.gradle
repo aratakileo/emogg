@@ -4,6 +4,26 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            name = 'SpongePowered'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+            content {
+                includeGroup 'org.spongepowered'
+                includeGroup 'org.spongepowered.gradle.vanilla'
+            }
+        }
+        maven {
+            name = 'NeoForged'
+            url = 'https://maven.neoforged.net/releases'
+        }
+        mavenCentral()
         gradlePluginPortal()
     }
 }
+
+rootProject.name = 'emogg'
+include('general', 'fabric', 'forge')
