@@ -10,7 +10,6 @@ Adds emoji support to the chat and to most of the Minecraft interface!
  <a href="https://discord.gg/t5ZqftXG4b">
     <img src="https://img.shields.io/badge/Discord-7289da?style=for-the-badge&logo=discord&logoColor=ffffff" alt="Discord" />
   </a>
- 
 </p>
 
 ### Features
@@ -27,7 +26,8 @@ To use emoji, you need to type `:emoji_name:`.
 If you do this in the chat screen, you will be shown autocompletion hints.
 The emoji selection menu is also available for the chat,
 which opens by clicking on the button in the lower right corner,
-or by clicking middle mouse button or by pressing `Shift` + `Esc`.
+or by clicking middle mouse button or by pressing `Shift` + `Esc`.  
+You can also copy the name of emojis from chat or books by clicking them.
 
 If you play on the server or over the network,
 then in addition to the fact that you and other players must have this mod installed,
