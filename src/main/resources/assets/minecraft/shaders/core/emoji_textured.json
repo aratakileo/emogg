@@ -4,8 +4,8 @@
         "srcrgb": "srcalpha",
         "dstrgb": "1-srcalpha"
     },
-    "vertex": "emoji",
-    "fragment": "emoji",
+    "vertex": "emoji_uv",
+    "fragment": "emoji_textured",
     "attributes": [
         "Position",
         "Color",

@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public final class Emoji {
@@ -47,17 +46,17 @@ public final class Emoji {
 
     public @NotNull String getEscapedCode() {return '\\' + getCode();}
 
-    private static Supplier<EmojiGlyph> GLYPH_LOADING = () -> {
-        EmojiGlyph glyph = new EmojiGlyph.Loading();
-        GLYPH_LOADING = () -> glyph;
-        return glyph;
-    };
+//    private Supplier<EmojiGlyph> GLYPH_LOADING = () -> {
+//        EmojiGlyph glyph = new EmojiGlyph.Loading();
+//        GLYPH_LOADING = () -> glyph;
+//        return glyph;
+//    };
 
     public @NotNull EmojiGlyph getGlyph() {
         updateLoadingState();
 
         var glyph = switch (state) {
-            case LOADING -> GLYPH_LOADING.get();
+            case LOADING -> EmojiGlyph.LOADING;
             case ERROR -> EmojiGlyph.ERROR;
             case ACTIVE -> glyphProvider.getGlyph();
             case INACTIVE -> {
@@ -65,6 +64,8 @@ public final class Emoji {
                 yield EmojiGlyph.EMPTY;
             }
         };
+
+//        glyph = EmojiGlyph.LOADING;
 
         if (glyph == null) {
             Emogg.LOGGER.warn("Failed to get glyph for emoji " + this + ": null");

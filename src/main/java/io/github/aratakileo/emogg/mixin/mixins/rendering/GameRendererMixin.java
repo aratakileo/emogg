@@ -1,6 +1,6 @@
 package io.github.aratakileo.emogg.mixin.mixins.rendering;
 
-import io.github.aratakileo.emogg.emoji.EmojiGlyphRenderTypes;
+import io.github.aratakileo.emogg.EmoggRenderTypes;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public abstract class GameRendererMixin {
             method = "reloadShaders",
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0),
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    void loadCustomShaders(ResourceProvider resourceProvider, CallbackInfo ci, List list, List list2) throws IOException {
-        EmojiGlyphRenderTypes.Shaders.loadShaders(resourceProvider, list2);
+    void loadCustomShaders(ResourceProvider resourceProvider, CallbackInfo ci, List list, List list2) {
+        EmoggRenderTypes.Shaders.loadShaders(resourceProvider, list2);
     }
 }
