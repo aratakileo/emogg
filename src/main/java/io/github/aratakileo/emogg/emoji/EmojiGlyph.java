@@ -175,7 +175,7 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
 
         @Override
         protected void renderImpl(VertexConsumer builder, Matrix4f mat, float r, float g, float b, float a, int packedLightCoords) {
-            final int ANIMATION_LENGTH = 3000;
+            final int ANIMATION_LENGTH = 2000;
             EmoggRenderTypes.Shaders.Uni.loadingAnimationTime.set(
                     (float) (Util.getMillis() % ANIMATION_LENGTH) / ANIMATION_LENGTH
             );
