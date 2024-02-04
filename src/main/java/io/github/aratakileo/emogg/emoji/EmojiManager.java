@@ -176,13 +176,11 @@ public class EmojiManager {
 
         emojiCategories.values().forEach(Collections::sort);
 
-        if (!emojiByName.isEmpty()) {
-            Emogg.LOGGER.info(String.format(
-                    "[emogg] The emoji list has been updated. Discovered %s emojis in %ss!",
-                    emojiByName.size(),
-                    (System.currentTimeMillis() - startsLoadingAt) / 1000d
-            ));
-        }
+        Emogg.LOGGER.info(String.format(
+                "[emogg] The emoji list has been updated. Discovered %s emojis in %ss!",
+                emojiByName.size(),
+                (System.currentTimeMillis() - startsLoadingAt) / 1000d
+        ));
 
         FueController.removeAllNonExistentFue();
     }
