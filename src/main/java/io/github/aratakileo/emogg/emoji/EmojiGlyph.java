@@ -27,20 +27,33 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
 
     public abstract float getAspectRatio();
 
+    protected boolean coloredByDefault() {
+        return false;
+    }
+
     // Temporary matrix reused for every render to avoid instantiating it every time
     private static final Matrix4f tempMat = new Matrix4f();
 
-    @Override
-    public final void render(boolean italic, float x, float y, Matrix4f mat, VertexConsumer builder, float r, float g, float b, float a, int packedLightCoords) {
+    private void setupMatrix(boolean italic, float x, float y, Matrix4f mat) {
         tempMat.set(
                 HEIGHT * getAspectRatio(), 0f, 0f, 0f,
                 italic ? -HEIGHT * ITALIC_SHEAR : 0f, HEIGHT, 0f, 0f,
                 0f, 0f, 0f, 0f,
                 x + (italic ? HEIGHT * ITALIC_SHEAR : 0f), y, 0f, 1f
         );
-
         tempMat.mulLocal(mat);
+    }
 
+    @Override
+    public final void render(boolean italic, float x, float y, Matrix4f mat, VertexConsumer builder, float r, float g, float b, float a, int packedLightCoords) {
+        setupMatrix(italic, x, y, mat);
+        if (!coloredByDefault())
+            r = g = b = 1f;
+        renderImpl(builder, tempMat, r, g, b, a, packedLightCoords);
+    }
+
+    public final void renderColored(boolean italic, float x, float y, Matrix4f mat, VertexConsumer builder, float r, float g, float b, float a, int packedLightCoords) {
+        setupMatrix(italic, x, y, mat);
         renderImpl(builder, tempMat, r, g, b, a, packedLightCoords);
     }
 
@@ -110,7 +123,6 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
 
         @Override
         protected void renderImpl(VertexConsumer builder, Matrix4f mat, float r, float g, float b, float a, int packedLightCoords) {
-            r = g = b = 1f;
             super.renderImpl(builder, mat, r, g, b, a, packedLightCoords);
         }
     }
@@ -129,7 +141,6 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
 
         @Override
         protected void renderImpl(VertexConsumer builder, Matrix4f mat, float r, float g, float b, float a, int packedLightCoords) {
-            r = g = b = 1f;
             super.renderImpl(builder, mat, r, g, b, a, packedLightCoords);
         }
     }
@@ -152,7 +163,6 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
             EmoggRenderTypes.Shaders.Uni.loadingAnimationTime.set(
                     (float) (Util.getMillis() % ANIMATION_LENGTH) / ANIMATION_LENGTH
             );
-            r = g = b = 1f;
             super.renderImpl(builder, mat, r, g, b, a, packedLightCoords);
         }
     }

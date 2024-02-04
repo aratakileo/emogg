@@ -16,7 +16,7 @@ public final class EmojiUtil {
     public final static String PNG_EXTENSION = ".png",
             EMOJI_FOLDER_NAME = "emoji";
 
-    public static void render(@NotNull EmojiGlyph emojiGlyph, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
+    public static void render(@NotNull EmojiGlyph emojiGlyph, @NotNull GuiGraphics guiGraphics, int x, int y, int size, float r, float g, float b, float a) {
         var builder = guiGraphics.bufferSource().getBuffer(
                 emojiGlyph.renderType(Font.DisplayMode.NORMAL)
         );
@@ -27,20 +27,28 @@ public final class EmojiUtil {
         guiGraphics.pose().translate(x, y, 0f);
         guiGraphics.pose().scale(scale, scale, 0f);
 
-        emojiGlyph.render(
+        emojiGlyph.renderColored(
                 false,
                 0f, 0f,
                 guiGraphics.pose().last().pose(),
                 builder,
-                1f, 1f, 1f, 1f,
+                r, g, b, a,
                 LightTexture.FULL_BRIGHT
         );
 
         guiGraphics.pose().popPose();
     }
 
+    public static void render(@NotNull EmojiGlyph emojiGlyph, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
+        render(emojiGlyph, guiGraphics, x, y, size, 1f, 1f, 1f, 1f);
+    }
+
     public static void render(@NotNull Emoji emoji, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
         render(emoji.getGlyph(), guiGraphics, x, y, size);
+    }
+
+    public static void render(@NotNull Emoji emoji, @NotNull GuiGraphics guiGraphics, int x, int y, int size, float r, float g, float b, float a) {
+        render(emoji.getGlyph(), guiGraphics, x, y, size, r, g, b, a);
     }
 
     public static @NotNull String normalizeEmojiKeyOrCategoryKey(@NotNull String sourceValue) {
