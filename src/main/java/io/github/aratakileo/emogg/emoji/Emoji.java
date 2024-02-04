@@ -5,7 +5,6 @@ import io.github.aratakileo.emogg.util.EmojiUtil;
 import io.github.aratakileo.emogg.util.NativeGifImage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +45,14 @@ public final class Emoji {
     }
 
     public @NotNull String getEscapedCode() {return '\\' + getCode();}
+
+    public State getState() {
+        return state;
+    }
+
+    public String getLoadError() {
+        return loadError;
+    }
 
     public @NotNull EmojiGlyph getGlyph() {
         updateLoadingState();

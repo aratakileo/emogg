@@ -82,7 +82,12 @@ public class EmojiParser {
                             final var emojiComponent = MutableComponent.create(new LiteralContents(
                                     Character.toString(EmojiFontSet.idToCodePoint(emoji.getId()))
                             ));
-                            emojiComponent.setStyle(Style.EMPTY.withFont(EmojiFontSet.NAME));
+                            emojiComponent.setStyle(
+                                    Style.EMPTY
+                                        .withFont(EmojiFontSet.NAME)
+                                        .withHoverEvent(EmojiInteractions.EmojiHoverEvent.of(emoji))
+                                        .withClickEvent(EmojiInteractions.EmojiClickEvent.of(emoji))
+                            );
                             components.add(emojiComponent);
                         }
                     } else { // escaped
