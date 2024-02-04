@@ -60,7 +60,14 @@ public class EmojiButton extends Button {
             renderSize += 2;
         }
 
-        EmojiUtil.render(displayableEmoji, guiGraphics, renderX, renderY, renderSize);
+        EmojiUtil.render(
+                displayableEmoji,
+                guiGraphics,
+                renderX,
+                renderY,
+                renderSize,
+                isHovered ? 0xffffffff : 0xff696969
+        );
     }
 
     protected void changeDisplayableEmoji() {

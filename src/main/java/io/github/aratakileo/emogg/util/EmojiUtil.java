@@ -16,7 +16,14 @@ public final class EmojiUtil {
     public final static String PNG_EXTENSION = ".png",
             EMOJI_FOLDER_NAME = "emoji";
 
-    public static void render(@NotNull EmojiGlyph emojiGlyph, @NotNull GuiGraphics guiGraphics, int x, int y, int size, float r, float g, float b, float a) {
+    public static void render(
+            @NotNull EmojiGlyph emojiGlyph,
+            @NotNull GuiGraphics guiGraphics,
+            int x,
+            int y,
+            int size,
+            int color
+    ) {
         var builder = guiGraphics.bufferSource().getBuffer(
                 emojiGlyph.renderType(Font.DisplayMode.NORMAL)
         );
@@ -26,6 +33,11 @@ public final class EmojiUtil {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(x, y, 0f);
         guiGraphics.pose().scale(scale, scale, 0f);
+
+        final float a = (float) (color >> 24 & 255) / 255f,
+                r = (float) (color >> 16 & 255) / 255f,
+                g = (float) (color >> 8 & 255) / 255f,
+                b = (float) (color & 255) / 255f;
 
         emojiGlyph.renderColored(
                 false,
@@ -39,16 +51,29 @@ public final class EmojiUtil {
         guiGraphics.pose().popPose();
     }
 
-    public static void render(@NotNull EmojiGlyph emojiGlyph, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
-        render(emojiGlyph, guiGraphics, x, y, size, 1f, 1f, 1f, 1f);
+    public static void render(
+            @NotNull EmojiGlyph emojiGlyph,
+            @NotNull GuiGraphics guiGraphics,
+            int x,
+            int y,
+            int size
+    ) {
+        render(emojiGlyph, guiGraphics, x, y, size, 0xffffffff);
     }
 
     public static void render(@NotNull Emoji emoji, @NotNull GuiGraphics guiGraphics, int x, int y, int size) {
         render(emoji.getGlyph(), guiGraphics, x, y, size);
     }
 
-    public static void render(@NotNull Emoji emoji, @NotNull GuiGraphics guiGraphics, int x, int y, int size, float r, float g, float b, float a) {
-        render(emoji.getGlyph(), guiGraphics, x, y, size, r, g, b, a);
+    public static void render(
+            @NotNull Emoji emoji,
+            @NotNull GuiGraphics guiGraphics,
+            int x,
+            int y,
+            int size,
+            int color
+    ) {
+        render(emoji.getGlyph(), guiGraphics, x, y, size, color);
     }
 
     public static @NotNull String normalizeEmojiKeyOrCategoryKey(@NotNull String sourceValue) {
