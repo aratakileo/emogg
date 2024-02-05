@@ -13,17 +13,16 @@ Adds emoji support to the chat and to most of the Minecraft interface!
 </p>
 
 ### Features
-- Support for both static and animated emojis
-- Custom emojis via resource packs, by simply put your emoji images in `assets/emogg/emoji`  
-  You can also generate the resource pack from discord server emojis using [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)
-- Emojis will be shown in chat, on signs, in item names, on entity name tags, in container names, etc. (It might not work in plain texts yet)
-- Emoji suggestions and completion (available only for chat)
-- A emoji selection menu (available only for chat)
-- Two built-in emoji packs
+- support for both static and animated emojis
+- custom emojis via resource packs, by simply put your emoji images in `assets/emogg/emoji`. You can also generate the resource pack from discord server emojis using [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)
+- emojis will be shown in chat, on signs, in item names, on entity name tags, in container names, etc. (It might not work in plain texts yet)
+- emoji suggestions and completion (available only for chat)
+- an emoji selection menu (available only for chat)
+- two built-in emoji packs
 
 ### How to use emojis?
 To use emoji, you need to type `:emoji_name:`.
-If you do this in the chat screen, you will be shown autocompletion hints.
+If you start typing this on the chat screen, Emogg will show you the autocomplete suggestions.
 The emoji selection menu is also available for the chat,
 which opens by clicking on the button in the lower right corner,
 or by clicking middle mouse button or by pressing `Shift` + `Esc`.  
