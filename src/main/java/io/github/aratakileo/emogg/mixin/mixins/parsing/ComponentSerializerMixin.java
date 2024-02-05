@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 
 @Mixin(Component.Serializer.class)
 public abstract class ComponentSerializerMixin {
+// unsupports in 1.20.4
     @Shadow public abstract JsonElement serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext);
 
     @Inject(

@@ -93,7 +93,7 @@ public class EmojiManager {
     // TODO: refactor name generation to work with different loader readers
 
     public void regEmoji(@NotNull ResourceLocation resourceLocation) {
-        var emojiName = EmojiUtil.normalizeEmojiKeyOrCategoryKey(EmojiUtil.getNameFromPath(resourceLocation));
+        var emojiName = EmojiUtil.normalizeEmojiObjectKey(EmojiUtil.getNameFromPath(resourceLocation));
         emojiName = getUniqueName(resourceLocation, emojiName);
 
         if (Objects.isNull(emojiName)) {

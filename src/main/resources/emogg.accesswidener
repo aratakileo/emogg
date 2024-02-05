@@ -1,45 +1,17 @@
 accessWidener v1 named
 
-accessible class net/minecraft/client/gui/Font
-accessible field net/minecraft/client/gui/Font fonts Ljava/util/function/Function;
 accessible class net/minecraft/client/renderer/RenderType$CompositeState
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 accessible class net/minecraft/client/renderer/RenderStateShard$ShaderStateShard
 accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
 accessible class net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard
 accessible class net/minecraft/client/renderer/RenderStateShard$LightmapStateShard
-accessible method net/minecraft/client/gui/Font getFontSet (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/gui/font/FontSet;
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
-accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
-accessible method net/minecraft/client/gui/components/AbstractWidget setFocused (Z)V
-accessible field net/minecraft/client/gui/Font filterFishyGlyphs Z
-accessible field net/minecraft/client/gui/Font SHADOW_OFFSET Lorg/joml/Vector3f;
-accessible method net/minecraft/client/gui/Font renderChar (Lnet/minecraft/client/gui/font/glyphs/BakedGlyph;ZZFFFLorg/joml/Matrix4f;Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFFI)V
-accessible method net/minecraft/client/gui/Font renderText (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)F
 accessible field net/minecraft/client/gui/components/AbstractWidget x I
 accessible field net/minecraft/client/gui/components/AbstractWidget y I
-accessible method net/minecraft/client/gui/components/Tooltip <init> (Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;)V
-accessible method net/minecraft/client/gui/GuiGraphics <init> (Lnet/minecraft/client/Minecraft;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V
-accessible field net/minecraft/client/gui/components/Tooltip message Lnet/minecraft/network/chat/Component;
-accessible field net/minecraft/client/gui/components/Tooltip narration Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/components/AbstractWidget isHovered Z
-accessible method net/minecraft/client/gui/Font adjustColor (I)I
-accessible class net/minecraft/client/StringSplitter$LineComponent
-accessible class net/minecraft/client/StringSplitter$FlatComponents
-accessible class net/minecraft/client/StringSplitter$LineBreakFinder
-accessible field net/minecraft/client/StringSplitter$LineComponent contents Ljava/lang/String;
-accessible field net/minecraft/client/StringSplitter$LineComponent style Lnet/minecraft/network/chat/Style;
-accessible field net/minecraft/client/StringSplitter$FlatComponents parts Ljava/util/List;
-accessible field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/StringSplitter;
-accessible method com/mojang/blaze3d/platform/NativeImage$Format getStbFormat (I)Lcom/mojang/blaze3d/platform/NativeImage$Format;
 
-mutable field net/minecraft/client/gui/Font splitter Lnet/minecraft/client/StringSplitter;
-
-extendable method net/minecraft/client/gui/Font renderText (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)F
 extendable method net/minecraft/client/gui/components/AbstractWidget render (Lnet/minecraft/client/gui/GuiGraphics;IIF)V
-
-accessible field net/minecraft/network/chat/contents/LiteralContents text Ljava/lang/String;
-mutable field net/minecraft/network/chat/contents/LiteralContents text Ljava/lang/String;
 
 accessible class net/minecraft/client/gui/font/FontManager$Preparation
 
@@ -57,4 +29,8 @@ mutable field net/minecraft/network/chat/MutableComponent contents Lnet/minecraf
 accessible field net/minecraft/network/chat/MutableComponent siblings Ljava/util/List;
 mutable field net/minecraft/network/chat/MutableComponent siblings Ljava/util/List;
 
+# 1.20.1
 accessible field net/minecraft/client/renderer/RenderBuffers fixedBuffers Ljava/util/SortedMap;
+
+# 1.20.4
+#accessible field net/minecraft/client/renderer/MultiBufferSource$BufferSource fixedBuffers Ljava/util/Map;

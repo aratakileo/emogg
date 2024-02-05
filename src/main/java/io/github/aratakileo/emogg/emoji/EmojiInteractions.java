@@ -8,6 +8,7 @@ import net.minecraft.network.chat.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.WeakHashMap;
 
 public class EmojiInteractions {
@@ -72,13 +73,6 @@ public class EmojiInteractions {
         public int hashCode() {
             return emoji.hashCode();
         }
-
-        @Override
-        public @NotNull JsonObject serialize() {
-            Emogg.LOGGER.warn("EmojiHoverEvent shouldn't be serialized!");
-            return new JsonObject();
-        }
-
     }
 
     public static class EmojiClickEvent extends ClickEvent {
@@ -106,7 +100,7 @@ public class EmojiInteractions {
 
         @Override
         public boolean equals(@NotNull Object object) {
-            return super.equals(object);
+            return object instanceof EmojiClickEvent emojiClickEvent && emojiClickEvent.emoji.equals(emoji);
         }
 
         @Override

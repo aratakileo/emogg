@@ -88,11 +88,11 @@ public final class Emoji {
             glyphProvider = loadingFuture.get();
             state = State.ACTIVE;
         } catch (ExecutionException e) {
-            Emogg.LOGGER.warn("Emoji " + name + " loading failed!", e.getCause());
+            Emogg.LOGGER.warn("Emoji " + getCode() + " loading failed!", e.getCause());
             loadError = e.getCause().toString();
             state = State.ERROR;
         } catch (InterruptedException | CancellationException e) {
-            Emogg.LOGGER.warn("Emoji " + name + " loading failed!", e);
+            Emogg.LOGGER.warn("Emoji " + getCode() + " loading failed!", e);
             loadError = e.toString();
             state = State.ERROR;
         }
@@ -120,8 +120,6 @@ public final class Emoji {
             @NotNull String name,
             @NotNull ResourceLocation resourceLocation
     ) {
-        name = EmojiUtil.normalizeEmojiKeyOrCategoryKey(name);
-
         var category = resourceLocation.getPath().substring(EmojiUtil.EMOJI_FOLDER_NAME.length() + 1);
 
         if (category.contains("/")) {
@@ -130,13 +128,16 @@ public final class Emoji {
             category = splitPath[splitPath.length - 2];
         } else category = EmojiCategory.DEFAULT;
 
-        category = EmojiUtil.normalizeEmojiKeyOrCategoryKey(category);
-
         final EmojiLoader loader = resourceLocation.getPath().endsWith(NativeGifImage.GIF_EXTENSION)
                 ? () -> EmojiLoader.gifLoader(EmojiLoader.resourceReader(resourceLocation))
                 : () -> EmojiLoader.staticImageLoader(EmojiLoader.resourceReader(resourceLocation));
 
-        return new Emoji(id, name, category, loader);
+        return new Emoji(
+                id,
+                EmojiUtil.normalizeEmojiObjectKey(name),
+                EmojiUtil.normalizeEmojiObjectKey(category.equals("default") ? EmojiCategory.DEFAULT : category),
+                loader
+        );
     }
 
     public enum State {

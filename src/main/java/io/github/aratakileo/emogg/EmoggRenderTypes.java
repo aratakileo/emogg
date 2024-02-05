@@ -27,9 +27,18 @@ import static net.minecraft.client.renderer.RenderStateShard.*;
 
 @Environment(EnvType.CLIENT)
 public class EmoggRenderTypes {
+
     // ########## Helper Function ##########
 
     private static RenderType setupEmojiRT(RenderType renderType) {
+// 1.20.4
+//        Minecraft.getInstance()
+//                .renderBuffers()
+//                .bufferSource()
+//                .fixedBuffers
+//                .put(renderType, new BufferBuilder(renderType.bufferSize()));
+
+// 1.20.1
         Minecraft.getInstance()
                 .renderBuffers()
                 .fixedBuffers
@@ -40,10 +49,12 @@ public class EmoggRenderTypes {
     private static CompositeStateBuilder beginStateWithShaderMaybeTexture(
             ShaderStateShard shader, @Nullable ResourceLocation texture) {
         final var builder = CompositeState.builder();
+
         builder.setShaderState(shader);
         builder.setTextureState(texture == null ? NO_TEXTURE : new TextureStateShard(texture, true, false));
         builder.setTransparencyState(TRANSLUCENT_TRANSPARENCY);
         builder.setLightmapState(LIGHTMAP);
+
         return builder;
     }
 

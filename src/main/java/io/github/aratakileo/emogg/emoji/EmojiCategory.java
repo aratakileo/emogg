@@ -44,7 +44,7 @@ public interface EmojiCategory {
     }
 
     /**
-     * @return all built-in category keys except `FueController.CATEGORY_FREQUENTLY_USED`
+     * @return all built-in category keys except {@link FueController#CATEGORY_FREQUENTLY_USED}
      */
     static @NotNull List<String> getBuiltinCategoryKeys() {
         return List.of(ANIME, MEMES, PEOPLE, NATURE, FOOD, ACTIVITIES, TRAVEL, OBJECTS, SYMBOLS, FLAGS, DEFAULT);

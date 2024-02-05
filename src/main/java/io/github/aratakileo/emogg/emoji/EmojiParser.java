@@ -7,7 +7,10 @@ import io.github.aratakileo.emogg.util.WeakIdentityHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.*;
+// 1.20.1
 import net.minecraft.network.chat.contents.LiteralContents;
+// 1.20.4
+//import net.minecraft.network.chat.contents.PlainTextContents;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -38,7 +41,10 @@ public class EmojiParser {
     }
 
     private static void _parse(MutableComponent component) {
+// 1.20.1
         if (component.getContents() instanceof LiteralContents literalContents) {
+// 1.20.4
+//        if (component.getContents() instanceof PlainTextContents.LiteralContents literalContents) {
             final var originalText = literalContents.text();
 
             final var sections = getEmojiSections(originalText);
@@ -69,7 +75,10 @@ public class EmojiParser {
 
                         if (emoji != null) {
                             if (!stringBuilder.isEmpty()) {
+// 1.20.1
                                 components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
+// 1.20.4
+//                                components.add(MutableComponent.create(new PlainTextContents.LiteralContents(stringBuilder.toString())));
                                 stringBuilder.setLength(0);
                             }
 
@@ -77,7 +86,10 @@ public class EmojiParser {
                             // Since, otherwise, the string builder should append the emoji syntax as normal text later.
                             lastEnd = section.end();
 
+// 1.20.1
                             final var emojiComponent = MutableComponent.create(new LiteralContents(
+// 1.20.4
+//                            final var emojiComponent = MutableComponent.create(new PlainTextContents.LiteralContents(
                                     Character.toString(EmojiFontSet.idToCodePoint(emoji.getId()))
                             ));
                             emojiComponent.setStyle(
@@ -105,14 +117,22 @@ public class EmojiParser {
                     );
                 }
             }
+
+// 1.20.1
             components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
+// 1.20.4
+//            components.add(MutableComponent.create(new PlainTextContents.LiteralContents(stringBuilder.toString())));
 
             // Add old extra components back
             components.addAll(component.getSiblings());
 
             // Remember to update mayBeParseResult() when changing the structure of parsed components
             component.siblings = components;
+
+// 1.20.1
             component.contents = ComponentContents.EMPTY;
+// 1.20.4
+//            component.contents = PlainTextContents.EMPTY;
 
             if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.debug("Parse result: <"+component+">");
@@ -142,7 +162,10 @@ public class EmojiParser {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isParsable(Component component) {
+// 1.20.1
         return component instanceof MutableComponent && component.getContents() instanceof LiteralContents;
+// 1.20.4
+//        return component instanceof MutableComponent && component.getContents() instanceof PlainTextContents.LiteralContents;
     }
 
     /**
@@ -150,7 +173,10 @@ public class EmojiParser {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean mayBeParseResult(Component component) {
+// 1.20.1
         return component instanceof MutableComponent && component.getContents() == ComponentContents.EMPTY;
+// 1.20.4
+//        return component instanceof MutableComponent && component.getContents() == PlainTextContents.EMPTY;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -175,15 +201,18 @@ public class EmojiParser {
      * <p>
      * This also detects the current thread, so that it does not alter things on the server thread.
      */
-    public static <T> void mixinApplyUsingOriginal(Component component,
-                                                   CallbackInfoReturnable<T> cir,
-                                                   Function<Component, T> operation,
-                                                   String debugLogPrefix) {
-        //
+    public static <T> void mixinApplyUsingOriginal(
+            Component component,
+            CallbackInfoReturnable<T> cir,
+            Function<Component, T> operation,
+            String debugLogPrefix
+    ) {
         final var original = EmojiParser.getOriginal(component);
+
         if (original != null) {
             if (EmoggConfig.instance.enableDebugMode)
-                Emogg.LOGGER.info(debugLogPrefix+"original:<{}> transformed:<{}>", original, component);
+                Emogg.LOGGER.info(debugLogPrefix + "original:<{}> transformed:<{}>", original, component);
+
             cir.cancel();
             cir.setReturnValue(operation.apply(original));
         }

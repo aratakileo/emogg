@@ -64,7 +64,7 @@ public final class EmojiUtil {
         render(emojiGlyph, guiGraphics, x, y, size, 0xffffffff, grayscale);
     }
 
-    public static @NotNull String normalizeEmojiKeyOrCategoryKey(@NotNull String sourceValue) {
+    public static @NotNull String normalizeEmojiObjectKey(@NotNull String sourceValue) {
         return StringUtils.strip(
                 sourceValue.toLowerCase()
                         .replaceAll("-+| +|\\.+", "_")

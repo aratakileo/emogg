@@ -24,20 +24,15 @@ public interface EmojiLoader {
 
     static CompletableFuture<InputStream> resourceReader(ResourceLocation location) {
         return CompletableFuture.supplyAsync(() -> {
-            var resource = Minecraft.getInstance().getResourceManager()
+            var resource = Minecraft.getInstance()
+                    .getResourceManager()
                     .getResource(location)
                     .orElseThrow(() -> new EmojiLoadingException("Resource not found: " + location));
-            InputStream inputStream = null;
+
             try {
-                inputStream = resource.open();
-                return inputStream;
+                return resource.open();
             } catch (IOException e) {
-                try {
-                    if (inputStream != null) inputStream.close();
-                } catch (IOException ee) {
-                    Emogg.LOGGER.warn("Failed to close resource: "+location, ee);
-                }
-                throw new EmojiLoadingException("Failed to open resource: "+location, e);
+                throw new EmojiLoadingException("Failed to open resource: " + location, e);
             }
         }, Minecraft.getInstance());
     }
@@ -56,17 +51,22 @@ public interface EmojiLoader {
                     NativeImage image = null;
                     try (inputStream) {
                         image = NativeImage.read(inputStream);
+
                         if (image.getWidth() <= 0 || image.getHeight() <= 0)
-                            throw new EmojiLoadingException("Invalid image!");
+                            throw new EmojiLoadingException("Invalid PNG image!");
+
                         return image;
                     } catch (IOException e) {
                         if (image != null) image.close();
-                        throw new EmojiLoadingException("Failed to load static image.", e);
+
+                        throw new EmojiLoadingException("Failed to load PNG image", e);
                     }
                 }, Util.backgroundExecutor())
                 .thenApplyAsync(image -> {
                     var glyph = EmojiAtlas.stitch(image);
+
                     image.close();
+
                     return () -> glyph;
                 }, Minecraft.getInstance());
     }
@@ -75,24 +75,31 @@ public interface EmojiLoader {
         return loader
                 .thenApplyAsync(inputStream -> {
                     NativeGifImage gif = null;
+
                     try (inputStream) {
                         gif = NativeGifImage.read(inputStream);
+
                         if (gif.getFrameCount() <= 0 || gif.getWidth() <= 0 || gif.getHeight() <= 0)
                             throw new EmojiLoadingException("Invalid GIF image!");
+
                         return gif;
                     } catch (IOException e) {
                         if (gif != null) gif.close();
-                        throw new EmojiLoadingException("Failed to load GIF image.", e);
+
+                        throw new EmojiLoadingException("Failed to load GIF image", e);
                     }
                 }, Util.backgroundExecutor())
                 .thenApplyAsync(gif -> {
                     var frames = new ArrayList<MultiFrameEmojiGlyphProvider.Frame>();
+
                     gif.processFrames((index, time, frame) -> {
                         frames.add(new MultiFrameEmojiGlyphProvider.Frame(
                                 EmojiAtlas.stitch(frame.nativeImage()), frame.delay()
                         ));
+
                         frame.nativeImage().close();
                     });
+
                     return new MultiFrameEmojiGlyphProvider(frames);
                 }, Minecraft.getInstance());
     }

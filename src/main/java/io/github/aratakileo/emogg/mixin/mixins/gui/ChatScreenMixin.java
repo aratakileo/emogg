@@ -136,7 +136,10 @@ public class ChatScreenMixin {
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
+// 1.20.1
     public void mouseScrolled(double mouseX, double mouseY, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
+// 1.20.4
+//    public void mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
         if (!emojiSelectionMenu.isHovered) return;
 
         cir.setReturnValue(emojiSelectionMenu.mouseScrolled(mouseX, mouseY, 0, verticalAmount));

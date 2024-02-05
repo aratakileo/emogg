@@ -27,7 +27,11 @@ public abstract class AbstractWidget extends AbstractButton {
 
     private @Nullable Tooltip tooltip;
 
+// 1.20.1
     protected @NotNull ClientTooltipPositioner tooltipPositioner = new MenuTooltipPositioner(this);
+// 1.20.4
+//    protected @NotNull ClientTooltipPositioner tooltipPositioner = new MenuTooltipPositioner(getRectangle());
+
     protected @Nullable Consumer<AbstractWidget> onClicked = null;
 
     public AbstractWidget(int x, int y, int width, int height) {
