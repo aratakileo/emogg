@@ -4,7 +4,7 @@
   "emogg.emoji.interaction.copy": "点击以复制 %s",
   "emogg.settings.title": "Emogg设置",
   "emogg.settings.option.enable_debug_mode.title": "调试模式: %s",
-  "emogg.settings.option.enable_debug_mode.description": "If this mode is enabled, then when using the mod, additional information will be provided, both inside the GUI and in the console. This mode can lead to a decrease in performance, so enabling this mode should be carried out if it is really necessary",
+  "emogg.settings.option.enable_debug_mode.description": "输出更多的日志信息，以及显示更多调试信息。此模式可能会导致性能下降，请仅在必要时启用。",
   "emogg.settings.option.enable_atlas_debug_hud.title": "显示贴图集: %s",
   "emogg.settings.option.enable_atlas_debug_hud.description": "在HUD中显示表情贴图集及相关调试信息。",
   "emogg.settings.option.force_load_all.title": "§c强制加载所有表情",
