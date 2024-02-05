@@ -1,4 +1,4 @@
-Language: **[English]** | [[Русский]](preview/README_ru.md)
+Language: **[English]** | [[Русский]](preview/README_ru.md) | [[中文]](preview/README_cn.md)
 
 # Emogg for better chatting experienсe! <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 Adds emoji support to the chat and to most of the Minecraft interface!
@@ -10,36 +10,42 @@ Adds emoji support to the chat and to most of the Minecraft interface!
  <a href="https://discord.gg/t5ZqftXG4b">
     <img src="https://img.shields.io/badge/Discord-7289da?style=for-the-badge&logo=discord&logoColor=ffffff" alt="Discord" />
   </a>
- 
 </p>
 
 ### Features
 - support for both static and animated emojis
-- ease of adding your own emojis by a resource pack! Use any of the below ways:
-    - just create a resource pack, add pictures there along the path `assets/emogg/emoji`
-    - convert the emoji from the discord server into a resource pack on [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)
-- you can use emojis in chat, on signs and in other places where there is text!
-- when you enter the emoji name, emoji suggestions appear above the input field (available only for chat)
-- you can choose the emoji you like in the emoji selection menu! (available only for chat)
-- by default, two emoji texture packs are built into the mod at once, each of which you can disable through the resource pack selection menu, like a regular resource pack
+- custom emojis via resource packs, by simply put your emoji images in `assets/emogg/emoji`. You can also generate the resource pack from discord server emojis using [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)
+- emojis will be shown in chat, on signs, in item names, on entity name tags, in container names, etc. (It might not work in plain texts yet)
+- emoji suggestions and completion (available only for chat)
+- an emoji selection menu (available only for chat)
+- two built-in emoji packs
 
-### How do emojis work?
-To use emoji, you need to type `:emoji_name:`. If you do this in a chat, you will be shown autocompletion hints. The emoji selection menu is also available in the chat, which opens by clicking on the button in the lower right corner, or by clicking middle mouse button or by pressing `Shift` + `Esc`.
+### How to use emojis?
+To use emoji, you need to type `:emoji_name:`.
+If you start typing this on the chat screen, Emogg will show you the autocomplete suggestions.
+The emoji selection menu is also available for the chat,
+which opens by clicking on the button in the lower right corner,
+or by clicking middle mouse button or by pressing `Shift` + `Esc`.  
+You can also copy the name of emojis from chat or books by clicking them.
 
-If you play on the server or over the network, then in addition to the fact that you and other players must have this mod installed, everyone must have the same resource packs added. If any of these conditions are not met, then instead of emojis, other players will see `:emoji_name:`.
+If you play on the server or over the network,
+then in addition to the fact that you and other players must have this mod installed,
+everyone must have the same resource packs added.
+Or else, other players will see `:emoji_name:`.
 
-If you don't want the emoji name to be transformed into an emoji, you can escape the emoji name by putting a backslash in front of it, thus: `\:emoji_name:`.
+If you don't want the emoji name to be transformed into an emoji, you can escape it like this: `\:emoji_name:`
 
 ### How can I add my own emojis?
 You can easily convert emojis from any discord server into a resource pack on [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)!
 
-If you want to configure the emoji resource pack in more detail or study the structure of such resource packs, then in this case, information for more advanced users is provided below.
+Details about these resource packs is also provided below for more advanced users.
 
-Next, the `assets/emogg/emoji` directory of the resource pack will be designated as the main directory or the main folder of the resource pack.
+To add your emojis to the game,
+just add pictures in the format `.gif` or `.png` to the `assets/emogg/emoji` folder inside your resource pack.
+Each picture added in this way will be automatically added to the game as an emoji.
 
-To add your emojis to the game, just add pictures in the format `.gif` or `.png` to the main directory inside your resource pack. Each picture added in this way will be automatically added to the game as an emoji.
-
-The optimal resolution for each emoji will be approximately `128x128` pixels (this is not a rule, but a recommendation). There is not much point in a higher resolution. Emoji will look better in the game if there is not too much empty space between the edges of the picture and the content. It is better to avoid adding emojis with too small details, because they can be difficult to distinguish.
+The optimal resolution for emojis will be approximately `128x128` pixels (this is not a rule, but a recommendation). There is not much point in a higher resolution. Emoji will look better in the game if there is not too much empty space between the edges of the picture and the content. It is better to avoid adding emojis with too small details, because they can be difficult to distinguish.  
+Non-square emojis are also supported, they will be scaled to fit the text height.
 
 The name of the image file, without extension, will be used as the name of the emoji, which can consist only of lowercase Latin characters `a-z`, numbers `0-9`, underscores `_`. Moreover, the underscores cannot stand at the beginning or at the end of the emoji name. The name of the image file can be anything, however, when loading emojis, all names are modified as follows:
 - all spaces, dots and dashes will be replaced with underscores
@@ -64,6 +70,6 @@ By default, the following category names are already registered in the mod:
 
 You can add your emojis to these categories or create your own. Also, for these categories, translation into six languages has already been implemented: English, German, Japanese, Chinese, Ukrainian, Russian. You can [help with translating](https://github.com/aratakileo/emogg/tree/main/src/main/resources/assets/emogg/lang) the mod into other languages. If you don't add a translation for your new categories using the resource pack language files, the folder name with a capital letter will be used. To add a translation of your category, you need to use the translation key `emogg.category.your_category_name`, where it is necessary to replace `your_category_name` with the name of your category. Each new category you add will be displayed in the selection menu above those already built into the mod.
 
-If the mod detects two or more emojis with the same name, these emojis will be added to the game, but the names of such emojis will be modified. At the end of the name of such emojis, an ordinal number will be added to distinguish them.
+If the mod detects two or more emojis with the same name. A digit will be added to the end of their names to distinguish them.
 
-You can find more detailed information on how to create your own resource packs on the Internet, or you can [download one](https://github.com/aratakileo/emogg/raw/main/resourcepack/builtin.zip) of the resource packs built into the mod as an example.
+You can find more detailed information on how to create your own resource packs on the Internet, or you can [download one](https://github.com/aratakileo/emogg/raw/main/resourcepack/builtin.zip) of the built-in resource packs as an example.

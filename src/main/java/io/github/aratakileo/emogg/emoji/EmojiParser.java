@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 @Environment(EnvType.CLIENT)
 public class EmojiParser {
-    public final static Pattern PATTERN = Pattern.compile("(\\\\?):([_A-Za-z0-9]+):");
+    public final static Pattern PATTERN = Pattern.compile("(\\\\?)[:：]([_A-Za-z0-9]+)[:：]");
 
     private static final WeakIdentityHashMap<MutableComponent, MutableComponent> parsedToOriginal = new WeakIdentityHashMap<>();
 

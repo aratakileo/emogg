@@ -15,14 +15,16 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public class EmojiSuggestion implements Suggestion, SuggestionRenderer {
     private final Emoji emoji;
+    private final String text;
 
-    public EmojiSuggestion(@NotNull Emoji emoji) {
+    public EmojiSuggestion(@NotNull Emoji emoji, @NotNull String text) {
         this.emoji = emoji;
+        this.text = text;
     }
 
     @Override
     public @NotNull String getText() {
-        return emoji.getCode();
+        return text;
     }
 
     @Override

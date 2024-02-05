@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -33,13 +35,15 @@ public class Emogg implements ClientModInitializer {
         ModrinthApi.checkUpdates();
 
         SuggestionsAPI.registerInjector(Injector.simple(
-                Pattern.compile(":[A-Za-z0-9_]*(:)?$"),
-                (currentExpression, startOffset) -> Cast.of(
-                        EmojiManager.getInstance()
-                                .getEmojisStream()
-                                .map(EmojiSuggestion::new)
-                                .toList()
-                )
+                Pattern.compile("[:：][A-Za-z0-9_]*([:：])?$"),
+                (currentExpression, startOffset) -> {
+                    List<EmojiSuggestion> suggestions = new LinkedList<>();
+                    EmojiManager.getInstance().getEmojisStream().forEach(emoji -> {
+                        suggestions.add(new EmojiSuggestion(emoji, ":%s:".formatted(emoji.getName())));
+                        suggestions.add(new EmojiSuggestion(emoji, "：%s：".formatted(emoji.getName())));
+                    });
+                   return Cast.of(suggestions);
+                }
         ));
 
         LOGGER.info(String.format(

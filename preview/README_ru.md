@@ -1,4 +1,4 @@
-Язык: [[English]](https://github.com/aratakileo/emogg) | **[Русский]**
+Язык: [[English]](https://github.com/aratakileo/emogg) | **[Русский]** | [[中文]](https://github.com/aratakileo/emogg/blob/main/preview/README_cn.md)
 
 # Emogg – для лучше опыта при общении в чате! <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 Добавляет поддержку эмодзи в чат и в большую часть интерфейса Minecraft!
