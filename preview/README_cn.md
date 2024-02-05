@@ -1,4 +1,4 @@
-语言: [[English]](https://github.com/aratakileo/emogg) | [[Русский]](preview/README_ru.md) | **[中文]**
+语言: [[English]](https://github.com/aratakileo/emogg) | [[Русский]](https://github.com/aratakileo/emogg/preview/README_ru.md) | **[中文]**
 
 # Emogg，为了更好的聊天体验！<img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 为 Minecraft 添加表情包功能。
