@@ -21,56 +21,49 @@
 - 表情选择菜单
 - 两个内置表情包
 
-### 如何使用？
-要输入表情，只需输入`:表情名称:`（中英文冒号皆可）。
-If you do this in the chat screen, you will be shown autocompletion hints.
-The emoji selection menu is also available for the chat,
-which opens by clicking on the button in the lower right corner,
-or by clicking middle mouse button or by pressing `Shift` + `Esc`.  
-You can also copy the name of emojis from chat or books by clicking them.
+### 使用
+要输入表情，只需输入`:表情名称:`（中英文冒号皆可）。在聊天界面中会出现补全提示。
+与可以点击聊天界面右下角的按钮（或者鼠标中键以及`Shift`+`Esc`）来打开表情选择界面。
+你还可以点击聊天以及书中的表情字符以复制其名称。
 
-If you play on the server or over the network,
-then in addition to the fact that you and other players must have this mod installed,
-everyone must have the same resource packs added.
-Or else, other players will see `:emoji_name:`.
+在多人游戏中，其他玩家需要安装Emogg以及对应的的资源包以显示对应的表情，如果一个表情在客户端中不存在则会显示为`:表情名称:`
 
-If you don't want the emoji name to be transformed into an emoji, you can escape it like this: `\:emoji_name:`
+如果你不希望某个表情被显示，可以通过`\:表情名称:`的方式转义。
 
-### How can I add my own emojis?
-You can easily convert emojis from any discord server into a resource pack on [our website](https://aratakileo.github.io/emogg-resourcepack-maker/)!
+### 添加自定义表情
+[我们的网站](https://aratakileo.github.io/emogg-resourcepack-maker/)可以自动用 Discord 表情生成Emogg资源包。 
 
-Details about these resource packs is also provided below for more advanced users.
+要通过资源包添加自定义表情，只需要将对应的图片（`.png`或`.gif`）放在资源包的`assets/emogg/emoji`文件夹内。
 
-To add your emojis to the game,
-just add pictures in the format `.gif` or `.png` to the `assets/emogg/emoji` folder inside your resource pack.
-Each picture added in this way will be automatically added to the game as an emoji.
+表情的分辨率在`128x128`左右比较合适（更高的分辨率没有什么必要），但任何的分辨率都是支持的。
+表情本身尽量填满整个图片，并且不建议有很小的细节。
+非正方形的图片也是支持的，这些表情会被自动缩放到合适的大小来适应文字的高度。
 
-The optimal resolution for emojis will be approximately `128x128` pixels (this is not a rule, but a recommendation). There is not much point in a higher resolution. Emoji will look better in the game if there is not too much empty space between the edges of the picture and the content. It is better to avoid adding emojis with too small details, because they can be difficult to distinguish.  
-Non-square emojis are also supported, they will be scaled to fit the text height.
+图片的文件名（不包括扩展名）会成为表情名称。表情名称只能包含拉丁字母，数字，以及下划线，因此会进行如下变换：
+- 所有空格，点和横线会被替换为下划线
+- 收尾空格会被去掉
+- 所有不支持的字符都会被去掉
+- 大写拉丁字母会被转换为小写
 
-The name of the image file, without extension, will be used as the name of the emoji, which can consist only of lowercase Latin characters `a-z`, numbers `0-9`, underscores `_`. Moreover, the underscores cannot stand at the beginning or at the end of the emoji name. The name of the image file can be anything, however, when loading emojis, all names are modified as follows:
-- all spaces, dots and dashes will be replaced with underscores
-- the underscores at the beginning and at the end of the name will be removed
-- unsupported characters will be removed from the name
-- uppercase Latin characters will be converted to lowercase characters
+这些规则对表情类别名称也适用。默认情况下，自定义表情会被添加到`其他`类别。
+但可以通过把表情图片放在`emoji`文件夹的某个子文件夹中来自定义每个表情的类别。
+文件夹的名称会作为该类别的名字。类别类似于一个命名空间，如果多个资源包中包含同名类别则它们添加到这个类别的表情都会被归为一类。  
+模组默认包含以下类别（注意在资源包文件夹名称要用括号中的英文名称）：
+- `动漫`（`anime`）
+- `梗`（`memes`）
+- `人`（`people`）
+- `自然`（`nature`）
+- `食物`（`food`）
+- `活动`（`activities`）
+- `旅行`（`travel`）
+- `物品`（`objects`）
+- `符号`（`symbols`）
+- `旗帜`（`flags`）
+- `其他`（`other`）
 
-The same rules apply to the names of the categories in which your emojis will be listed. By default, all emojis added to the main catalog will be listed in the `other` category. To link your emojis to a certain category, it is enough to create a folder with the name of the category inside the main folder and transfer there the emojis that will be attributed to this category. There can be any number of folders with any name between the main folder and the category folder, because the name of the pack in which your emojis are directly located (except the main folder) will be taken as the name of the category. This can be used to create a namespace. So if another resource pack has an emoji with the same name as yours, both your and the emoji from another resource pack will be added to the game.
+通过资源包添加的自定义类别默认不会有翻译，
+但可以通过添加`emogg.category.类别名`的词条来添加翻译。
 
-By default, the following category names are already registered in the mod:
-- `anime`
-- `memes`
-- `people`
-- `nature`
-- `food`
-- `activities`
-- `travel`
-- `objects`
-- `symbols`
-- `flags`
-- `other`
+如果加载表情的时候出现同名表情，则表情名称末尾会被自动加上下划线编号以区分它们。
 
-You can add your emojis to these categories or create your own. Also, for these categories, translation into six languages has already been implemented: English, German, Japanese, Chinese, Ukrainian, Russian. You can [help with translating](https://github.com/aratakileo/emogg/tree/main/src/main/resources/assets/emogg/lang) the mod into other languages. If you don't add a translation for your new categories using the resource pack language files, the folder name with a capital letter will be used. To add a translation of your category, you need to use the translation key `emogg.category.your_category_name`, where it is necessary to replace `your_category_name` with the name of your category. Each new category you add will be displayed in the selection menu above those already built into the mod.
-
-If the mod detects two or more emojis with the same name. A digit will be added to the end of their names to distinguish them.
-
-You can find more detailed information on how to create your own resource packs on the Internet, or you can [download one](https://github.com/aratakileo/emogg/raw/main/resourcepack/builtin.zip) of the built-in resource packs as an example.
+至于如何制作资源包可以很容易在网上查到，你也可以在这里下载一个[模组内置的资源包](https://github.com/aratakileo/emogg/raw/main/resourcepack/builtin.zip)来作为示例。
