@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 @Environment(EnvType.CLIENT)
 @FunctionalInterface
@@ -24,6 +23,7 @@ public interface EmojiLoader {
 
     static CompletableFuture<InputStream> resourceReader(ResourceLocation location) {
         return CompletableFuture.supplyAsync(() -> {
+
             var resource = Minecraft.getInstance().getResourceManager()
                     .getResource(location)
                     .orElseThrow(() -> new EmojiLoadingException("Resource not found: " + location));
@@ -39,7 +39,7 @@ public interface EmojiLoader {
                 }
                 throw new EmojiLoadingException("Failed to open resource: "+location, e);
             }
-        }, Minecraft.getInstance());
+        }, Util.ioPool());
     }
 
     static CompletableFuture<InputStream> downloader(URL url) {
@@ -52,7 +52,7 @@ public interface EmojiLoader {
 
     static CompletableFuture<EmojiGlyphProvider> staticImageLoader(CompletableFuture<InputStream> loader) {
         return loader
-                .thenApplyAsync(inputStream -> {
+                .thenApply(inputStream -> {
                     NativeImage image = null;
                     try (inputStream) {
                         image = NativeImage.read(inputStream);
@@ -63,7 +63,7 @@ public interface EmojiLoader {
                         if (image != null) image.close();
                         throw new EmojiLoadingException("Failed to load static image.", e);
                     }
-                }, Util.backgroundExecutor())
+                })
                 .thenApplyAsync(image -> {
                     var glyph = EmojiAtlas.stitch(image);
                     image.close();
@@ -73,7 +73,7 @@ public interface EmojiLoader {
 
     static CompletableFuture<MultiFrameEmojiGlyphProvider> gifLoader(CompletableFuture<InputStream> loader) {
         return loader
-                .thenApplyAsync(inputStream -> {
+                .thenApply(inputStream -> {
                     NativeGifImage gif = null;
                     try (inputStream) {
                         gif = NativeGifImage.read(inputStream);
@@ -84,7 +84,7 @@ public interface EmojiLoader {
                         if (gif != null) gif.close();
                         throw new EmojiLoadingException("Failed to load GIF image.", e);
                     }
-                }, Util.backgroundExecutor())
+                })
                 .thenApplyAsync(gif -> {
                     var frames = new ArrayList<MultiFrameEmojiGlyphProvider.Frame>();
                     gif.processFrames((index, time, frame) -> {
