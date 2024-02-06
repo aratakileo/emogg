@@ -24,7 +24,8 @@ public interface EmojiLoader {
     static CompletableFuture<InputStream> resourceReader(ResourceLocation location) {
         return CompletableFuture.supplyAsync(() -> {
 
-            var resource = Minecraft.getInstance().getResourceManager()
+            var resource = Minecraft.getInstance()
+                    .getResourceManager()
                     .getResource(location)
                     .orElseThrow(() -> new EmojiLoadingException("Resource not found: " + location));
             InputStream inputStream = null;
