@@ -4,8 +4,8 @@
         "srcrgb": "srcalpha",
         "dstrgb": "1-srcalpha"
     },
-    "vertex": "emoji_uv",
-    "fragment": "emoji_textured",
+    "vertex": "emogg:emoji_uv",
+    "fragment": "emogg:emoji_loading",
     "attributes": [
         "Position",
         "Color",
@@ -13,7 +13,6 @@
         "UV2"
     ],
     "samplers": [
-        { "name": "Sampler0" },
         { "name": "Sampler2" }
     ],
     "uniforms": [
@@ -25,6 +24,6 @@
         { "name": "FogEnd", "type": "float", "count": 1, "values": [ 1.0 ] },
         { "name": "FogColor", "type": "float", "count": 4, "values": [ 0.0, 0.0, 0.0, 0.0 ] },
         { "name": "FogShape", "type": "int", "count": 1, "values": [ 0 ] },
-        { "name": "grayscale", "type": "float", "count": 1, "values": [ 1.0 ] }
+        { "name": "animationTime", "type": "float", "count": 1, "values": [ 0 ] }
     ]
 }

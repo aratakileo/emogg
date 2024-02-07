@@ -120,6 +120,12 @@ public class EmoggRenderTypes {
         );
     }
 
+    private static boolean customShadersAvailable = false;
+
+    private static boolean useCustomShaders() {
+        return EmoggConfig.instance.enableCustomShaders && customShadersAvailable;
+    }
+
     // ########## Render Type Definitions ##########
 
     private static final Function<ResourceLocation, GlyphRenderTypes> EMOJI_TEXTURED =
@@ -140,7 +146,7 @@ public class EmoggRenderTypes {
             ));
 
     public static GlyphRenderTypes emojiTextured(ResourceLocation texture) {
-        if (EmoggConfig.instance.useCustomShaders) {
+        if (useCustomShaders()) {
             return EMOJI_TEXTURED.apply(texture);
         } else {
             return EMOJI_TEXTURED_VANILLA.apply(texture);
@@ -157,7 +163,7 @@ public class EmoggRenderTypes {
             ));
 
     public static GlyphRenderTypes emojiTexturedGrayscale(ResourceLocation texture) {
-        if (EmoggConfig.instance.useCustomShaders) {
+        if (useCustomShaders()) {
             return EMOJI_TEXTURED_GRAYSCALE.apply(texture);
         } else {
             // No vanilla fallback, falling back to colored
@@ -183,7 +189,7 @@ public class EmoggRenderTypes {
             );
 
     public static GlyphRenderTypes emojiNoTexture() {
-        if (EmoggConfig.instance.useCustomShaders) {
+        if (useCustomShaders()) {
             return EMOJI_NO_TEXTURE;
         } else {
             return EMOJI_NO_TEXTURE_VANILLA;
@@ -198,6 +204,14 @@ public class EmoggRenderTypes {
                     Shaders.EMOJI_LOADING_SEE_THROUGH,
                     null, true
             );
+
+    public static GlyphRenderTypes emojiLoading() {
+        if (useCustomShaders()) {
+            return EMOJI_LOADING;
+        } else {
+            return EMOJI_NO_TEXTURE_VANILLA;
+        }
+    }
 
     // ########## Shaders ##########
 
@@ -236,37 +250,38 @@ public class EmoggRenderTypes {
         }
 
         private static void _loadShaders(ResourceProvider resourceProvider, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list) throws IOException {
+            var NS = Emogg.NAMESPACE_OR_ID + ":";
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emoji_textured", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
+                    new ShaderInstance(resourceProvider, NS + "emoji_textured", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
                     shader -> {
                         emojiTextured = shader;
                         Uni.grayscaleModeIntensity.uniforms[0] = shader.safeGetUniform("grayscale");
                     }
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emoji_textured_see_through", DefaultVertexFormat.POSITION_COLOR_TEX),
+                    new ShaderInstance(resourceProvider, NS + "emoji_textured_see_through", DefaultVertexFormat.POSITION_COLOR_TEX),
                     shader -> {
                         emojiTexturedSeeThrough = shader;
                         Uni.grayscaleModeIntensity.uniforms[1] = shader.safeGetUniform("grayscale");
                     }
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emoji_no_texture", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP),
+                    new ShaderInstance(resourceProvider, NS + "emoji_no_texture", DefaultVertexFormat.POSITION_COLOR_LIGHTMAP),
                     shader -> emojiNoTexture = shader
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emoji_no_texture_see_through", DefaultVertexFormat.POSITION_COLOR),
+                    new ShaderInstance(resourceProvider, NS + "emoji_no_texture_see_through", DefaultVertexFormat.POSITION_COLOR),
                     shader -> emojiNoTextureSeeThrough = shader
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emoji_loading", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
+                    new ShaderInstance(resourceProvider, NS + "emoji_loading", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP),
                     shader -> {
                         emojiLoading = shader;
                         Uni.loadingAnimationTime.uniforms[0] = shader.safeGetUniform("animationTime");
                     }
             ));
             list.add(Pair.of(
-                    new ShaderInstance(resourceProvider, "emoji_loading_see_through", DefaultVertexFormat.POSITION_COLOR_TEX),
+                    new ShaderInstance(resourceProvider, NS + "emoji_loading_see_through", DefaultVertexFormat.POSITION_COLOR_TEX),
                     shader -> {
                         emojiLoadingSeeThrough = shader;
                         Uni.loadingAnimationTime.uniforms[1] = shader.safeGetUniform("animationTime");
@@ -275,9 +290,11 @@ public class EmoggRenderTypes {
         }
 
         public static void loadShaders(ResourceProvider resourceProvider, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list) {
+            customShadersAvailable = false;
             Emogg.LOGGER.info("Loading emogg shaders...");
             try {
                 _loadShaders(resourceProvider, list);
+                customShadersAvailable = true;
             } catch (Exception e) {
                 Emogg.LOGGER.error("Emogg shader loading failed!", e);
             }

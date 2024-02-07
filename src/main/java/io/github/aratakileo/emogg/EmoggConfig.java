@@ -26,7 +26,7 @@ public class EmoggConfig {
     public boolean enableAtlasDebugHUD = false;
     public @NotNull ArrayList<FueController.EmojiStatistic> frequentlyUsedEmojis = new ArrayList<>();
     public @NotNull ArrayList<String> hiddenCategoryNames = new ArrayList<>();
-    public boolean useCustomShaders = true;
+    public boolean enableCustomShaders = true;
 
     public static void setField(String field, Object value) {
         try {
