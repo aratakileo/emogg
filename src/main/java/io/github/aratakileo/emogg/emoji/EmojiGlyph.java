@@ -165,7 +165,7 @@ public abstract class EmojiGlyph extends BakedGlyph implements GlyphInfo {
 
     private static class Loading extends RectEmojiGlyph {
         public Loading() {
-            super(EmoggRenderTypes.EMOJI_LOADING);
+            super(EmoggRenderTypes.emojiLoading());
         }
 
         @Override

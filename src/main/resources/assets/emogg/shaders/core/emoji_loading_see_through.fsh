@@ -1,6 +1,6 @@
 #version 150
 
-#moj_import <emoji_loading_animation.glsl>
+#moj_import <emogg:emoji_loading_animation.glsl>
 
 uniform vec4 ColorModulator;
 

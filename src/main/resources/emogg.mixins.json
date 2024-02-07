@@ -16,7 +16,8 @@
     "parsing.MutableComponentMixin",
     "rendering.FontMixin",
     "rendering.GameRendererMixin",
-    "rendering.StringRenderOutputMixin"
+    "rendering.StringRenderOutputMixin",
+    "misc.ResourceLocationMixin"
   ],
   "injectors": {
     "defaultRequire": 1
