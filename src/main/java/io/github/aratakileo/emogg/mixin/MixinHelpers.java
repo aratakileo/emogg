@@ -6,7 +6,7 @@ public class MixinHelpers {
     // FontMixin.preGlowOutlineRender
     // FontMixin.postGlowOutlineRender
     // StringRenderOutputMixin.noShadowAndGlowOutlineForEmojis
-    public static boolean shouldSkipEmojiGlyphRender = false;
+    public static boolean shouldSkipEmojiGlyphRender = false, hasMessageAboutUpdateBeenShown = false;
 
     // ResourceLocationMixin
     public static final Pattern PATTERN_NAMESPACE = Pattern.compile("/([a-z0-9_.-]+):");

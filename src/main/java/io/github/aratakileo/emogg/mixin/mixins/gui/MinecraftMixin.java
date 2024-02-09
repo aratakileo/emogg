@@ -2,6 +2,7 @@ package io.github.aratakileo.emogg.mixin.mixins.gui;
 
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.api.ModrinthApi;
+import io.github.aratakileo.emogg.mixin.MixinHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -41,7 +42,7 @@ public class MinecraftMixin {
         if (
                 screen == null
                         && level != null
-                        && !Emogg.hasMessageAboutUpdateBeenShown
+                        && !MixinHelpers.hasMessageAboutUpdateBeenShown
                         && ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.NEEDS_TO_BE_UPDATED
         ) {
             try {
@@ -63,7 +64,7 @@ public class MinecraftMixin {
 
                 gui.getChat().addMessage(Component.Serializer.fromJson(messageRawtext));
 
-                Emogg.hasMessageAboutUpdateBeenShown = true;
+                MixinHelpers.hasMessageAboutUpdateBeenShown = true;
             } catch (Exception e) {
                 gui.getChat().addMessage(
                         Component.literal("Emogg: something went wrong...")

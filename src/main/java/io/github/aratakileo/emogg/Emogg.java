@@ -28,8 +28,6 @@ public class Emogg implements ClientModInitializer {
 
     public static final String NAMESPACE_OR_ID = "emogg";
 
-    public static boolean hasMessageAboutUpdateBeenShown = false;
-
     @Override
     public void onInitializeClient() {
         ModrinthApi.checkUpdates();
