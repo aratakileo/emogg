@@ -1,10 +1,6 @@
 {
-  "emogg.settings.title": "Emoggの設定",
-  "emogg.settings.option.is_debug_mode_enabled.title": "デバッグモード: %s",
-  "emogg.settings.option.is_debug_mode_enabled.description": "デバッグモードを有効にすると、Mod利用時にGUIとコンソールの両方に追加の情報を表示します。このモードはパフォーマンスの低下につながる可能性があるため、必要な場合にのみ有効にしてください。",
-  "emogg.settings.save_and_quit": "保存して終了",
-  "emogg.gui.state.enabled": "Enabled",
-  "emogg.gui.state.disabled": "Disabled",
+  "emogg.config.entry.enable_debug_mode.title": "デバッグモード",
+  "emogg.config.entry.enable_debug_mode.description": "デバッグモードを有効にすると、Mod利用時にGUIとコンソールの両方に追加の情報を表示します。このモードはパフォーマンスの低下につながる可能性があるため、必要な場合にのみ有効にしてください。",
   "emogg.tooltip.action.add_emojis": "絵文字の追加",
   "emogg.category.$frequently_used": "使用頻度が高い",
   "emogg.category.food": "フード",

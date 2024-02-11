@@ -1,9 +1,12 @@
 package io.github.aratakileo.emogg;
 
-import io.github.aratakileo.emogg.api.ModrinthApi;
+import io.github.aratakileo.elegantia.gui.config.Config;
+import io.github.aratakileo.elegantia.updatechecker.ModrinthUpdateChecker;
+import io.github.aratakileo.elegantia.updatechecker.SuccessfulResponse;
+import io.github.aratakileo.elegantia.util.ModInfo;
+import io.github.aratakileo.elegantia.util.Platform;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.gui.EmojiSuggestion;
-import io.github.aratakileo.emogg.util.Platform;
 import io.github.aratakileo.suggestionsapi.SuggestionsAPI;
 import io.github.aratakileo.suggestionsapi.injector.Injector;
 import io.github.aratakileo.suggestionsapi.util.Cast;
@@ -11,7 +14,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -22,15 +24,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
 public class Emogg implements ClientModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Emogg.class);
-
-    public static final String NAMESPACE_OR_ID = "emogg";
+    public final static Logger LOGGER = LoggerFactory.getLogger(Emogg.class);
+    public final static String NAMESPACE_OR_ID = "emogg";
+    public final static ModrinthUpdateChecker UPDATE_CHECKER = new ModrinthUpdateChecker(NAMESPACE_OR_ID);
 
     @Override
     public void onInitializeClient() {
-        ModrinthApi.checkUpdates();
+        final var lastResponse = UPDATE_CHECKER.check();
 
         SuggestionsAPI.registerInjector(Injector.simple(
                 Pattern.compile("[:：][A-Za-z0-9_]*([:：])?$"),
@@ -44,30 +45,29 @@ public class Emogg implements ClientModInitializer {
                 }
         ));
 
-        LOGGER.info(String.format(
-                "[emogg] Installed v%s; %s to download (from modrinth.com)%s",
-                Platform.getModVersion(NAMESPACE_OR_ID),
-                switch (ModrinthApi.getResponseCode()) {
-                    case SUCCESSFUL, NEEDS_TO_BE_UPDATED -> "available";
+        LOGGER.info("[emogg] Installed v%s; %s to download (from modrinth.com)%s".formatted(
+                ModInfo.getVersion(NAMESPACE_OR_ID).orElse("unknown").split("\\+")[0],
+                switch (lastResponse.getResponseCode()) {
+                    case SUCCESSFUL, NEW_VERSION_IS_AVAILABLE -> "available";
                     default -> "not available";
                 },
-                switch (ModrinthApi.getResponseCode()) {
+                switch (lastResponse.getResponseCode()) {
                     case DOES_NOT_EXIST_AT_MODRINTH -> ", because does not exist for Minecraft v"
-                            + SharedConstants.getCurrentVersion().getName();
-                    case SUCCESSFUL, NEEDS_TO_BE_UPDATED -> String.format(
-                            " v%s - %s",
-                            ModrinthApi.getUpdateVersion(),
-                            ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.NEEDS_TO_BE_UPDATED
-                                    ? "needs to be updated" : "not needs to be updated"
+                            + Platform.getCurrentMinecraftVersion();
+                    case SUCCESSFUL, NEW_VERSION_IS_AVAILABLE -> " v%s - %s".formatted(
+                            UPDATE_CHECKER.getLastResponseAsSuccessful()
+                                    .map(SuccessfulResponse::getDefinedVersion)
+                                    .orElse("unknown"),
+                            lastResponse.isNewVersionAvailable() ? "needs to be updated" : "not needs to be updated"
                     );
                     default -> ", because something went wrong";
                 }
         ));
 
-        if (ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.DOES_NOT_EXIST_AT_MODRINTH)
+        if (lastResponse.doesNotExistAtModrinth())
             LOGGER.warn("[emogg] It looks like you are using an unofficial version port!");
 
-        EmoggConfig.load();
+        EmoggConfig.instance = Config.init(EmoggConfig.class, NAMESPACE_OR_ID);
         EmojiManager.init();
 
         registerBuiltinResourcePack("builtin");

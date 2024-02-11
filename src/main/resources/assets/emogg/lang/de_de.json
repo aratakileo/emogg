@@ -1,10 +1,6 @@
 {
-  "emogg.settings.title": "Emogg-Einstellungen",
-  "emogg.settings.option.is_debug_mode_enabled.title": "Debug-Modus: %s",
-  "emogg.settings.option.is_debug_mode_enabled.description": "Wenn dieser Modus aktiviert ist, werden bei Verwendung des Mods zusätzliche Informationen bereitgestellt, sowohl innerhalb der grafischen Benutzeroberfläche als auch in der Konsole. Dieser Modus kann zu Leistungseinbußen führen, daher sollte die Aktivierung dieses Modus erfolgen, wenn es wirklich notwendig ist",
-  "emogg.settings.save_and_quit": "Speichern und beenden",
-  "emogg.gui.state.enabled": "Aktiviert",
-  "emogg.gui.state.disabled": "Deaktiviert",
+  "emogg.config.entry.enable_debug_mode.title": "Debug-Modus",
+  "emogg.config.entry.enable_debug_mode.description": "Wenn dieser Modus aktiviert ist, werden bei Verwendung des Mods zusätzliche Informationen bereitgestellt, sowohl innerhalb der grafischen Benutzeroberfläche als auch in der Konsole. Dieser Modus kann zu Leistungseinbußen führen, daher sollte die Aktivierung dieses Modus erfolgen, wenn es wirklich notwendig ist",
   "emogg.tooltip.action.add_emojis": "Emojis hinzufügen",
   "emogg.category.$frequently_used": "Häufig verwendet",
   "emogg.category.food": "Essen",

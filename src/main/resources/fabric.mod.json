@@ -25,16 +25,14 @@
   "entrypoints": {
     "client": [
       "io.github.aratakileo.emogg.Emogg"
-    ],
-    "modmenu": [
-      "io.github.aratakileo.emogg.api.ModMenuApiImpl"
     ]
   },
   "mixins": [
     "emogg.mixins.json"
   ],
   "depends": {
-    "suggestions-api": ">=${suggestions_api_version}"
+    "suggestions-api": ">=${suggestions_api_version}",
+    "elegantia": ">=${elegantia_version}"
   },
   "accessWidener" : "emogg.accesswidener"
 }

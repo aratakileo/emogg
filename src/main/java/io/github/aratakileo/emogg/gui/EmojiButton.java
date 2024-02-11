@@ -1,5 +1,7 @@
-package io.github.aratakileo.emogg.gui.component;
+package io.github.aratakileo.emogg.gui;
 
+import io.github.aratakileo.elegantia.gui.widget.Button;
+import io.github.aratakileo.elegantia.util.Rect2i;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
@@ -13,13 +15,8 @@ import org.jetbrains.annotations.Nullable;
 public class EmojiButton extends Button {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
-    public EmojiButton(int x, int y, int size) {
-        super(
-                x,
-                y,
-                size,
-                size
-        );
+    public EmojiButton(@NotNull Rect2i rect2i) {
+        super(rect2i, null);
 
         changeDisplayableEmoji();
     }
@@ -33,15 +30,15 @@ public class EmojiButton extends Button {
         this.displayableEmoji = displayableEmoji;
     }
 
-    @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
-        final var hasBeenHovered = isHovered;
-
-        super.render(guiGraphics, mouseX, mouseY, dt);
-
-        if (!hasBeenHovered && isHovered)
-            changeDisplayableEmoji();
-    }
+//    @Override
+//    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
+//        final var hasBeenHovered = isHovered;
+//
+//        super.render(guiGraphics, mouseX, mouseY, dt);
+//
+//        if (!hasBeenHovered && isHovered)
+//            changeDisplayableEmoji();
+//    }
 
     @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
@@ -50,9 +47,12 @@ public class EmojiButton extends Button {
             return;
         }
 
+        if (!wasHovered && isHovered)
+            changeDisplayableEmoji();
+
         setTooltip(displayableEmoji.getEscapedCode());
 
-        int renderX = x, renderY = y, renderSize = width;
+        int renderX = getX(), renderY = getY(), renderSize = getWidth();
 
         if (isHovered) {
             renderX -= 1;

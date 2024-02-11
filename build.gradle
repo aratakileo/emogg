@@ -7,20 +7,6 @@ apply from: 'util.gradle'
 
 group = project.maven_group
 
-repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-    maven {
-        url = 'https://maven.terraformersmc.com/releases'
-        content {
-            includeGroup 'com.terraformersmc'
-        }
-    }
-}
-
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -28,19 +14,24 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modImplementation files("lib/elegantia-0.0.1-alpha+1.20-1.20.1.jar")
 
     implEmbeddedMod "maven.modrinth:suggestions-api:${project.suggestions_api_version}"
 }
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "suggestions_api_version", suggestions_api_version
+    final var replaceProperties = [
+            "version": project.version,
+            "suggestions_api_version": suggestions_api_version,
+            "elegantia_version": elegantia_version
+    ]
+
+    inputs.properties replaceProperties
+
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "suggestions_api_version": suggestions_api_version
+        expand replaceProperties
     }
 }
 

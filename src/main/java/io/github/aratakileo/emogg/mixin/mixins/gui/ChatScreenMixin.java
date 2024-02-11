@@ -1,5 +1,6 @@
 package io.github.aratakileo.emogg.mixin.mixins.gui;
 
+import io.github.aratakileo.elegantia.util.Rect2i;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.FueController;
 import net.minecraft.client.Minecraft;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import oshi.util.tuples.Pair;
 import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.gui.esm.EmojiSelectionMenu;
-import io.github.aratakileo.emogg.gui.component.EmojiButton;
+import io.github.aratakileo.emogg.gui.EmojiButton;
 import io.github.aratakileo.emogg.util.KeyboardUtil;
 
 @Mixin(ChatScreen.class)
@@ -37,11 +38,11 @@ public class ChatScreenMixin {
         final var self = (ChatScreen)(Object)this;
 
         final var positionOffset = input.getHeight();
-        emojiButton = new EmojiButton(
+        emojiButton = new EmojiButton(new Rect2i(
                 self.width - positionOffset,
                 self.height - positionOffset,
                 input.getHeight() - 4
-        );
+        ));
         self.addRenderableWidget(emojiButton);
 
         emojiSelectionMenu = new EmojiSelectionMenu((float) (emojiButton.getHeight() * 1.5));
@@ -49,15 +50,17 @@ public class ChatScreenMixin {
         emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
         self.addRenderableWidget(emojiSelectionMenu);
 
-        emojiButton.setOnClicked(emojiPickerButton -> {
-            if (!emojiSelectionMenu.visible) emojiSelectionMenu.refreshFrequentlyUsedEmojis();
+        emojiButton.setOnClickListener((btn, byUser) -> {
+            if (!emojiSelectionMenu.isVisible) emojiSelectionMenu.refreshFrequentlyUsedEmojis();
 
-            emojiSelectionMenu.visible = !emojiSelectionMenu.visible;
+            emojiSelectionMenu.isVisible = !emojiSelectionMenu.isVisible;
+
+            return true;
         });
 
         if (EmojiManager.getInstance().isEmpty()) {
-            emojiButton.active = false;
-            emojiButton.visible = false;
+            emojiButton.isActive = false;
+            emojiButton.isVisible = false;
         }
     }
 
@@ -65,7 +68,7 @@ public class ChatScreenMixin {
     public void resizeHead(Minecraft minecraft, int x, int y, CallbackInfo ci) {
         emojiSelectionMenuState = new Pair<>(
                 emojiSelectionMenu.verticalScrollbar.getProgress(),
-                emojiSelectionMenu.visible
+                emojiSelectionMenu.isVisible
         );
         emojiButtonDisplayableEmojiState = emojiButton.getDisplayableEmoji();
     }
@@ -74,7 +77,7 @@ public class ChatScreenMixin {
     public void resizeTail(Minecraft minecraft, int x, int y, CallbackInfo ci) {
         emojiSelectionMenu.refreshFrequentlyUsedEmojis();
         emojiSelectionMenu.verticalScrollbar.setProgress(emojiSelectionMenuState.getA());
-        emojiSelectionMenu.visible = emojiSelectionMenuState.getB();
+        emojiSelectionMenu.isVisible = emojiSelectionMenuState.getB();
         emojiButton.setDisplayableEmoji(emojiButtonDisplayableEmojiState);
     }
 
@@ -104,30 +107,30 @@ public class ChatScreenMixin {
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (keyCode != KeyboardUtil.K_ESC) return;
 
-        if (emojiSelectionMenu.visible) {
-            emojiSelectionMenu.visible = false;
+        if (emojiSelectionMenu.isVisible) {
+            emojiSelectionMenu.isVisible = false;
             cir.setReturnValue(true);
             return;
         }
 
         if (modifiers == KeyboardUtil.KMOD_SHIFT) {
-            emojiSelectionMenu.visible = true;
+            emojiSelectionMenu.isVisible = true;
             cir.setReturnValue(true);
         }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionMenu.visible && button == KeyboardUtil.BUTTON_MIDDLE) {
-            emojiSelectionMenu.visible = true;
+        if (!emojiSelectionMenu.isVisible && button == KeyboardUtil.BUTTON_MIDDLE) {
+            emojiSelectionMenu.isVisible = true;
 
             cir.setReturnValue(true);
 
             return;
         }
 
-        if (!emojiButton.isHovered) {
-            if (!emojiSelectionMenu.isHovered) emojiSelectionMenu.visible = false;
+        if (!emojiButton.isHovered()) {
+            if (!emojiSelectionMenu.isHovered()) emojiSelectionMenu.isVisible = false;
 
             return;
         }
@@ -140,7 +143,7 @@ public class ChatScreenMixin {
     public void mouseScrolled(double mouseX, double mouseY, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
 // 1.20.4
 //    public void mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionMenu.isHovered) return;
+        if (!emojiSelectionMenu.isHovered()) return;
 
         cir.setReturnValue(emojiSelectionMenu.mouseScrolled(mouseX, mouseY, 0, verticalAmount));
     }

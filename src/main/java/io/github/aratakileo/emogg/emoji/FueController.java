@@ -43,7 +43,7 @@ public class FueController {
             return !emojiStatistic.isUnderRemoveProtection(itExists) && !itExists;
         });
 
-        EmoggConfig.save();
+        EmoggConfig.instance.save();
     }
 
     public static void collectStatisticFrom(@NotNull String text) {
@@ -76,7 +76,7 @@ public class FueController {
         EmoggConfig.instance.frequentlyUsedEmojis.sort(
                 Comparator.<EmojiStatistic>comparingInt(e -> e.usePoints).reversed()
         );
-        EmoggConfig.save();
+        EmoggConfig.instance.save();
     }
 
     private static void markEmojiUse(@NotNull Emoji emoji) {

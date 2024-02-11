@@ -3,10 +3,10 @@ package io.github.aratakileo.emogg.emoji;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.aratakileo.elegantia.util.Rect2i;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.util.HudRenderCallback;
-import io.github.aratakileo.emogg.util.Rect2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -116,11 +116,13 @@ public class EmojiAtlas {
             width += padding * 2;
             height += padding * 2;
 
-            var iter = freeSpace.listIterator();
+            final var iter = freeSpace.listIterator();
+
             while (iter.hasNext()) {
-                var rect = iter.next();
+                final var rect = iter.next();
+
                 if (rect.getWidth() >= width && rect.getHeight() >= height) {
-                    var pos = new Vector2i(rect.getX() + padding, rect.getY() + padding);
+                    final var pos = new Vector2i(rect.getX() + padding, rect.getY() + padding);
 
                     // #########  |  #########
                     // ##### 0 #  |  #####   #
@@ -148,61 +150,55 @@ public class EmojiAtlas {
                     // rect -> 1
                     if (ratioA < ratioB) {
                         // Solution A
-                        toAdd = new Rect2i(
-                                rect.getX() + width,
-                                rect.getY(),
-                                rect.getWidth() - width,
-                                height
-                        );
-                        rect.setY(rect.getY() + height);
-                        rect.setHeight(rect.getHeight() - height);
+                        toAdd = rect.cutLeft(width).setIpHeight(height);
+                        rect.cutIpTop(height);
                     } else {
                         // Solution B
-                        toAdd = new Rect2i(
-                                rect.getX(),
-                                rect.getY() + height,
-                                width,
-                                rect.getHeight() - height
-                        );
-                        rect.setX(rect.getX() + width);
-                        rect.setWidth(rect.getWidth() - width);
+                        toAdd = rect.cutTop(height).setIpWidth(width);
+                        rect.cutIpLeft(width);
                     }
 
                     // Keep small rectangular spaces in the front reduce fragmentation
                     iter.remove();
-                    if (rect.hasArea()) freeSpace.addFirst(rect);
-                    if (toAdd.hasArea()) freeSpace.addFirst(toAdd);
+
+                    if (rect.isExist()) freeSpace.addFirst(rect);
+                    if (toAdd.isExist()) freeSpace.addFirst(toAdd);
 
                     return pos;
                 }
             }
+
             return null;
         }
 
         private boolean expand() {
             RenderSystem.assertOnRenderThreadOrInit();
 
-            final int LIMIT = RenderSystem.maxSupportedTextureSize();
-            if (totalWidth == LIMIT && totalHeight == LIMIT)
+            final var limit = RenderSystem.maxSupportedTextureSize();
+
+            if (totalWidth == limit && totalHeight == limit)
                 return false;
 
-            int oldWidth = totalWidth, oldHeight = totalHeight;
+            final var oldWidth = totalWidth;
+            final var oldHeight = totalHeight;
+
             if (totalWidth <= totalHeight) {
-                totalWidth = Math.min(totalWidth * 2, LIMIT);
+                totalWidth = Math.min(totalWidth * 2, limit);
                 freeSpace.add(new Rect2i(oldWidth, 0, totalWidth - oldWidth, totalHeight));
             } else {
-                totalHeight = Math.min(totalHeight * 2, LIMIT);
+                totalHeight = Math.min(totalHeight * 2, limit);
                 freeSpace.add(new Rect2i(0, oldHeight, totalWidth, totalHeight - oldHeight));
             }
 
-            Emogg.LOGGER.info("Expanding emoji atlas: %dx%d -> %dx%d".formatted(
-                    oldWidth, oldHeight,
-                    totalWidth, totalHeight
-            ));
+            if (EmoggConfig.instance.enableDebugMode)
+                Emogg.LOGGER.info("Expanding emoji atlas: %dx%d -> %dx%d".formatted(
+                        oldWidth, oldHeight,
+                        totalWidth, totalHeight
+                ));
 
             // Copy data
             bind();
-            var image = new NativeImage(NativeImage.Format.RGBA, oldWidth, oldHeight, false);
+            final var image = new NativeImage(NativeImage.Format.RGBA, oldWidth, oldHeight, false);
             image.downloadTexture(0, false);
 
             // Create new texture
@@ -226,7 +222,7 @@ public class EmojiAtlas {
         }
 
         private void fillBackground() {
-            try (var image = new NativeImage(NativeImage.Format.RGBA, totalWidth, totalHeight, false)) {
+            try (final var image = new NativeImage(NativeImage.Format.RGBA, totalWidth, totalHeight, false)) {
                 image.fillRect(0, 0, totalWidth, totalHeight, BG_FILL_COLOR);
                 bind();
                 image.upload(0, 0, 0, false);
@@ -236,9 +232,11 @@ public class EmojiAtlas {
         @SuppressWarnings("unused")
         private void _debugDrawFreeSpace() {
             RenderSystem.assertOnRenderThreadOrInit();
-            var image = new NativeImage(NativeImage.Format.RGBA, totalWidth, totalHeight, false);
-            var random = new Random();
-            for (var rect : freeSpace) {
+
+            final var image = new NativeImage(NativeImage.Format.RGBA, totalWidth, totalHeight, false);
+            final var random = new Random();
+
+            for (final var rect : freeSpace) {
                 try {
                     image.fillRect(
                             rect.getX(), rect.getY(),
@@ -249,7 +247,9 @@ public class EmojiAtlas {
                     Emogg.LOGGER.warn(e.toString());
                 }
             }
+
             bind();
+
             image.upload(0, 0, 0, false);
             image.close();
         }
