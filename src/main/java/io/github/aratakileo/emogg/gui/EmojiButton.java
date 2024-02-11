@@ -1,7 +1,7 @@
 package io.github.aratakileo.emogg.gui;
 
 import io.github.aratakileo.elegantia.gui.widget.Button;
-import io.github.aratakileo.elegantia.util.Rect2i;
+import io.github.aratakileo.elegantia.math.Rect2i;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;

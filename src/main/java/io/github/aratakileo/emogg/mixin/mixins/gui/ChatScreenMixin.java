@@ -1,6 +1,7 @@
 package io.github.aratakileo.emogg.mixin.mixins.gui;
 
-import io.github.aratakileo.elegantia.util.Rect2i;
+import io.github.aratakileo.elegantia.math.Rect2i;
+import io.github.aratakileo.elegantia.util.Mouse;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.FueController;
 import net.minecraft.client.Minecraft;
@@ -23,19 +24,21 @@ import io.github.aratakileo.emogg.util.KeyboardUtil;
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
     @Unique
-    protected EmojiButton emojiButton;
+    public EmojiButton emojiButton;
     @Unique
-    protected EmojiSelectionMenu emojiSelectionMenu;
+    public EmojiSelectionMenu emojiSelectionMenu;
     @Unique
     protected Pair<Integer, Boolean> emojiSelectionMenuState;
     @Unique
     protected Emoji emojiButtonDisplayableEmojiState;
 
-    @Shadow public EditBox input;
+    @Shadow
+    protected EditBox input;
 
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
         final var self = (ChatScreen)(Object)this;
+        input.setCanLoseFocus(true);
 
         final var positionOffset = input.getHeight();
         emojiButton = new EmojiButton(new Rect2i(
@@ -43,12 +46,10 @@ public class ChatScreenMixin {
                 self.height - positionOffset,
                 input.getHeight() - 4
         ));
-        self.addRenderableWidget(emojiButton);
 
         emojiSelectionMenu = new EmojiSelectionMenu((float) (emojiButton.getHeight() * 1.5));
         emojiSelectionMenu.setRightBottom(self.width - 2, self.height - input.getHeight() - 3);
         emojiSelectionMenu.setOnEmojiSelected(emoji -> input.insertText(emoji.getCode()));
-        self.addRenderableWidget(emojiSelectionMenu);
 
         emojiButton.setOnClickListener((btn, byUser) -> {
             if (!emojiSelectionMenu.isVisible) emojiSelectionMenu.refreshFrequentlyUsedEmojis();
@@ -62,6 +63,9 @@ public class ChatScreenMixin {
             emojiButton.isActive = false;
             emojiButton.isVisible = false;
         }
+
+        self.addRenderableWidget(emojiButton);
+        self.addRenderableWidget(emojiSelectionMenu);
     }
 
     @Inject(method = "resize", at = @At("HEAD"))
@@ -107,35 +111,25 @@ public class ChatScreenMixin {
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (keyCode != KeyboardUtil.K_ESC) return;
 
-        if (emojiSelectionMenu.isVisible) {
-            emojiSelectionMenu.isVisible = false;
-            cir.setReturnValue(true);
-            return;
-        }
-
-        if (modifiers == KeyboardUtil.KMOD_SHIFT) {
-            emojiSelectionMenu.isVisible = true;
-            cir.setReturnValue(true);
-        }
+        if (emojiSelectionMenu.isVisible || modifiers == KeyboardUtil.KMOD_SHIFT)
+            cir.setReturnValue(emojiButton.onClick(false));
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionMenu.isVisible && button == KeyboardUtil.BUTTON_MIDDLE) {
-            emojiSelectionMenu.isVisible = true;
+        if (Mouse.Button.of(button).isLeft()) {
+            if (emojiButton.isHovered()) {
+                cir.setReturnValue(emojiButton.onClick(true));
+                return;
+            }
 
-            cir.setReturnValue(true);
-
-            return;
+            if (!emojiSelectionMenu.isHovered() && emojiSelectionMenu.isVisible) {
+                cir.setReturnValue(emojiButton.onClick(false));
+                return;
+            }
         }
 
-        if (!emojiButton.isHovered()) {
-            if (!emojiSelectionMenu.isHovered()) emojiSelectionMenu.isVisible = false;
-
-            return;
-        }
-
-        cir.setReturnValue(emojiButton.mouseClicked(mouseX, mouseY, 0));
+        if (Mouse.Button.of(button).isMiddle()) cir.setReturnValue(emojiButton.onClick(false));
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)

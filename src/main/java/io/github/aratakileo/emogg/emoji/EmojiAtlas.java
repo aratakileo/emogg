@@ -3,7 +3,8 @@ package io.github.aratakileo.emogg.emoji;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.github.aratakileo.elegantia.util.Rect2i;
+import io.github.aratakileo.elegantia.math.Rect2i;
+import io.github.aratakileo.elegantia.math.Vector2ic;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.util.HudRenderCallback;
@@ -17,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector2i;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -91,28 +91,30 @@ public class EmojiAtlas {
         public @Nullable EmojiGlyph.Atlas stitch(NativeImage image) {
             RenderSystem.assertOnRenderThreadOrInit();
 
-            Vector2i pos;
+            Vector2ic pos;
+
             while ((pos = fit(image.getWidth(), image.getHeight(), 1)) == null) {
                 if (!expand()) return null;
             }
 
             if (EmoggConfig.instance.enableDebugMode)
-                Emogg.LOGGER.info("Stitching emoji texture to ({},{})", pos.x, pos.y);
+                Emogg.LOGGER.info("Stitching emoji texture to ({})", pos);
 
             bind();
             image.upload(0, pos.x, pos.y, false);
 
-            var glyph = new EmojiGlyph.Atlas(
+            final var glyph = new EmojiGlyph.Atlas(
                     name,
-                    new Rect2i(pos.x, pos.y, image.getWidth(), image.getHeight())
+                    new Rect2i(pos, image.getWidth(), image.getHeight())
             );
+
             glyph.updateUV(totalWidth, totalHeight);
             stitchedGlyphs.add(glyph);
             return glyph;
         }
 
         @SuppressWarnings("SameParameterValue")
-        private @Nullable Vector2i fit(int width, int height, int padding) {
+        private @Nullable Vector2ic fit(int width, int height, int padding) {
             width += padding * 2;
             height += padding * 2;
 
@@ -122,7 +124,7 @@ public class EmojiAtlas {
                 final var rect = iter.next();
 
                 if (rect.getWidth() >= width && rect.getHeight() >= height) {
-                    final var pos = new Vector2i(rect.getX() + padding, rect.getY() + padding);
+                    final var pos = rect.getPosition().add(padding, padding);
 
                     // #########  |  #########
                     // ##### 0 #  |  #####   #

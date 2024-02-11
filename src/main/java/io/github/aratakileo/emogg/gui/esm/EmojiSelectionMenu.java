@@ -1,10 +1,11 @@
 package io.github.aratakileo.emogg.gui.esm;
 
 import io.github.aratakileo.elegantia.gui.TooltipPositioner;
-import io.github.aratakileo.elegantia.gui.widget.AbstractWidget;
+import io.github.aratakileo.elegantia.gui.widget.CompositeWidget;
 import io.github.aratakileo.elegantia.gui.widget.VerticalScrollbar;
+import io.github.aratakileo.elegantia.math.Rect2i;
 import io.github.aratakileo.elegantia.util.GuiGraphicsUtil;
-import io.github.aratakileo.elegantia.util.Rect2i;
+import io.github.aratakileo.elegantia.util.Mouse;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.emoji.*;
@@ -25,7 +26,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public class EmojiSelectionMenu extends AbstractWidget {
+public class EmojiSelectionMenu extends CompositeWidget {
     public final static int MAX_NUMBER_OF_EMOJIS_IN_LINE = 9,
             MAX_NUMBER_OF_LINES_ON_PAGE = 8,
             SCROLLBAR_WIDTH = 5;
@@ -39,6 +40,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     );
 
     private final float emojiSize, contentWidth;
+
     private final Rect2i settingsButtonRect, plusButtonRect;
     private final ArrayList<CategoryContent> categoryContents = new ArrayList<>();
     private final boolean isSinglePage;
@@ -46,6 +48,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private @Nullable Consumer<Emoji> onEmojiSelected = null;
     private @Nullable EmojiOrCategoryContent hoveredEmojiOrCategoryContent = null;
 
+    @CompositePart(lateInitAnchor = "verticalScrollbar")
     public final VerticalScrollbar verticalScrollbar;
 
     protected EmojiSelectionMenu(float emojiSize, int headerHeight, float contentWidth) {
@@ -85,6 +88,8 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 1
         );
 
+        declareAsInited("verticalScrollbar");
+
         if (isSinglePage)
             setWidth(getWidth() - SCROLLBAR_WIDTH);
 
@@ -106,23 +111,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
                 (int) (EmojiGlyph.HEIGHT + 3),
                 (emojiSize + 1) * MAX_NUMBER_OF_EMOJIS_IN_LINE
         );
-    }
-
-    @Override
-    public void setX(int x) {
-        final var oldX = getX();
-
-        super.setX(x);
-
-        verticalScrollbar.setX(this.verticalScrollbar.getX() + (x - oldX));
-    }
-
-    @Override
-    public void setY(int y) {
-        final var oldY = getY();
-        super.setY(y);
-
-        this.verticalScrollbar.setY(this.verticalScrollbar.getY() + (y - oldY));
     }
 
     @Override
@@ -333,43 +321,21 @@ public class EmojiSelectionMenu extends AbstractWidget {
         /*
         * Start of scrollbar processing & rendering
         */
-        if (!isSinglePage) verticalScrollbar.render(guiGraphics, mouseX, mouseY, dt);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        if (!isActive() || !isHovered || isSinglePage)
-            return false;
-
-        verticalScrollbar.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseDragged(
-            double mouseX,
-            double mouseY,
-            double deltaX,
-            double deltaY,
-            @NotNull MouseButton mouseButton
-    ) {
-        return verticalScrollbar.mouseDragged(mouseX, mouseY, deltaX, deltaY, mouseButton);
+        verticalScrollbar.isVisible = !isSinglePage;
+        super.renderWidget(guiGraphics, mouseX, mouseY, dt);
     }
 
     @Override
     public boolean onClick(boolean byUser) {
-        final var mouseHandler = Minecraft.getInstance().mouseHandler;
-        final var mouseX = mouseHandler.xpos();
-        final var mouseY = mouseHandler.ypos();
+        final var localisedMousePos = Mouse.getPosition().sub(getX(), getY());
 
-        if (settingsButtonRect.move(getX(), getY()).contains(mouseX, mouseY)) {
+        if (settingsButtonRect.contains(localisedMousePos)) {
             GuiGraphicsUtil.playClickSound();
             Minecraft.getInstance().setScreen(EmoggConfig.instance.getScreen());
             return true;
         }
 
-        if (plusButtonRect.move(getX(), getY()).contains(mouseX, mouseY)) {
+        if (plusButtonRect.contains(localisedMousePos)) {
             GuiGraphicsUtil.playClickSound();
             Util.getPlatform().openUri("https://aratakileo.github.io/emogg-resourcepack-maker/");
             return true;
@@ -397,11 +363,6 @@ public class EmojiSelectionMenu extends AbstractWidget {
         );
 
         return true;
-    }
-
-    @Override
-    public boolean onMouseClick(double mouseX, double mouseY) {
-        return !isSinglePage && verticalScrollbar.mouseClicked(mouseX, mouseY, MouseButton.LEFT);
     }
 
     public void refreshFrequentlyUsedEmojis() {
