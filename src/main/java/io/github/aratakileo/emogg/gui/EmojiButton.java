@@ -30,16 +30,6 @@ public class EmojiButton extends Button {
         this.displayableEmoji = displayableEmoji;
     }
 
-//    @Override
-//    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
-//        final var hasBeenHovered = isHovered;
-//
-//        super.render(guiGraphics, mouseX, mouseY, dt);
-//
-//        if (!hasBeenHovered && isHovered)
-//            changeDisplayableEmoji();
-//    }
-
     @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         if (displayableEmoji == null) {
