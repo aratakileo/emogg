@@ -2,6 +2,7 @@ package io.github.aratakileo.emogg.mixin.mixins.gui;
 
 import io.github.aratakileo.elegantia.math.Rect2i;
 import io.github.aratakileo.elegantia.util.Mouse;
+import io.github.aratakileo.elegantia.util.WidgetPositioner;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.FueController;
 import net.minecraft.client.Minecraft;
@@ -40,12 +41,14 @@ public class ChatScreenMixin {
         final var self = (ChatScreen)(Object)this;
         input.setCanLoseFocus(true);
 
-        final var positionOffset = input.getHeight();
-        emojiButton = new EmojiButton(new Rect2i(
-                self.width - positionOffset,
-                self.height - positionOffset,
-                input.getHeight() - 4
-        ));
+        final var emojiButtonSize = input.getHeight() - 4;
+
+        emojiButton = new EmojiButton(
+                new WidgetPositioner(emojiButtonSize, emojiButtonSize)
+                        .setGravity(WidgetPositioner.GRAVITY_RIGHT | WidgetPositioner.GRAVITY_BOTTOM)
+                        .setMargin(4)
+                        .getNewBounds()
+        );
 
         emojiSelectionMenu = new EmojiSelectionMenu((float) (emojiButton.getHeight() * 1.5));
         emojiSelectionMenu.setRightBottom(self.width - 2, self.height - input.getHeight() - 3);
@@ -133,9 +136,9 @@ public class ChatScreenMixin {
     }
 
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
-// 1.20.1
+// 1.20-1.20.1
     public void mouseScrolled(double mouseX, double mouseY, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
-// 1.20.4
+// 1.20.2-1.20.4
 //    public void mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount, CallbackInfoReturnable<Boolean> cir) {
         if (!emojiSelectionMenu.isHovered()) return;
 

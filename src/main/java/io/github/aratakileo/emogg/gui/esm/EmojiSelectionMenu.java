@@ -4,8 +4,10 @@ import io.github.aratakileo.elegantia.gui.TooltipPositioner;
 import io.github.aratakileo.elegantia.gui.widget.CompositeWidget;
 import io.github.aratakileo.elegantia.gui.widget.VerticalScrollbar;
 import io.github.aratakileo.elegantia.math.Rect2i;
+import io.github.aratakileo.elegantia.math.Vector2ic;
 import io.github.aratakileo.elegantia.util.GuiGraphicsUtil;
 import io.github.aratakileo.elegantia.util.Mouse;
+import io.github.aratakileo.elegantia.util.WidgetPositioner;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.emoji.*;
@@ -77,12 +79,9 @@ public class EmojiSelectionMenu extends CompositeWidget {
 
         this.isSinglePage = totalLinesAmount < MAX_NUMBER_OF_LINES_ON_PAGE;
         this.verticalScrollbar = new VerticalScrollbar(
-                new Rect2i(
-                        getRight() - SCROLLBAR_WIDTH,
-                        getY() + headerHeight,
-                        SCROLLBAR_WIDTH,
-                        getHeight() - headerHeight
-                ),
+                new WidgetPositioner(SCROLLBAR_WIDTH, getHeight() - headerHeight - 1)
+                        .setGravity(WidgetPositioner.GRAVITY_RIGHT | WidgetPositioner.GRAVITY_BOTTOM)
+                        .getNewBoundsInside(getBounds()),
                 totalLinesAmount - MAX_NUMBER_OF_LINES_ON_PAGE,
                 2,
                 1
@@ -261,16 +260,18 @@ public class EmojiSelectionMenu extends CompositeWidget {
                 renderLine = iline >= verticalScrollbar.getProgress();
 
                 if (renderLine) {
-                    final var emojiX = (int) (getX() + icolumn * (emojiSize + 1) + 1);
-                    final var emojiY = (int) (getY() + emojiSize + renderLineIndex * (emojiSize + 1) + 1);
+                    final var emojiPos = getPosition().add(
+                            (int)(icolumn * (emojiSize + 1) + 1),
+                            (int)(emojiSize + renderLineIndex * (emojiSize + 1) + 1)
+                    );
 
                     if (!verticalScrollbar.isScrolling() && mouseColumn == icolumn && mouseLine == renderLineIndex) {
                         hoveredEmojiOrCategoryContent = new EmojiOrCategoryContent(emoji);
                         setTooltip(emoji.getEscapedCode());
                         GuiGraphicsUtil.drawRect(
                                 guiGraphics,
-                                emojiX,
-                                emojiY,
+                                emojiPos.x,
+                                emojiPos.y,
                                 (int) emojiSize,
                                 (int) emojiSize,
                                 0x77ffffff
@@ -280,8 +281,8 @@ public class EmojiSelectionMenu extends CompositeWidget {
                     EmojiUtil.render(
                             emoji.getGlyph(),
                             guiGraphics,
-                            emojiX + 1,
-                            emojiY + 1,
+                            emojiPos.x + 1,
+                            emojiPos.y + 1,
                             (int) (emojiSize - 2),
                             false
                     );
@@ -293,7 +294,7 @@ public class EmojiSelectionMenu extends CompositeWidget {
                                 guiGraphics,
                                 debugString,
                                 getX() - font.width(debugString) - 2,
-                                emojiY + 2,
+                                emojiPos.y + 2,
                                 0xffffff
                         );
                     }

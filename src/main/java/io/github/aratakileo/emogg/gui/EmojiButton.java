@@ -1,6 +1,6 @@
 package io.github.aratakileo.emogg.gui;
 
-import io.github.aratakileo.elegantia.gui.widget.Button;
+import io.github.aratakileo.elegantia.gui.widget.AbstractButton;
 import io.github.aratakileo.elegantia.math.Rect2i;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.Emoji;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public class EmojiButton extends Button {
+public class EmojiButton extends AbstractButton {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
     public EmojiButton(@NotNull Rect2i rect2i) {
@@ -42,19 +42,18 @@ public class EmojiButton extends Button {
 
         setTooltip(displayableEmoji.getEscapedCode());
 
-        int renderX = getX(), renderY = getY(), renderSize = getWidth();
+        final var renderPos = getPosition().copyAsMutable();
+        var renderSize = getWidth();
 
         if (isHovered) {
-            renderX -= 1;
-            renderY -= 1;
+            renderPos.sub(1, 1);
             renderSize += 2;
         }
 
         EmojiUtil.render(
                 displayableEmoji.getGlyph(),
                 guiGraphics,
-                renderX,
-                renderY,
+                renderPos,
                 renderSize,
                 !isHovered
         );
