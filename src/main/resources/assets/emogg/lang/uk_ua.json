@@ -15,5 +15,14 @@
   "emogg.category.memes": "Меми",
   "emogg.category.activities": "Дії",
   "emogg.resourcepack.builtin.name": "Вбудовані емодзі",
-  "emogg.message.new_version_is_available": "Доступна нова версія! Її можна завантажити на %s"
+  "emogg.message.new_version_is_available": "Доступна нова версія! Її можна завантажити на %s",
+  "emogg.emoji.interaction.loading": "Завантаження...",
+  "emogg.emoji.interaction.error": "Не вдалося завантажити емодзі через: %s",
+  "emogg.emoji.interaction.copy": "Натисніть, щоб скопіювати %s у буфер обміну",
+  "emogg.config.entry.enable_atlas_debug_hud.title": "HUD налагоджувального атласу",
+  "emogg.config.entry.enable_atlas_debug_hud.description": "Відобразити на екрані атлас з текстурами емодзи та налагоджувальну інформацію зшивання цих текстур",
+  "emogg.config.entry.force_load_all_emojis.title": "Примусово завантажити всі емодзи [§c§l!§r]",
+  "emogg.config.entry.force_load_all_emojis.description": "Примусово завантажити всі емодзі (§cможе призвести до збою гри§r§f)",
+  "emogg.config.entry.reload_all_emojis.title": "Перезавантажте всі емодзі",
+  "emogg.config.entry.reload_all_emojis.description": "Очистіть завантажені текстури емодзі та перезавантажте їх"
 }

@@ -1,11 +1,11 @@
 {
   "emogg.emoji.interaction.loading": "Loading...",
-  "emogg.emoji.interaction.error": "Failed to load: %s",
+  "emogg.emoji.interaction.error": "Failed to load. Reason: %s",
   "emogg.emoji.interaction.copy": "Click to copy %s",
   "emogg.config.entry.enable_debug_mode.title": "Debug mode",
   "emogg.config.entry.enable_debug_mode.description": "If this mode is enabled, then when using the mod, additional information will be provided, both inside the GUI and in the console. This mode can lead to a decrease in performance, so enabling this mode should be carried out if it is really necessary",
   "emogg.config.entry.enable_atlas_debug_hud.title": "Atlas debug HUD",
-  "emogg.config.entry.enable_atlas_debug_hud.description": "Display the emoji atlas texture and stitching debug into on screen",
+  "emogg.config.entry.enable_atlas_debug_hud.description": "Display the emoji atlas texture and stitching debug on screen",
   "emogg.config.entry.force_load_all_emojis.title": "Force load all emojis [§c§l!§r]",
   "emogg.config.entry.force_load_all_emojis.description": "Immediately start to load all emojis (§cmight cause a game crash§r§f)",
   "emogg.config.entry.reload_all_emojis.title": "Reload all emojis",
