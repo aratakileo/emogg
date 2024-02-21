@@ -34,7 +34,7 @@ public class Emogg implements ClientModInitializer {
         final var lastResponse = UPDATE_CHECKER.check();
 
         SuggestionsAPI.registerInjector(Injector.simple(
-                Pattern.compile("[:：][A-Za-z0-9_]*([:：])?$"),
+                Pattern.compile("[:：][A-Za-z0-9_]*[:：]?$"),
                 (currentExpression, startOffset) -> {
                     List<EmojiSuggestion> suggestions = new LinkedList<>();
                     EmojiManager.getInstance().getEmojisStream().forEach(emoji -> {
