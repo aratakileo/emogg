@@ -14,7 +14,7 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation files("lib/elegantia-0.0.1-alpha+1.20-1.20.1.jar")
+    modImplementation "maven.modrinth:elegantia:${project.elegantia_version}+fabric-${project.minecraft_version}"
 
     implEmbeddedMod "maven.modrinth:suggestions-api:${project.suggestions_api_version}+fabric"
 }
@@ -23,14 +23,15 @@ processResources {
     final var replaceProperties = [
             "version": project.version,
             "suggestions_api_version": suggestions_api_version,
-            "elegantia_version": elegantia_version
+            "elegantia_version": elegantia_version,
+            "pack_format": pack_format
     ]
 
     inputs.properties replaceProperties
 
     filteringCharset "UTF-8"
 
-    filesMatching("fabric.mod.json") {
+    filesMatching(["fabric.mod.json", "/resourcepacks/*/pack.mcmeta"]) {
         expand replaceProperties
     }
 }

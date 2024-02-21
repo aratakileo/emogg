@@ -1,6 +1,6 @@
 {
   "pack": {
     "description": "Twemoji",
-    "pack_format": 15
+    "pack_format": ${pack_format}
   }
 }

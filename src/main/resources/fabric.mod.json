@@ -32,7 +32,7 @@
   ],
   "depends": {
     "suggestions-api": ">=${suggestions_api_version}",
-    "elegantia": ">=${elegantia_version}"
+    "elegantia": "=${elegantia_version}"
   },
   "accessWidener" : "emogg.accesswidener"
 }

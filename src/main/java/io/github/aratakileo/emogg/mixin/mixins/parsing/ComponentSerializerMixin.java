@@ -15,17 +15,17 @@ import java.lang.reflect.Type;
 @Mixin(Component.Serializer.class)
 public abstract class ComponentSerializerMixin {
 // unsupports in 1.20.4
-    @Shadow public abstract JsonElement serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext);
-
-    @Inject(
-            method = "serialize(Lnet/minecraft/network/chat/Component;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext, CallbackInfoReturnable<JsonElement> cir) {
-        EmojiParser.mixinApplyUsingOriginal(
-                component, cir,
-                c -> serialize(c, type, jsonSerializationContext),
-                "ComponentSerializer - "
-        );
-    }
+//    @Shadow public abstract JsonElement serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext);
+//
+//    @Inject(
+//            method = "serialize(Lnet/minecraft/network/chat/Component;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;",
+//            at = @At("HEAD"),
+//            cancellable = true)
+//    private void serialize(Component component, Type type, JsonSerializationContext jsonSerializationContext, CallbackInfoReturnable<JsonElement> cir) {
+//        EmojiParser.mixinApplyUsingOriginal(
+//                component, cir,
+//                c -> serialize(c, type, jsonSerializationContext),
+//                "ComponentSerializer - "
+//        );
+//    }
 }
