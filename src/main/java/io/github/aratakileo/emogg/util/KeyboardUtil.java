@@ -14,8 +14,4 @@ public final class KeyboardUtil {
             KMOD_SHIFT = 1 << 0,
             KMOD_CTRL = 1 << 1,
             KMOD_ALT = 1 << 2;
-
-    public static final int BUTTON_LEFT = 0,
-            BUTTON_RIGHT = 1,
-            BUTTON_MIDDLE = 2;
 }

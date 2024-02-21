@@ -1,14 +1,17 @@
 package io.github.aratakileo.emogg.gui.esm;
 
+import io.github.aratakileo.elegantia.gui.TooltipPositioner;
+import io.github.aratakileo.elegantia.gui.widget.CompositeWidget;
+import io.github.aratakileo.elegantia.gui.widget.VerticalScrollbar;
+import io.github.aratakileo.elegantia.math.Rect2i;
+import io.github.aratakileo.elegantia.math.Vector2ic;
+import io.github.aratakileo.elegantia.util.GuiGraphicsUtil;
+import io.github.aratakileo.elegantia.util.Mouse;
+import io.github.aratakileo.elegantia.util.WidgetPositioner;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.emoji.*;
-import io.github.aratakileo.emogg.gui.component.AbstractWidget;
-import io.github.aratakileo.emogg.gui.component.VerticalScrollbar;
-import io.github.aratakileo.emogg.gui.screen.SettingsScreen;
 import io.github.aratakileo.emogg.util.EmojiUtil;
-import io.github.aratakileo.emogg.util.Rect2i;
-import io.github.aratakileo.emogg.util.GuiUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.Util;
@@ -25,7 +28,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public class EmojiSelectionMenu extends AbstractWidget {
+public class EmojiSelectionMenu extends CompositeWidget {
     public final static int MAX_NUMBER_OF_EMOJIS_IN_LINE = 9,
             MAX_NUMBER_OF_LINES_ON_PAGE = 8,
             SCROLLBAR_WIDTH = 5;
@@ -39,6 +42,7 @@ public class EmojiSelectionMenu extends AbstractWidget {
     );
 
     private final float emojiSize, contentWidth;
+
     private final Rect2i settingsButtonRect, plusButtonRect;
     private final ArrayList<CategoryContent> categoryContents = new ArrayList<>();
     private final boolean isSinglePage;
@@ -46,17 +50,18 @@ public class EmojiSelectionMenu extends AbstractWidget {
     private @Nullable Consumer<Emoji> onEmojiSelected = null;
     private @Nullable EmojiOrCategoryContent hoveredEmojiOrCategoryContent = null;
 
+    @CompositePart(lateInitAnchor = "verticalScrollbar")
     public final VerticalScrollbar verticalScrollbar;
 
     protected EmojiSelectionMenu(float emojiSize, int headerHeight, float contentWidth) {
-        super(
+        super(new Rect2i(
                 0,
                 0,
                 (int) contentWidth + 1 + SCROLLBAR_WIDTH,
                 (int) ((emojiSize + 1) * MAX_NUMBER_OF_LINES_ON_PAGE) + 1 + headerHeight
-        );
+        ));
 
-        this.visible = false;
+        this.isVisible = false;
         this.emojiSize = emojiSize;
         this.contentWidth = contentWidth;
 
@@ -74,28 +79,29 @@ public class EmojiSelectionMenu extends AbstractWidget {
 
         this.isSinglePage = totalLinesAmount < MAX_NUMBER_OF_LINES_ON_PAGE;
         this.verticalScrollbar = new VerticalScrollbar(
-                x + width - SCROLLBAR_WIDTH,
-                y + headerHeight,
-                SCROLLBAR_WIDTH,
-                height - headerHeight,
+                new WidgetPositioner(SCROLLBAR_WIDTH, getHeight() - headerHeight - 1)
+                        .setGravity(WidgetPositioner.GRAVITY_RIGHT | WidgetPositioner.GRAVITY_BOTTOM)
+                        .getNewBoundsInside(getBounds()),
                 totalLinesAmount - MAX_NUMBER_OF_LINES_ON_PAGE,
                 2,
                 1
         );
 
+        declareAsInited("verticalScrollbar");
+
         if (isSinglePage)
-            width -= SCROLLBAR_WIDTH;
+            setWidth(getWidth() - SCROLLBAR_WIDTH);
 
         final var buttonSize = EmojiGlyph.HEIGHT + 2;
 
         this.settingsButtonRect = new Rect2i(
-                (int) (width - EmojiGlyph.HEIGHT - 3),
+                (int) (getWidth() - EmojiGlyph.HEIGHT - 3),
                 1,
                 (int) buttonSize
         );
         this.plusButtonRect = settingsButtonRect.copy().moveX((int) (-buttonSize - 1));
 
-        setTooltipPositioner(MOUSE_TOOLTIP_POSITIONER);
+        setTooltipPositionerGetter(TooltipPositioner.HoveredTooltipPositioner::new);
     }
 
     public EmojiSelectionMenu(float emojiSize) {
@@ -107,59 +113,43 @@ public class EmojiSelectionMenu extends AbstractWidget {
     }
 
     @Override
-    public void setX(int x) {
-        final var oldX = this.x;
-        this.x = x;
-        this.verticalScrollbar.setX(this.verticalScrollbar.x + (x - oldX));
-    }
-
-    @Override
-    public void setY(int y) {
-        final var oldY = this.y;
-        this.y = y;
-        this.verticalScrollbar.setY(this.verticalScrollbar.y + (y - oldY));
-    }
-
-    @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         disableTooltip();
 
         /*
         * Start of header processing & rendering
         */
-        GuiUtil.drawRect(guiGraphics, x, y, width, (int) emojiSize, 0xaa000000);
-
-        renderString(
+        GuiGraphicsUtil.drawRect(guiGraphics, getBounds().setIpHeight((int) emojiSize), 0xaa000000);
+        GuiGraphicsUtil.drawText(
                 guiGraphics,
                 StringUtils.capitalize(Emogg.NAMESPACE_OR_ID),
-                2,
-                2,
-                0xffffff,
-                true
+                getX() + 2,
+                getY() + 2,
+                0xffffff
         );
 
-        final var settingsButtonRenderRect = settingsButtonRect.move(x, y);
-        final var plusButtonRenderRect = plusButtonRect.move(x, y);
+        final var settingsButtonRenderRect = settingsButtonRect.move(getX(), getY());
+        final var plusButtonRenderRect = plusButtonRect.move(getX(), getY());
 
         if (!verticalScrollbar.isScrolling()) {
             if (settingsButtonRenderRect.contains(mouseX, mouseY)) {
-                GuiUtil.drawRect(guiGraphics, settingsButtonRenderRect, 0x77ffffff);
-                setTooltip(Component.translatable("emogg.settings.title"));
+                GuiGraphicsUtil.drawRect(guiGraphics, settingsButtonRenderRect, 0x77ffffff);
+                setTooltip(Component.translatable("elegantia.gui.config.title", Emogg.NAMESPACE_OR_ID));
             }
 
             if (plusButtonRenderRect.contains(mouseX, mouseY)) {
-                GuiUtil.drawRect(guiGraphics, plusButtonRenderRect, 0x77ffffff);
+                GuiGraphicsUtil.drawRect(guiGraphics, plusButtonRenderRect, 0x77ffffff);
                 setTooltip(Component.translatable("emogg.tooltip.action.add_emojis"));
             }
         }
 
-        GuiUtil.renderTexture(
+        GuiGraphicsUtil.renderTexture(
                 guiGraphics,
                 SETTINGS_ICON,
                 settingsButtonRenderRect.moveBounds(1, 1, -1, -1)
         );
 
-        GuiUtil.renderTexture(
+        GuiGraphicsUtil.renderTexture(
                 guiGraphics,
                 PLUS_ICON,
                 plusButtonRenderRect.moveBounds(1, 1, -1, -1)
@@ -168,20 +158,18 @@ public class EmojiSelectionMenu extends AbstractWidget {
         /*
         * Start of content processing & rendering
         */
-        GuiUtil.drawRect(
+        GuiGraphicsUtil.drawRect(
                 guiGraphics,
-                x,
-                (int) (y + emojiSize),
-                width,
-                (int) (height - emojiSize),
+                getBounds().cutIpTop((int) emojiSize),
                 0xaa222222,
                 1,
                 0xaa000000
         );
 
-        final var mouseColumn = (int) ((mouseX - x) / (emojiSize + 1));
-        final var mouseLine = (int) ((mouseY - y) / (emojiSize + 1)) - 1;
+        final var mouseColumn = (int) ((mouseX - getX()) / (emojiSize + 1));
+        final var mouseLine = (int) ((mouseY - getY()) / (emojiSize + 1)) - 1;
         final var categoryTitleOffsetY = (int) ((emojiSize - EmojiGlyph.HEIGHT) / 2);
+        final var font = Minecraft.getInstance().font;
 
         hoveredEmojiOrCategoryContent = null;
 
@@ -213,44 +201,43 @@ public class EmojiSelectionMenu extends AbstractWidget {
                     isHovered = true;
                     hoveredEmojiOrCategoryContent = new EmojiOrCategoryContent(categoryContent);
 
-                    GuiUtil.drawRect(
+                    GuiGraphicsUtil.drawRect(
                             guiGraphics,
-                            x + 1,
-                            y + categoryTitleLocalY - 2,
-                            (int) contentWidth,
-                            (int) emojiSize,
+                            getBounds()
+                                    .moveIp(1, categoryTitleLocalY - 2)
+                                    .setIpSize((int) contentWidth, (int) emojiSize),
                             0x77ffffff
                     );
 
                     setTooltip(categoryContent.getDisplayableName());
                 }
 
-                final var expandIndicatorChar = categoryContent.isExpanded() ? "-" : "+";
-                final var expandIndicatorLocalX = (int) (contentWidth - getFont().width(expandIndicatorChar));
+                final var expandIndicatorText = categoryContent.isExpanded() ? "-" : "+";
+                final var expandIndicatorLocalX = (int) (contentWidth - font.width(expandIndicatorText));
 
-                renderString(
+                GuiGraphicsUtil.drawText(
                         guiGraphics,
                         categoryContent.getDisplayableName(expandIndicatorLocalX - 2),
-                        2,
-                        categoryTitleLocalY,
+                        getX() + 2,
+                        getY() + categoryTitleLocalY,
                         isHovered ? 0xe7e7e7 : 0x6c757d
                 );
 
-                renderString(
+                GuiGraphicsUtil.drawText(
                         guiGraphics,
-                        expandIndicatorChar,
-                        expandIndicatorLocalX,
-                        categoryTitleLocalY,
+                        expandIndicatorText,
+                        getX() + expandIndicatorLocalX,
+                        getY() + categoryTitleLocalY,
                         0xffffff
                 );
 
                 if (EmoggConfig.instance.enableDebugMode) {
                     final var debugString = String.valueOf(iline);
-                    renderString(
+                    GuiGraphicsUtil.drawText(
                             guiGraphics,
                             debugString,
-                            -getFont().width(debugString) - 2,
-                            categoryTitleLocalY,
+                            getX() - font.width(debugString) - 2,
+                            getY() + categoryTitleLocalY,
                             0xffffff
                     );
                 }
@@ -267,35 +254,47 @@ public class EmojiSelectionMenu extends AbstractWidget {
             var renderLine = false;
             var icolumn = 0;
 
+            assert Objects.nonNull(categoryContent.getEmojis());
+
             for (final var emoji: categoryContent.getEmojis()) {
                 renderLine = iline >= verticalScrollbar.getProgress();
 
                 if (renderLine) {
-                    final var emojiX = (int) (x + icolumn * (emojiSize + 1) + 1);
-                    final var emojiY = (int) (y + emojiSize + renderLineIndex * (emojiSize + 1) + 1);
+                    final var emojiPos = getPosition().add(
+                            (int)(icolumn * (emojiSize + 1) + 1),
+                            (int)(emojiSize + renderLineIndex * (emojiSize + 1) + 1)
+                    );
 
                     if (!verticalScrollbar.isScrolling() && mouseColumn == icolumn && mouseLine == renderLineIndex) {
                         hoveredEmojiOrCategoryContent = new EmojiOrCategoryContent(emoji);
                         setTooltip(emoji.getEscapedCode());
-                        GuiUtil.drawRect(
+                        GuiGraphicsUtil.drawRect(
                                 guiGraphics,
-                                emojiX,
-                                emojiY,
+                                emojiPos.x,
+                                emojiPos.y,
                                 (int) emojiSize,
                                 (int) emojiSize,
                                 0x77ffffff
                         );
                     }
 
-                    EmojiUtil.render(emoji.getGlyph(), guiGraphics, emojiX + 1, emojiY + 1, (int) (emojiSize - 2), false);
+                    EmojiUtil.render(
+                            emoji.getGlyph(),
+                            guiGraphics,
+                            emojiPos.x + 1,
+                            emojiPos.y + 1,
+                            (int) (emojiSize - 2),
+                            false
+                    );
 
                     if (EmoggConfig.instance.enableDebugMode && icolumn == 0) {
                         final var debugString = String.valueOf(iline);
-                        renderString(
+
+                        GuiGraphicsUtil.drawText(
                                 guiGraphics,
                                 debugString,
-                                -getFont().width(debugString) - 2,
-                                emojiY - y + 2,
+                                getX() - font.width(debugString) - 2,
+                                emojiPos.y + 2,
                                 0xffffff
                         );
                     }
@@ -323,70 +322,48 @@ public class EmojiSelectionMenu extends AbstractWidget {
         /*
         * Start of scrollbar processing & rendering
         */
-        if (!isSinglePage) verticalScrollbar.render(guiGraphics, mouseX, mouseY, dt);
+        verticalScrollbar.isVisible = !isSinglePage;
+        super.renderWidget(guiGraphics, mouseX, mouseY, dt);
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        if (!isActive() || !isHovered || isSinglePage)
-            return false;
+    public boolean onClick(boolean byUser) {
+        final var localisedMousePos = Mouse.getPosition().sub(getX(), getY());
 
-        verticalScrollbar.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        return verticalScrollbar.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-    }
-
-    @Override
-    public void onClick(double mouseX, double mouseY) {
-        if (settingsButtonRect.move(x, y).contains(mouseX, mouseY)) {
-            playClickSound();
-            Minecraft.getInstance().setScreen(new SettingsScreen());
+        if (settingsButtonRect.contains(localisedMousePos)) {
+            GuiGraphicsUtil.playClickSound();
+            Minecraft.getInstance().setScreen(EmoggConfig.instance.getScreen());
+            return true;
         }
 
-        if (plusButtonRect.move(x, y).contains(mouseX, mouseY)) {
-            playClickSound();
+        if (plusButtonRect.contains(localisedMousePos)) {
+            GuiGraphicsUtil.playClickSound();
             Util.getPlatform().openUri("https://aratakileo.github.io/emogg-resourcepack-maker/");
+            return true;
         }
 
-        super.onClick(mouseX, mouseY);
-
-        if (isSinglePage) return;
-
-        verticalScrollbar.onClick(mouseX, mouseY);
-    }
-
-    @Override
-    public void onPress() {
-        super.onPress();
-
-        if (Objects.isNull(hoveredEmojiOrCategoryContent)) return;
+        if (Objects.isNull(hoveredEmojiOrCategoryContent)) return false;
 
         if (hoveredEmojiOrCategoryContent.isEmoji() && Objects.nonNull(onEmojiSelected)) {
-            playClickSound();
+            GuiGraphicsUtil.playClickSound();
             onEmojiSelected.accept(hoveredEmojiOrCategoryContent.getEmoji());
-            return;
+            return true;
         }
 
-        if (!hoveredEmojiOrCategoryContent.isCategoryContent()) return;
+        if (!hoveredEmojiOrCategoryContent.isCategoryContent()) return false;
 
         final var categoryContent = hoveredEmojiOrCategoryContent.getCategoryContent();
 
+        assert Objects.nonNull(categoryContent);
+
         categoryContent.toggleExpand();
-        playClickSound();
+        GuiGraphicsUtil.playClickSound();
 
         verticalScrollbar.increaseMaxProgress(
                 (categoryContent.isExpanded() ? 1 : -1) * (categoryContent.getLineCount() - 1)
         );
-    }
 
-    @Override
-    public void onRelease(double mouseX, double mouseY) {
-        verticalScrollbar.onRelease(mouseX, mouseY);
+        return true;
     }
 
     public void refreshFrequentlyUsedEmojis() {

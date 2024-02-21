@@ -1,10 +1,6 @@
 {
-  "emogg.settings.title": "Emogg-Einstellungen",
-  "emogg.settings.option.is_debug_mode_enabled.title": "Debug-Modus: %s",
-  "emogg.settings.option.is_debug_mode_enabled.description": "Wenn dieser Modus aktiviert ist, werden bei Verwendung des Mods zusätzliche Informationen bereitgestellt, sowohl innerhalb der grafischen Benutzeroberfläche als auch in der Konsole. Dieser Modus kann zu Leistungseinbußen führen, daher sollte die Aktivierung dieses Modus erfolgen, wenn es wirklich notwendig ist",
-  "emogg.settings.save_and_quit": "Speichern und beenden",
-  "emogg.gui.state.enabled": "Aktiviert",
-  "emogg.gui.state.disabled": "Deaktiviert",
+  "emogg.config.entry.enable_debug_mode.title": "Debug-Modus",
+  "emogg.config.entry.enable_debug_mode.description": "Wenn dieser Modus aktiviert ist, werden bei Verwendung des Mods zusätzliche Informationen bereitgestellt, sowohl innerhalb der grafischen Benutzeroberfläche als auch in der Konsole. Dieser Modus kann zu Leistungseinbußen führen, daher sollte die Aktivierung dieses Modus erfolgen, wenn es wirklich notwendig ist",
   "emogg.tooltip.action.add_emojis": "Emojis hinzufügen",
   "emogg.category.$frequently_used": "Häufig verwendet",
   "emogg.category.food": "Essen",
@@ -19,5 +15,13 @@
   "emogg.category.memes": "Meme",
   "emogg.category.activities": "Aktivitäten",
   "emogg.resourcepack.builtin.name": "Integrierte Emojis",
-  "emogg.message.new_version_is_available": "Neue Version ist verfügbar! Laden Sie es bei %s herunter"
+  "emogg.message.new_version_is_available": "Neue Version ist verfügbar! Laden Sie es bei %s herunter",
+  "emogg.emoji.interaction.loading": "Wird geladen...",
+  "emogg.emoji.interaction.error": "Laden fehlgeschlagen. Grund: %s",
+  "emogg.emoji.interaction.copy": "Klicken Sie, um %s zu kopieren",
+  "emogg.config.entry.enable_atlas_debug_hud.description": "Zeigen Sie die Emoji-Atlas-Textur und das Stitching-Debugging auf dem Bildschirm an",
+  "emogg.config.entry.force_load_all_emojis.title": "Laden aller Emojis erzwingen [§c§l!§r]",
+  "emogg.config.entry.force_load_all_emojis.description": "Beginnen Sie sofort mit dem Laden aller Emojis (§ckann zu einem Spielabsturz führen§r§f)",
+  "emogg.config.entry.reload_all_emojis.title": "Laden Sie alle Emojis neu",
+  "emogg.config.entry.reload_all_emojis.description": "Löschen Sie geladene Emoji-Texturen und laden Sie sie neu"
 }

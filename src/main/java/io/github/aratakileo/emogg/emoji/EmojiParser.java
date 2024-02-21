@@ -8,9 +8,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.*;
 // 1.20.1
-import net.minecraft.network.chat.contents.LiteralContents;
+//import net.minecraft.network.chat.contents.LiteralContents;
 // 1.20.4
-//import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -42,9 +42,9 @@ public class EmojiParser {
 
     private static void _parse(MutableComponent component) {
 // 1.20.1
-        if (component.getContents() instanceof LiteralContents literalContents) {
+//        if (component.getContents() instanceof LiteralContents literalContents) {
 // 1.20.4
-//        if (component.getContents() instanceof PlainTextContents.LiteralContents literalContents) {
+        if (component.getContents() instanceof PlainTextContents.LiteralContents literalContents) {
             final var originalText = literalContents.text();
 
             final var sections = getEmojiSections(originalText);
@@ -76,9 +76,9 @@ public class EmojiParser {
                         if (emoji != null) {
                             if (!stringBuilder.isEmpty()) {
 // 1.20.1
-                                components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
+//                                components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
 // 1.20.4
-//                                components.add(MutableComponent.create(new PlainTextContents.LiteralContents(stringBuilder.toString())));
+                                components.add(MutableComponent.create(new PlainTextContents.LiteralContents(stringBuilder.toString())));
                                 stringBuilder.setLength(0);
                             }
 
@@ -87,9 +87,9 @@ public class EmojiParser {
                             lastEnd = section.end();
 
 // 1.20.1
-                            final var emojiComponent = MutableComponent.create(new LiteralContents(
+//                            final var emojiComponent = MutableComponent.create(new LiteralContents(
 // 1.20.4
-//                            final var emojiComponent = MutableComponent.create(new PlainTextContents.LiteralContents(
+                            final var emojiComponent = MutableComponent.create(new PlainTextContents.LiteralContents(
                                     Character.toString(EmojiFontSet.idToCodePoint(emoji.getId()))
                             ));
                             emojiComponent.setStyle(
@@ -119,9 +119,9 @@ public class EmojiParser {
             }
 
 // 1.20.1
-            components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
+//            components.add(MutableComponent.create(new LiteralContents(stringBuilder.toString())));
 // 1.20.4
-//            components.add(MutableComponent.create(new PlainTextContents.LiteralContents(stringBuilder.toString())));
+            components.add(MutableComponent.create(new PlainTextContents.LiteralContents(stringBuilder.toString())));
 
             // Add old extra components back
             components.addAll(component.getSiblings());
@@ -130,9 +130,9 @@ public class EmojiParser {
             component.siblings = components;
 
 // 1.20.1
-            component.contents = ComponentContents.EMPTY;
+//            component.contents = ComponentContents.EMPTY;
 // 1.20.4
-//            component.contents = PlainTextContents.EMPTY;
+            component.contents = PlainTextContents.EMPTY;
 
             if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.debug("Parse result: <"+component+">");
@@ -163,9 +163,9 @@ public class EmojiParser {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isParsable(Component component) {
 // 1.20.1
-        return component instanceof MutableComponent && component.getContents() instanceof LiteralContents;
+//        return component instanceof MutableComponent && component.getContents() instanceof LiteralContents;
 // 1.20.4
-//        return component instanceof MutableComponent && component.getContents() instanceof PlainTextContents.LiteralContents;
+        return component instanceof MutableComponent && component.getContents() instanceof PlainTextContents.LiteralContents;
     }
 
     /**
@@ -174,9 +174,9 @@ public class EmojiParser {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean mayBeParseResult(Component component) {
 // 1.20.1
-        return component instanceof MutableComponent && component.getContents() == ComponentContents.EMPTY;
+//        return component instanceof MutableComponent && component.getContents() == ComponentContents.EMPTY;
 // 1.20.4
-//        return component instanceof MutableComponent && component.getContents() == PlainTextContents.EMPTY;
+        return component instanceof MutableComponent && component.getContents() == PlainTextContents.EMPTY;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

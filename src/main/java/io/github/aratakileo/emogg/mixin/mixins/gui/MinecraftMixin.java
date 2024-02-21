@@ -1,7 +1,8 @@
 package io.github.aratakileo.emogg.mixin.mixins.gui;
 
+import io.github.aratakileo.elegantia.updatechecker.Response;
+import io.github.aratakileo.elegantia.updatechecker.SuccessfulResponse;
 import io.github.aratakileo.emogg.Emogg;
-import io.github.aratakileo.emogg.api.ModrinthApi;
 import io.github.aratakileo.emogg.mixin.MixinHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -36,42 +37,46 @@ public class MinecraftMixin {
     @Shadow @Final
     public Gui gui;
 
-
     @Inject(method = "setScreen", at = @At("HEAD"))
     private void setScreen(Screen screen, CallbackInfo ci) {
+        final var updateChecker = Emogg.UPDATE_CHECKER;
+
         if (
-                screen == null
-                        && level != null
-                        && !MixinHelpers.hasMessageAboutUpdateBeenShown
-                        && ModrinthApi.getResponseCode() == ModrinthApi.ResponseCode.NEEDS_TO_BE_UPDATED
-        ) {
-            try {
-                final var lang = Language.getInstance();
-                final var rightMessageParts = lang.getOrDefault("emogg.message.new_version_is_available")
-                        .split("%s");
-                final var messageRawtext = IOUtils.toString(
-                        Minecraft.getInstance()
-                                .getResourceManager()
-                                .getResource(messageResourceLocation)
-                                .get()
-                                .open(),
-                                Charset.defaultCharset()
-                ).replaceAll("\\{link}", ModrinthApi.getLinkForUpdate())
-                        .replaceAll("\\{tooltip}", lang.getOrDefault("chat.link.open"))
-                        .replace("{left}", rightMessageParts[0])
-                        .replace("{right}", rightMessageParts.length > 1 ? rightMessageParts[1] : "")
-                        .replace("{button}", "Modrinth");
+                screen != null
+                        || level == null
+                        || MixinHelpers.hasMessageAboutUpdateBeenShown
+                        || !updateChecker.getLastResponse().map(Response::isNewVersionAvailable).orElse(false)
+        ) return;
 
-                gui.getChat().addMessage(Component.Serializer.fromJson(messageRawtext));
+        try {
+            final var lang = Language.getInstance();
+            final var rightMessageParts = lang.getOrDefault("emogg.message.new_version_is_available")
+                    .split("%s");
+            final var messageRawtext = IOUtils.toString(
+                    Minecraft.getInstance()
+                            .getResourceManager()
+                            .getResource(messageResourceLocation)
+                            .orElseThrow()
+                            .open(),
+                            Charset.defaultCharset()
+            ).replaceAll(
+                    "\\{link}",
+                    updateChecker.getLastResponseAsSuccessful().map(SuccessfulResponse::getVersionPageUrl).orElseThrow()
+            ).replaceAll("\\{tooltip}", lang.getOrDefault("chat.link.open"))
+                    .replace("{left}", rightMessageParts[0])
+                    .replace("{right}", rightMessageParts.length > 1 ? rightMessageParts[1] : "")
+                    .replace("{button}", "Modrinth");
 
-                MixinHelpers.hasMessageAboutUpdateBeenShown = true;
-            } catch (Exception e) {
-                gui.getChat().addMessage(
-                        Component.literal("Emogg: something went wrong...")
-                                .withStyle(style -> style.withColor(ChatFormatting.RED))
-                );
-                Emogg.LOGGER.error("Trouble: ", e);
-            }
+            gui.getChat().addMessage(Component.Serializer.fromJson(messageRawtext));
+
+            MixinHelpers.hasMessageAboutUpdateBeenShown = true;
+        } catch (Exception e) {
+            gui.getChat().addMessage(
+                    Component.literal("Something went wrong...")
+                            .withStyle(style -> style.withColor(ChatFormatting.RED))
+            );
+
+            Emogg.LOGGER.error("Trouble: ", e);
         }
     }
 }

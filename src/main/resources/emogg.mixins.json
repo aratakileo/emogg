@@ -8,16 +8,16 @@
   "client": [
     "font.FontManagerMixin",
     "gui.ChatScreenMixin",
-    "gui.InBedChatScreenMixin",
     "gui.GuiMixin",
+    "gui.InBedChatScreenMixin",
     "gui.MinecraftMixin",
+    "misc.ResourceLocationMixin",
     "parsing.ComponentMixin",
     "parsing.ComponentSerializerMixin",
     "parsing.MutableComponentMixin",
     "rendering.FontMixin",
     "rendering.GameRendererMixin",
-    "rendering.StringRenderOutputMixin",
-    "misc.ResourceLocationMixin"
+    "rendering.StringRenderOutputMixin"
   ],
   "injectors": {
     "defaultRequire": 1

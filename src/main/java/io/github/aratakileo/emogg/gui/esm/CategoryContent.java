@@ -44,7 +44,7 @@ public class CategoryContent {
         if (hiddenCategoryNames.contains(name)) {
             if (isExpanded) {
                 hiddenCategoryNames.remove(name);
-                EmoggConfig.save();
+                EmoggConfig.instance.save();
             }
 
             return;
@@ -52,7 +52,7 @@ public class CategoryContent {
 
         if (!isExpanded) {
             hiddenCategoryNames.add(name);
-            EmoggConfig.save();
+            EmoggConfig.instance.save();
         }
     }
 

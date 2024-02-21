@@ -1,5 +1,7 @@
-package io.github.aratakileo.emogg.gui.component;
+package io.github.aratakileo.emogg.gui;
 
+import io.github.aratakileo.elegantia.gui.widget.AbstractButton;
+import io.github.aratakileo.elegantia.math.Rect2i;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.util.EmojiUtil;
@@ -10,16 +12,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public class EmojiButton extends Button {
+public class EmojiButton extends AbstractButton {
     private Emoji displayableEmoji = null, prevDisplayableEmoji = null;
 
-    public EmojiButton(int x, int y, int size) {
-        super(
-                x,
-                y,
-                size,
-                size
-        );
+    public EmojiButton(@NotNull Rect2i rect2i) {
+        super(rect2i, null);
 
         changeDisplayableEmoji();
     }
@@ -34,37 +31,29 @@ public class EmojiButton extends Button {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
-        final var hasBeenHovered = isHovered;
-
-        super.render(guiGraphics, mouseX, mouseY, dt);
-
-        if (!hasBeenHovered && isHovered)
-            changeDisplayableEmoji();
-    }
-
-    @Override
     public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float dt) {
         if (displayableEmoji == null) {
             disableTooltip();
             return;
         }
 
+        if (!wasHovered && isHovered)
+            changeDisplayableEmoji();
+
         setTooltip(displayableEmoji.getEscapedCode());
 
-        int renderX = x, renderY = y, renderSize = width;
+        final var renderPos = getPosition().copyAsMutable();
+        var renderSize = getWidth();
 
         if (isHovered) {
-            renderX -= 1;
-            renderY -= 1;
+            renderPos.sub(1, 1);
             renderSize += 2;
         }
 
         EmojiUtil.render(
                 displayableEmoji.getGlyph(),
                 guiGraphics,
-                renderX,
-                renderY,
+                renderPos,
                 renderSize,
                 !isHovered
         );

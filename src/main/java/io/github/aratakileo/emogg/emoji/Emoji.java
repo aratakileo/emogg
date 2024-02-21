@@ -1,8 +1,8 @@
 package io.github.aratakileo.emogg.emoji;
 
+import io.github.aratakileo.elegantia.util.NativeGifImage;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.util.EmojiUtil;
-import io.github.aratakileo.emogg.util.NativeGifImage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;

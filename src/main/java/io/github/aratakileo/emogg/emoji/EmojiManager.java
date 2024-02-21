@@ -1,10 +1,9 @@
 package io.github.aratakileo.emogg.emoji;
 
 import com.google.common.collect.Lists;
+import io.github.aratakileo.elegantia.util.NativeGifImage;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.util.EmojiUtil;
-import io.github.aratakileo.emogg.util.NativeGifImage;
-import io.github.aratakileo.emogg.util.StringUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -93,25 +92,16 @@ public class EmojiManager {
     // TODO: refactor name generation to work with different loader readers
 
     public void regEmoji(@NotNull ResourceLocation resourceLocation) {
-        var emojiName = EmojiUtil.normalizeEmojiObjectKey(EmojiUtil.getNameFromPath(resourceLocation));
-        emojiName = getUniqueName(resourceLocation, emojiName);
-
-        if (Objects.isNull(emojiName)) {
-            if (EmoggConfig.instance.enableDebugMode)
-                Emogg.LOGGER.error(String.format(
-                        "Failed to load %s, because it is already defined",
-                        StringUtil.repr(resourceLocation)
-                ));
-
-            return;
-        }
+        final var emojiName = getUniqueName(EmojiUtil.normalizeEmojiObjectKey(
+                EmojiUtil.getNameFromPath(resourceLocation)
+        ));
 
         int id;
         synchronized (nameToIdMap) {
             id = nameToIdMap.computeIfAbsent(emojiName, name -> nameToIdMap.size());
         }
 
-        var emoji = Emoji.fromResource(id, emojiName, resourceLocation);
+        final var emoji = Emoji.fromResource(id, emojiName, resourceLocation);
 
         emojiByName.put(emojiName, emoji);
         emojiById.put(emoji.getId(), emoji);
@@ -120,18 +110,15 @@ public class EmojiManager {
 
         if (EmoggConfig.instance.enableDebugMode)
             Emogg.LOGGER.info(String.format(
-                    "Discovered %s as %s to category <%s>",
-                    StringUtil.repr(resourceLocation),
+                    "Discovered \"%s\" as %s to category <%s>",
+                    resourceLocation,
                     emoji.getCode(),
                     emoji.getCategory()
             ));
    }
 
-    private @Nullable String getUniqueName(@NotNull ResourceLocation resourceLocation, @NotNull String emojiName) {
+    private @NotNull String getUniqueName(@NotNull String emojiName) {
         if (emojiByName.containsKey(emojiName)) {
-//            if (emojiByName.get(emojiName).getResourceLocation().equals(resourceLocation))
-//                return null;
-
             var emojiNameIndex = 0;
             var newEmojiName = emojiName + emojiNameIndex;
 

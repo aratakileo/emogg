@@ -1,5 +1,6 @@
 package io.github.aratakileo.emogg.util;
 
+import io.github.aratakileo.elegantia.math.Vector2iInterface;
 import io.github.aratakileo.emogg.emoji.EmojiGlyph;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -51,6 +52,16 @@ public final class EmojiUtil {
         );
 
         guiGraphics.pose().popPose();
+    }
+
+    public static void render(
+            @NotNull EmojiGlyph emojiGlyph,
+            @NotNull GuiGraphics guiGraphics,
+            @NotNull Vector2iInterface pos,
+            int size,
+            boolean grayscale
+    ) {
+        render(emojiGlyph, guiGraphics, pos.x(), pos.y(), size, grayscale);
     }
 
     public static void render(

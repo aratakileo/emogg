@@ -1,10 +1,6 @@
 {
-  "emogg.settings.title": "Налаштування Emogg",
-  "emogg.settings.option.is_debug_mode_enabled.title": "Режим налагодження: %s",
-  "emogg.settings.option.is_debug_mode_enabled.description": "Якщо цей режим включений, то при користуванні мода, надаватиметься додаткова інформація, як всередині графічного інтерфейсу, так і в консоль. Цей режим може призвести до зниження продуктивності, тому включення цього режиму повинно здійснюватись у разі, якщо це дійсно необхідно",
-  "emogg.settings.save_and_quit": "Зберегти та вийти",
-  "emogg.gui.state.enabled": "Увімкнено",
-  "emogg.gui.state.disabled": "Вимкнено",
+  "emogg.config.entry.enable_debug_mode.title": "Режим налагодження",
+  "emogg.config.entry.enable_debug_mode.description": "Якщо цей режим включений, то при користуванні мода, надаватиметься додаткова інформація, як всередині графічного інтерфейсу, так і в консоль. Цей режим може призвести до зниження продуктивності, тому включення цього режиму повинно здійснюватись у разі, якщо це дійсно необхідно",
   "emogg.tooltip.action.add_emojis": "Додати емодзі",
   "emogg.category.$frequently_used": "Часто вживані",
   "emogg.category.food": "Їжа",
@@ -19,5 +15,14 @@
   "emogg.category.memes": "Меми",
   "emogg.category.activities": "Дії",
   "emogg.resourcepack.builtin.name": "Вбудовані емодзі",
-  "emogg.message.new_version_is_available": "Доступна нова версія! Її можна завантажити на %s"
+  "emogg.message.new_version_is_available": "Доступна нова версія! Її можна завантажити на %s",
+  "emogg.emoji.interaction.loading": "Завантаження...",
+  "emogg.emoji.interaction.error": "Не вдалося завантажити емодзі через: %s",
+  "emogg.emoji.interaction.copy": "Натисніть, щоб скопіювати %s у буфер обміну",
+  "emogg.config.entry.enable_atlas_debug_hud.title": "HUD налагоджувального атласу",
+  "emogg.config.entry.enable_atlas_debug_hud.description": "Відобразити на екрані атлас з текстурами емодзи та налагоджувальну інформацію зшивання цих текстур",
+  "emogg.config.entry.force_load_all_emojis.title": "Примусово завантажити всі емодзи [§c§l!§r]",
+  "emogg.config.entry.force_load_all_emojis.description": "Примусово завантажити всі емодзі (§cможе призвести до збою гри§r§f)",
+  "emogg.config.entry.reload_all_emojis.title": "Перезавантажте всі емодзі",
+  "emogg.config.entry.reload_all_emojis.description": "Очистіть завантажені текстури емодзі та перезавантажте їх"
 }

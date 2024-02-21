@@ -11,10 +11,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class InBedChatScreenMixin extends ChatScreenMixin {
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (!emojiSelectionMenu.visible || keyCode != KeyboardUtil.K_ESC) return;
+        if (keyCode != KeyboardUtil.K_ESC) return;
 
-        emojiSelectionMenu.visible = false;
-
-        cir.setReturnValue(true);
+        if (emojiSelectionMenu.isVisible || modifiers == KeyboardUtil.KMOD_SHIFT)
+            cir.setReturnValue(emojiButton.onClick(false));
     }
 }
