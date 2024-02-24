@@ -31,16 +31,16 @@ public class EmoggRenderTypes {
     // ########## Helper Function ##########
 
     private static RenderType setupEmojiRT(RenderType renderType) {
-// 1.20.4
+// 1.20.1
         Minecraft.getInstance()
                 .renderBuffers()
-                .bufferSource()
                 .fixedBuffers
                 .put(renderType, new BufferBuilder(renderType.bufferSize()));
 
-// 1.20.1
+// 1.20.4
 //        Minecraft.getInstance()
 //                .renderBuffers()
+//                .bufferSource()
 //                .fixedBuffers
 //                .put(renderType, new BufferBuilder(renderType.bufferSize()));
         return renderType;

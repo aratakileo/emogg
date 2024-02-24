@@ -30,7 +30,7 @@ accessible field net/minecraft/network/chat/MutableComponent siblings Ljava/util
 mutable field net/minecraft/network/chat/MutableComponent siblings Ljava/util/List;
 
 # 1.20.1
-#accessible field net/minecraft/client/renderer/RenderBuffers fixedBuffers Ljava/util/SortedMap;
+accessible field net/minecraft/client/renderer/RenderBuffers fixedBuffers Ljava/util/SortedMap;
 
 # 1.20.4
-accessible field net/minecraft/client/renderer/MultiBufferSource$BufferSource fixedBuffers Ljava/util/Map;
+#accessible field net/minecraft/client/renderer/MultiBufferSource$BufferSource fixedBuffers Ljava/util/Map;
