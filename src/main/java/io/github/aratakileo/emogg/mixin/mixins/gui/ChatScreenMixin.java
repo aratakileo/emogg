@@ -1,8 +1,7 @@
 package io.github.aratakileo.emogg.mixin.mixins.gui;
 
-import io.github.aratakileo.elegantia.math.Rect2i;
+import io.github.aratakileo.elegantia.gui.WidgetBoundsBuilder;
 import io.github.aratakileo.elegantia.util.Mouse;
-import io.github.aratakileo.elegantia.util.WidgetPositioner;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
 import io.github.aratakileo.emogg.emoji.FueController;
 import net.minecraft.client.Minecraft;
@@ -18,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import oshi.util.tuples.Pair;
 import io.github.aratakileo.emogg.emoji.Emoji;
-import io.github.aratakileo.emogg.gui.esm.EmojiSelectionMenu;
-import io.github.aratakileo.emogg.gui.EmojiButton;
+import io.github.aratakileo.emogg.gui.widget.EmojiSelectionMenu;
+import io.github.aratakileo.emogg.gui.widget.EmojiButton;
 import io.github.aratakileo.emogg.util.KeyboardUtil;
 
 @Mixin(ChatScreen.class)
@@ -44,10 +43,10 @@ public class ChatScreenMixin {
         final var emojiButtonSize = input.getHeight() - 4;
 
         emojiButton = new EmojiButton(
-                new WidgetPositioner(emojiButtonSize, emojiButtonSize)
-                        .setGravity(WidgetPositioner.GRAVITY_RIGHT | WidgetPositioner.GRAVITY_BOTTOM)
+                new WidgetBoundsBuilder(emojiButtonSize, emojiButtonSize)
+                        .setGravity(WidgetBoundsBuilder.GRAVITY_RIGHT | WidgetBoundsBuilder.GRAVITY_BOTTOM)
                         .setMargin(4)
-                        .getNewBounds()
+                        .build()
         );
 
         emojiSelectionMenu = new EmojiSelectionMenu((float) (emojiButton.getHeight() * 1.5));
@@ -63,7 +62,7 @@ public class ChatScreenMixin {
         });
 
         if (EmojiManager.getInstance().isEmpty()) {
-            emojiButton.isActive = false;
+            emojiButton.isEnabled = false;
             emojiButton.isVisible = false;
         }
 

@@ -1,15 +1,13 @@
 package io.github.aratakileo.emogg.emoji;
 
 import com.google.common.collect.Lists;
-import io.github.aratakileo.elegantia.util.NativeGifImage;
+import io.github.aratakileo.elegantia.event.ResourceReloadListener;
+import io.github.aratakileo.elegantia.graphics.NativeGifImage;
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import io.github.aratakileo.emogg.Emogg;
 import org.jetbrains.annotations.NotNull;
@@ -139,8 +137,7 @@ public class EmojiManager {
 
         final var emojiNamesInCategory = emojiCategories.get(emoji.getCategory());
 
-        if (emojiNamesInCategory.contains(emoji.getName()))
-            return;
+        if (emojiNamesInCategory.contains(emoji.getName())) return;
 
         emojiNamesInCategory.add(emoji.getName());
     }
@@ -174,20 +171,7 @@ public class EmojiManager {
 
     public static void init() {
         instance = new EmojiManager();
-
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(
-                new SimpleSynchronousResourceReloadListener() {
-                    @Override
-                    public ResourceLocation getFabricId() {
-                        return new ResourceLocation(Emogg.NAMESPACE_OR_ID, EmojiUtil.EMOJI_FOLDER_NAME);
-                    }
-
-                    @Override
-                    public void onResourceManagerReload(ResourceManager resourceManager) {
-                        instance.onResourceReload(resourceManager);
-                    }
-                }
-        );
+        ResourceReloadListener.register(instance::onResourceReload);
     }
 
     public static @NotNull EmojiManager getInstance() {

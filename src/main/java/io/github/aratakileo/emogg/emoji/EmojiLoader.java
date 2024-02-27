@@ -1,7 +1,7 @@
 package io.github.aratakileo.emogg.emoji;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import io.github.aratakileo.elegantia.util.NativeGifImage;
+import io.github.aratakileo.elegantia.graphics.NativeGifImage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.Util;

@@ -1,4 +1,4 @@
-package io.github.aratakileo.emogg.gui;
+package io.github.aratakileo.emogg.gui.widget;
 
 import io.github.aratakileo.elegantia.gui.widget.AbstractButton;
 import io.github.aratakileo.elegantia.math.Rect2i;

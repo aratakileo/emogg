@@ -20,27 +20,25 @@ public interface EmojiCategory {
             FLAGS = "flags";
 
     static @NotNull List<String> getCategoryKeys(boolean sort) {
-        if (sort) {
-            final var categoryKeys = Lists.newArrayList(EmojiManager.getInstance().getCategoryKeys());
+        if (!sort) return EmojiManager.getInstance().getCategoryKeys();
 
-            Collections.sort(categoryKeys);
+        final var categoryKeys = Lists.newArrayList(EmojiManager.getInstance().getCategoryKeys());
 
-            for (final var categoryKey: getBuiltinCategoryKeys()) {
-                if (!categoryKeys.contains(categoryKey)) continue;
+        Collections.sort(categoryKeys);
 
-                categoryKeys.remove(categoryKey);
-                categoryKeys.add(categoryKey);
-            }
+        for (final var categoryKey: getBuiltinCategoryKeys()) {
+            if (!categoryKeys.contains(categoryKey)) continue;
 
-            if (categoryKeys.contains(FueController.CATEGORY_FREQUENTLY_USED)) {
-                categoryKeys.remove(FueController.CATEGORY_FREQUENTLY_USED);
-                categoryKeys.add(0, FueController.CATEGORY_FREQUENTLY_USED);
-            }
-
-            return categoryKeys;
+            categoryKeys.remove(categoryKey);
+            categoryKeys.add(categoryKey);
         }
 
-        return EmojiManager.getInstance().getCategoryKeys();
+        if (categoryKeys.contains(FueController.CATEGORY_FREQUENTLY_USED)) {
+            categoryKeys.remove(FueController.CATEGORY_FREQUENTLY_USED);
+            categoryKeys.add(0, FueController.CATEGORY_FREQUENTLY_USED);
+        }
+
+        return categoryKeys;
     }
 
     /**

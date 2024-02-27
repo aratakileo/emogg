@@ -8,7 +8,6 @@
   "client": [
     "font.FontManagerMixin",
     "gui.ChatScreenMixin",
-    "gui.GuiMixin",
     "gui.InBedChatScreenMixin",
     "gui.MinecraftMixin",
     "misc.ResourceLocationMixin",

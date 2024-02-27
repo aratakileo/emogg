@@ -23,7 +23,7 @@
   "emogg.category.anime": "Anime",
   "emogg.category.memes": "Memes",
   "emogg.category.activities": "Activities",
-  "emogg.resourcepack.builtin.name": "Built-in emojis",
-  "emogg.resourcepack.twemogg.name": "Twemogg",
+  "emogg.resourcepack.builtin.title": "Built-in emojis",
+  "emogg.resourcepack.twemogg.title": "Twemogg",
   "emogg.message.new_version_is_available": "New version is available! Download it at %s"
 }
