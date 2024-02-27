@@ -23,7 +23,7 @@
   "emogg.category.anime": "动漫",
   "emogg.category.memes": "梗",
   "emogg.category.activities": "活动",
-  "emogg.resourcepack.builtin.name": "内置表情",
-  "emogg.resourcepack.twemogg.name": "推特表情",
+  "emogg.resourcepack.builtin.title": "内置表情",
+  "emogg.resourcepack.twemogg.title": "推特表情",
   "emogg.message.new_version_is_available": "Emogg发现新版本，请在 %s 下载。"
 }

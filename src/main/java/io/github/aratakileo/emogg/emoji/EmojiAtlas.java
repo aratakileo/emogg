@@ -3,11 +3,12 @@ package io.github.aratakileo.emogg.emoji;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.aratakileo.elegantia.event.HudRenderListener;
+import io.github.aratakileo.elegantia.graphics.RectDrawer;
 import io.github.aratakileo.elegantia.math.Rect2i;
 import io.github.aratakileo.elegantia.math.Vector2ic;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.EmoggConfig;
-import io.github.aratakileo.emogg.util.HudRenderCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -45,7 +46,7 @@ public class EmojiAtlas {
     }
 
     static {
-        HudRenderCallback.EVENT.register((guiGraphics, tickDelta) -> {
+        HudRenderListener.EVENT.register((guiGraphics, dt) -> {
             if (EmoggConfig.instance.enableAtlasDebugHUD && !textures.isEmpty()) {
                 textures.get(textures.size() - 1).drawDebugHUD(guiGraphics);
             }
@@ -53,7 +54,7 @@ public class EmojiAtlas {
     }
 
     private static class EmojiAtlasTexture extends AbstractTexture implements Dumpable {
-        private final ResourceLocation name;
+        private final ResourceLocation resourceLocation;
         private int totalWidth = 256, totalHeight = 256;
         private final LinkedList<Rect2i> freeSpace = new LinkedList<>();
 
@@ -64,11 +65,11 @@ public class EmojiAtlas {
         // Can be changed to fill the bg with a specific color for debugging
         private static final int BG_FILL_COLOR = 0x00000000;
 
-        public EmojiAtlasTexture(String name) {
+        public EmojiAtlasTexture(@NotNull String name) {
             RenderSystem.assertOnRenderThreadOrInit();
 
-            this.name = new ResourceLocation(Emogg.NAMESPACE_OR_ID, name);
-            Minecraft.getInstance().getTextureManager().register(this.name, this);
+            this.resourceLocation = new ResourceLocation(Emogg.NAMESPACE_OR_ID, name);
+            Minecraft.getInstance().getTextureManager().register(this.resourceLocation, this);
 
             TextureUtil.prepareImage(
                     NativeImage.InternalGlFormat.RGBA,
@@ -81,21 +82,20 @@ public class EmojiAtlas {
 //            glyphRenderTypes = EmoggRenderTypes.emojiTextured(this.name);
 
             Emogg.LOGGER.info("Created emoji atlas texture: {}x{} {}",
-                    totalWidth, totalHeight, getName());
+                    totalWidth, totalHeight, getResourceLocation());
         }
 
         @Override
-        public void load(ResourceManager resourceManager) {
+        public void load(@NotNull ResourceManager resourceManager) {
         }
 
-        public @Nullable EmojiGlyph.Atlas stitch(NativeImage image) {
+        public @Nullable EmojiGlyph.Atlas stitch(@NotNull NativeImage image) {
             RenderSystem.assertOnRenderThreadOrInit();
 
             Vector2ic pos;
 
-            while ((pos = fit(image.getWidth(), image.getHeight(), 1)) == null) {
+            while ((pos = fit(image.getWidth(), image.getHeight(), 1)) == null)
                 if (!expand()) return null;
-            }
 
             if (EmoggConfig.instance.enableDebugMode)
                 Emogg.LOGGER.info("Stitching emoji texture to ({})", pos);
@@ -104,12 +104,14 @@ public class EmojiAtlas {
             image.upload(0, pos.x, pos.y, false);
 
             final var glyph = new EmojiGlyph.Atlas(
-                    name,
+                    resourceLocation,
                     new Rect2i(pos, image.getWidth(), image.getHeight())
             );
 
             glyph.updateUV(totalWidth, totalHeight);
+
             stitchedGlyphs.add(glyph);
+
             return glyph;
         }
 
@@ -257,26 +259,28 @@ public class EmojiAtlas {
         }
 
         @Override
-        public void dumpContents(ResourceLocation resourceLocation, Path path) {
+        public void dumpContents(final @NotNull ResourceLocation resourceLocation, final @NotNull Path path) {
 //        _debugDrawFreeSpace();
 
             TextureUtil.writeAsPNG(
-                    path, resourceLocation.toDebugFileName(),
+                    path,
+                    resourceLocation.toDebugFileName(),
                     getId(),
                     0,
-                    totalWidth, totalHeight
+                    totalWidth,
+                    totalHeight
             );
         }
 
-        public ResourceLocation getName() {
-            return name;
+        public ResourceLocation getResourceLocation() {
+            return resourceLocation;
         }
 
-        public void drawDebugHUD(GuiGraphics guiGraphics) {
-            double scale = (double) guiGraphics.guiHeight() / totalHeight;
+        public void drawDebugHUD(final @NotNull GuiGraphics guiGraphics) {
+            final var scale = (double) guiGraphics.guiHeight() / (double) totalHeight;
 
             guiGraphics.blit(
-                    getName(),
+                    getResourceLocation(),
                     0, 0,
                     (int) (totalWidth * scale), (int) (totalHeight * scale),
                     0f, 0f,
@@ -284,14 +288,15 @@ public class EmojiAtlas {
                     totalWidth, totalHeight
             );
 
-            var random = new Random();
-            for (var rect : freeSpace) {
+            final var random = new Random();
+
+            for (final var rect : freeSpace) {
                 random.setSeed(rect.hashCode());
-                guiGraphics.fill(
-                        (int) (rect.getX() * scale), (int) (rect.getY() * scale),
-                        (int) (rect.getRight() * scale), (int) (rect.getBottom() * scale),
-                        random.nextInt(0, 0xFFFFFF+1) | (128 << 24)
-                );
+
+                RectDrawer.with(
+                        guiGraphics,
+                        rect.mul(scale)
+                ).draw(random.nextInt(0, 0xFFFFFF + 1) | (128 << 24));
             }
         }
     }

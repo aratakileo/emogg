@@ -1,8 +1,9 @@
-package io.github.aratakileo.emogg.gui.esm;
+package io.github.aratakileo.emogg.gui;
 
 import io.github.aratakileo.emogg.EmoggConfig;
 import io.github.aratakileo.emogg.emoji.Emoji;
 import io.github.aratakileo.emogg.emoji.EmojiManager;
+import io.github.aratakileo.emogg.gui.widget.EmojiSelectionMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
