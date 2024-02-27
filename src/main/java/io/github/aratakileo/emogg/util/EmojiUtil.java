@@ -1,6 +1,7 @@
 package io.github.aratakileo.emogg.util;
 
 import io.github.aratakileo.elegantia.math.Vector2iInterface;
+import io.github.aratakileo.elegantia.util.Strings;
 import io.github.aratakileo.emogg.emoji.EmojiGlyph;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -77,7 +78,7 @@ public final class EmojiUtil {
 
     public static @NotNull String normalizeEmojiObjectKey(@NotNull String sourceValue) {
         return StringUtils.strip(
-                sourceValue.toLowerCase()
+                Strings.camelToSnake(sourceValue)
                         .replaceAll("-+| +|\\.+", "_")
                         .replaceAll("[^a-z0-9_]", ""),
                 "_"
