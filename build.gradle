@@ -22,15 +22,14 @@ processResources {
     final var replaceProperties = [
             "version": project.version,
             "suggestions_api_version": suggestions_api_version,
-            "elegantia_version": elegantia_version,
-            "pack_format": pack_format
+            "elegantia_version": elegantia_version
     ]
 
     inputs.properties replaceProperties
 
     filteringCharset "UTF-8"
 
-    filesMatching(["fabric.mod.json", "/resourcepacks/*/pack.mcmeta"]) {
+    filesMatching(["fabric.mod.json"]) {
         expand replaceProperties
     }
 }
