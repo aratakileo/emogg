@@ -16,18 +16,13 @@ public class EmojiInteractions {
         private final Emoji emoji;
 
         private EmojiHoverEvent(@NotNull Emoji emoji) {
-            super(null, null);
+            super(Action.SHOW_TEXT, null);
             this.emoji = emoji;
         }
 
         private static final WeakHashMap<Emoji, EmojiHoverEvent> cache = new WeakHashMap<>();
         public static @NotNull EmojiHoverEvent of(@NotNull Emoji emoji) {
             return cache.computeIfAbsent(emoji, EmojiHoverEvent::new);
-        }
-
-        @Override
-        public @NotNull Action<?> getAction() {
-            return Action.SHOW_TEXT;
         }
 
         @SuppressWarnings("unchecked")
