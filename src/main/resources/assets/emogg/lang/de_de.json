@@ -14,7 +14,7 @@
   "emogg.category.anime": "Anime",
   "emogg.category.memes": "Meme",
   "emogg.category.activities": "Aktivitäten",
-  "emogg.resourcepack.builtin.name": "Integrierte Emojis",
+  "emogg.resourcepack.builtin.title": "Integrierte Emojis",
   "emogg.message.new_version_is_available": "Neue Version ist verfügbar! Laden Sie es bei %s herunter",
   "emogg.emoji.interaction.loading": "Wird geladen...",
   "emogg.emoji.interaction.error": "Laden fehlgeschlagen. Grund: %s",

@@ -14,6 +14,6 @@
   "emogg.category.anime": "動漫",
   "emogg.category.memes": "模因",
   "emogg.category.activities": "活動",
-  "emogg.resourcepack.builtin.name": "固有的表情符號",
+  "emogg.resourcepack.builtin.title": "固有的表情符號",
   "emogg.message.new_version_is_available": "新版本上線了！在 %s 下載"
 }

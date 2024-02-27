@@ -1,6 +1,6 @@
 package io.github.aratakileo.emogg.emoji;
 
-import io.github.aratakileo.elegantia.util.NativeGifImage;
+import io.github.aratakileo.elegantia.graphics.NativeGifImage;
 import io.github.aratakileo.emogg.Emogg;
 import io.github.aratakileo.emogg.util.EmojiUtil;
 import net.fabricmc.api.EnvType;
